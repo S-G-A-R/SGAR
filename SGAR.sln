@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGAR.AppWebBlazor", "SGAR.AppWebBlazor\SGAR.AppWebBlazor.csproj", "{4186BC39-8606-42BF-9CC1-B547F2C90912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGAR.EN", "SGAR.EN\SGAR.EN.csproj", "{9A94E706-D440-48FC-ACC0-64BEC27787C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4186BC39-8606-42BF-9CC1-B547F2C90912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4186BC39-8606-42BF-9CC1-B547F2C90912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4186BC39-8606-42BF-9CC1-B547F2C90912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4186BC39-8606-42BF-9CC1-B547F2C90912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A94E706-D440-48FC-ACC0-64BEC27787C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A94E706-D440-48FC-ACC0-64BEC27787C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A94E706-D440-48FC-ACC0-64BEC27787C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A94E706-D440-48FC-ACC0-64BEC27787C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6D9F9C3-2338-4F60-9149-84B9CC75BAD4}
+	EndGlobalSection
+EndGlobal
