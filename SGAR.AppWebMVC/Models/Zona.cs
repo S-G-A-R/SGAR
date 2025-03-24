@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -7,10 +8,13 @@ public partial class Zona
 {
     public int Id { get; set; }
 
+    [Required(ErrorMessage = "El nombre es obligatorio.")]
     public string Nombre { get; set; } = null!;
-
+    [Display(Name = "Departamento")]
+    [Required(ErrorMessage = "Seleccione un distrito.")]
     public int IdDistrito { get; set; }
-
+    [Display(Name = "Alcaldia")]
+    [Required(ErrorMessage = "Asocie la alcaldía.")]
     public int IdAlcaldia { get; set; }
 
     public string? Descripcion { get; set; }
