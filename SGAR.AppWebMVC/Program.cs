@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
 
@@ -8,6 +9,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<SgarDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Cnn"));
+});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie((o) =>
+{
+    o.LoginPath = new PathString("/Usuarios/login");
+    o.AccessDeniedPath = new PathString("/Home/Unauthorized");
+    o.ExpireTimeSpan = TimeSpan.FromHours(8);
+    o.SlidingExpiration = true;
+    o.Cookie.HttpOnly = true;
 });
 
 
@@ -26,6 +35,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
