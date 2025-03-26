@@ -234,5 +234,5 @@ GO
 INSERT INTO Departamentos(Nombre) VALUES ('TestDepartamento')
 INSERT INTO Municipios(Nombre, IdDepartamento) VALUES ('TestMunicipio', 1)
 INSERT INTO Distritos(Nombre, IdMunicipio) VALUES ('TestDistrito', 1)
-INSERT INTO Alcaldias(IdMunicipio, Correo, Password) VALUES (1, 'admin@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92') --Password: 12345
+INSERT INTO Alcaldias(IdMunicipio, Correo, Password) VALUES (1, 'admin@gmail.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5') --Password: 12345
 INSERT INTO Zonas(Nombre, IdDistrito, IdAlcaldia, Descripcion) VALUES ('TestZona', 1, 1, 'Zona de Prueba')
