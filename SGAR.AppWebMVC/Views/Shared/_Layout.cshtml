@@ -23,7 +23,15 @@
             <div class="offcanvas-body">
                 @* <p>TO DO, AQUI VA TODO, SEPARADO POR ROLES/IF, dentro de los if se ocultaran segun el rol.</p> *@
 
-                    <ul class="navbar-nav flex-grow-1">
+                <ul class="navbar-nav flex-grow-1">
+                    @if (User.IsInRole("Alcaldia"))
+                    {
+                        var nombre = User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.ToString();
+                        var municipio = User.FindFirst("Municipio").Value;
+
+                        <li>
+                            <h3>@nombre de @municipio </h3>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Inicio</a>
                         </li>
@@ -36,6 +44,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Supervisores</a>
                         </li>
+                    }
+
                 </ul>
             </div>
         </div>

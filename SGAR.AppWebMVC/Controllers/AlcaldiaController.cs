@@ -38,11 +38,12 @@ namespace SGAR.AppWebMVC.Controllers
             alcaldia.Password = GenerarHash256(alcaldia.Password);
             var alcaldiaAuth = await _context.Alcaldias
                 .FirstOrDefaultAsync(s => s.Correo == alcaldia.Correo && s.Password == alcaldia.Password);
+            var municipio = await _context.Municipios.FirstOrDefaultAsync(s => s.Id == alcaldiaAuth.IdMunicipio);
             if (alcaldiaAuth != null && alcaldiaAuth.Id > 0 && alcaldiaAuth.Correo == alcaldia.Correo)
             {
                 var claims = new[] {
                     new Claim("Id", alcaldiaAuth.Id.ToString()),
-                    new Claim("Municipio", alcaldiaAuth.IdMunicipio.ToString()),
+                    new Claim("Municipio", municipio.Nombre),
                     new Claim(ClaimTypes.Role, alcaldiaAuth.GetType().Name)
                     };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
