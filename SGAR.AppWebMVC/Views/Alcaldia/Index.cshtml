@@ -1,47 +1,42 @@
 ﻿@model IEnumerable<SGAR.AppWebMVC.Models.Alcaldia>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Menú";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-center">
+<div class="menu content-center row mx-auto">
+    <div class="col-2 p-4">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Correo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdMunicipioNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdMunicipioNavigation.Nombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <br />
+        <div class="contenedor-boton">
+            <button asp-action="Index" asp-controller="Alcaldia" class="boton-mapache">Gestionar Vehículos</button>
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        </div>
+
+        <br />
+        <div class="contenedor-boton">
+            <button asp-action="Index" asp-controller="Alcaldia" class="boton-mapache">Gestionar Horarios</button>
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        </div>
+
+        <br />
+        <div class="contenedor-boton">
+            <button asp-action="Index" asp-controller="Alcaldia" class="boton-mapache">Gestionar Operadores</button>
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        </div>
+
+        <br />
+        <div class="contenedor-boton">
+            <button asp-action="Index" asp-controller="Alcaldia" class="boton-mapache">Gestionar Supervisores</button>
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        </div>
+    </div>
+</div>
+</div>
+
+

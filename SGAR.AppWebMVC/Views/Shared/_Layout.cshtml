@@ -25,16 +25,19 @@
 
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Inicio</a>
+                            <a class="nav-link text-dark m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Operadores</a>
+                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-car-front-fill"></i> Operadores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Ciudadanos</a>
+                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-people-fill"></i> Ciudadanos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-house"></i> Supervisores</a>
+                            <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-person-vcard-fill"></i> Supervisores</a>
+                        </li>
+                        <li class="nav-item align-items-end">
+                            <a class="nav-link btn btn-outline-secondary m-2 text-black" asp-area="" asp-controller="Alcaldia" asp-action="CerrarSesion"> <i class="bi bi-arrow-bar-left"></i> Cerrar sesion</a>
                         </li>
                 </ul>
             </div>
@@ -50,16 +53,13 @@
                     <i class="bi bi-list"></i>
                 </button>
 
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SGAR</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">S.G.A.R</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                            </li>
 
 
                         </ul>
@@ -72,8 +72,8 @@
                             @if (User.IsInRole("Alcaldia"))
                                     {
                                         var nombre = User.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value.ToString();
-                                <a class="me-3 btn btn-secondary" asp-area="" asp-controller="Alcaldia" asp-action="CerrarSesion">Cerrar sesion</a>
-                                <span>@nombre</span>
+                                @* <a class="me-3 btn btn-secondary" asp-area="" asp-controller="Alcaldia" asp-action="CerrarSesion">Cerrar sesion</a> *@
+                            <span>@nombre <i class="bi bi-person-circle"></i></span>
                             }
 
                         }

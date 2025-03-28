@@ -19,4 +19,64 @@ html {
 
 body {
   margin-bottom: 60px;
+}S
+
+/* Estilos para los enlaces dentro del offcanvas */
+.offcanvas-body a {
+    transition: background-color 0.3s ease;
+    padding: 5px;
+    display: block; /* Para que el padding y el background-color ocupen todo el ancho */
+}
+
+    /* Estilo al pasar el cursor */
+    .offcanvas-body a:hover {
+        background-color: #e0ffe0; 
+    }
+
+
+
+    /*BOTON ESTILO OREJAS DE MAPACHE*/
+.contenedor-boton {
+    position: relative;
+    display: inline-block;
+    margin:15px;
+    
+}
+
+.boton-mapache {
+    border: 2px solid transparent;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    height: 50px;
+    width:250px;
+    background-color:#968d8d;
+}
+
+    .boton-mapache:hover {
+        border: 3px solid black;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+.oreja {
+    position: absolute;
+    width: 30px; /* Ajusta el tamaño de las imágenes */
+    height: 30px;
+    display: none;
+}
+
+.oreja-izquierda {
+    top: -25px;
+    left: 5px;
+}
+
+.oreja-derecha {
+    top: -25px;
+    right: 5px;
+}
+
+.contenedor-boton:hover .oreja {
+    display: block;
 }
