@@ -19,12 +19,18 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Operador
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Operador operador, int topRegistro = 10)
         {
-            var sgarDbContext = _context.Operadores.Include(o => o.IdAlcaldiaNavigation).Include(o => o.Vehiculo);
-            return View(await sgarDbContext.ToListAsync());
+            var query = _context.Operadores.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(operador.Nombre))
+                query = query.Where(s => s.Nombre.Contains(operador.Nombre));
+            if (!string.IsNullOrWhiteSpace(operador.Dui))
+                query = query.Where(s => s.Dui.Contains(operador.Dui));
+            if (topRegistro > 0)
+                query = query.Take(topRegistro);
+            query = query.OrderByDescending(s => s.Id);
+            return View(await query.ToListAsync());
         }
-
         // GET: Operador/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,7 +54,7 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Operador/Create
         public IActionResult Create()
         {
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Correo");
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id");
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id");
             return View();
         }
@@ -66,7 +72,7 @@ namespace SGAR.AppWebMVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Correo", operador.IdAlcaldia);
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
             return View(operador);
         }
@@ -84,7 +90,7 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Correo", operador.IdAlcaldia);
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
             return View(operador);
         }
@@ -94,36 +100,49 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,TelefonoPersonal,CorreoPersonal,Dui,Foto,Ayudantes,CodigoOperador,TelefonoLaboral,CorreoLaboral,VehiculoId,LicenciaDoc,AntecedentesDoc,SolvenciaDoc,Password,IdAlcaldia")] Operador operador)
+        public async Task<IActionResult> Edit (int id, [Bind("Id,Nombre,Apellido,TelefonoPersonal,CorreoPersonal,Dui,Foto,Ayudantes,CodigoOperador,TelefonoLaboral,CorreoLaboral,VehiculoId,LicenciaDoc,AntecedentesDoc,SolvenciaDoc,IdAlcaldia")] Operador operador)
         {
             if (id != operador.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var operadorUpdate = await _context.Operadores
+                .FirstOrDefaultAsync(o => o.Id == operador.Id);
+             
+            try
             {
-                try
-                {
-                    _context.Update(operador);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OperadorExists(operador.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                operadorUpdate.Nombre = operador.Nombre;
+                operadorUpdate.Apellido = operador.Apellido;
+                operadorUpdate.TelefonoPersonal = operador.TelefonoPersonal;
+                operadorUpdate.CorreoPersonal = operador.CorreoPersonal;
+                operadorUpdate.Dui = operador.Dui;
+                operadorUpdate.Foto = operador.Foto;
+                operadorUpdate.Ayudantes = operador.Ayudantes;
+                operadorUpdate.CodigoOperador = operador.CodigoOperador;
+                operadorUpdate.CorreoLaboral = operador.CorreoLaboral;
+                operadorUpdate.TelefonoLaboral = operador.CorreoLaboral;
+                operadorUpdate.VehiculoId = operador.VehiculoId;
+                operadorUpdate.LicenciaDoc = operador.LicenciaDoc;
+                operadorUpdate.AntecedentesDoc = operador.AntecedentesDoc;
+                operadorUpdate.SolvenciaDoc = operador.SolvenciaDoc;
+                operadorUpdate.IdAlcaldia = operador.IdAlcaldia;
+                _context.Update(operadorUpdate);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Correo", operador.IdAlcaldia);
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
-            return View(operador);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OperadorExists(operador.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(operador);
+                }
+            }
+
         }
 
         // GET: Operador/Delete/5

@@ -1,16 +1,58 @@
 ﻿@model IEnumerable<SGAR.AppWebMVC.Models.Operador>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de operadores";
 }
 
-<h1>Index</h1>
+<h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+
+<form asp-action="Index" class="mb-3">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" />
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group">
+                <label class="control-label">DUI</label>
+                <input type="text" name="Dui" class="form-control" />
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Cant. Registros</label>
+                <select name="topRegistro" class="form-control">
+                    <option selected value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="60">60</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="0">Todos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <input type="submit" value="Buscar" class="btn btn-primary" />
+            <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle-fill"></i></a>
+        </div>
+    </div>
+
+
+</form>
+
+<div class="row">
+    <div class="col-10 mx-auto">
+        <table class="table table-striped mt-4 shadow" id="myTable">
+            <thead class="table-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
@@ -19,40 +61,14 @@
                 @Html.DisplayNameFor(model => model.Apellido)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TelefonoPersonal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CorreoPersonal)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Dui)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ayudantes)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.CodigoOperador)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TelefonoLaboral)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CorreoLaboral)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LicenciaDoc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AntecedentesDoc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SolvenciaDoc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
@@ -73,19 +89,7 @@
                 @Html.DisplayFor(modelItem => item.Apellido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TelefonoPersonal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CorreoPersonal)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Dui)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Foto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ayudantes)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CodigoOperador)
@@ -94,32 +98,30 @@
                 @Html.DisplayFor(modelItem => item.TelefonoLaboral)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CorreoLaboral)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LicenciaDoc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AntecedentesDoc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SolvenciaDoc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.IdAlcaldiaNavigation.Correo)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Vehiculo.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": languageTable
+            });
+        });
+    </script>
+}
