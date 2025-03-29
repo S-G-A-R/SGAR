@@ -71,6 +71,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: ListAlcaldias
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> List(Alcaldia alcaldia, int topRegistro = 10)
         {
 
@@ -103,6 +104,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Alcaldia/Details/5
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -122,6 +124,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Alcaldia/Create
+        [Authorize(Policy = "Admin")]
         public IActionResult Create()
         {
             List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
@@ -137,6 +140,7 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,IdMunicipio,Correo,Password")] Alcaldia alcaldia)
         {
             try
@@ -163,6 +167,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Alcaldia/Edit/5
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -194,6 +199,7 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IdMunicipio,Correo")] Alcaldia alcaldia)
         {
             if (id != alcaldia.Id)
@@ -228,6 +234,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Alcaldia/Delete/5
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -249,6 +256,7 @@ namespace SGAR.AppWebMVC.Controllers
         // POST: Alcaldia/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var alcaldia = await _context.Alcaldias.FindAsync(id);

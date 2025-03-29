@@ -19,6 +19,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     o.Cookie.HttpOnly = true;
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+                      policy.RequireClaim("Id", "1")
+                      .RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Alcaldia"));
+});
+
 
 var app = builder.Build();
 
