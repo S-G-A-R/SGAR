@@ -1,0 +1,106 @@
+﻿@model SGAR.AppWebMVC.Models.Operador
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Operador</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Apellido" class="control-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonoPersonal" class="control-label"></label>
+                <input asp-for="TelefonoPersonal" class="form-control" />
+                <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorreoPersonal" class="control-label"></label>
+                <input asp-for="CorreoPersonal" class="form-control" />
+                <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dui" class="control-label"></label>
+                <input asp-for="Dui" class="form-control" />
+                <span asp-validation-for="Dui" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <input asp-for="Foto" class="form-control" />
+                <span asp-validation-for="Foto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ayudantes" class="control-label"></label>
+                <input asp-for="Ayudantes" class="form-control" />
+                <span asp-validation-for="Ayudantes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CodigoOperador" class="control-label"></label>
+                <input asp-for="CodigoOperador" class="form-control" />
+                <span asp-validation-for="CodigoOperador" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonoLaboral" class="control-label"></label>
+                <input asp-for="TelefonoLaboral" class="form-control" />
+                <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorreoLaboral" class="control-label"></label>
+                <input asp-for="CorreoLaboral" class="form-control" />
+                <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehiculoId" class="control-label"></label>
+                <select asp-for="VehiculoId" class ="form-control" asp-items="ViewBag.VehiculoId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LicenciaDoc" class="control-label"></label>
+                <input asp-for="LicenciaDoc" class="form-control" />
+                <span asp-validation-for="LicenciaDoc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AntecedentesDoc" class="control-label"></label>
+                <input asp-for="AntecedentesDoc" class="form-control" />
+                <span asp-validation-for="AntecedentesDoc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SolvenciaDoc" class="control-label"></label>
+                <input asp-for="SolvenciaDoc" class="form-control" />
+                <span asp-validation-for="SolvenciaDoc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdAlcaldia" class="control-label"></label>
+                <select asp-for="IdAlcaldia" class ="form-control" asp-items="ViewBag.IdAlcaldia"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

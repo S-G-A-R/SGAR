@@ -43,7 +43,7 @@ namespace SGAR.AppWebMVC.Controllers
             ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
             ViewData["AlcaldiaId"] = new SelectList(alcaldias, "Id", "Nombre");
 
-            return View(await query.ToListAsync());
+            return View(await query.OrderByDescending(s => s.Id).ToListAsync());
         }
 
         public JsonResult GetMunicipiosFromDepartamentoId(int departamentoId)
