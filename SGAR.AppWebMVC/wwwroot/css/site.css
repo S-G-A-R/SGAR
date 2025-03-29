@@ -30,7 +30,7 @@ body {
 
     /* Estilo al pasar el cursor */
     .offcanvas-body a:hover {
-        background-color: #e0ffe0; 
+        background-color: #968d8d; 
     }
 
 
@@ -50,8 +50,8 @@ body {
     cursor: pointer;
     border-radius: 10px;
     height: 50px;
-    width:250px;
-    background-color:#968d8d;
+    width: 250px;
+    background-color: #b0abab;
 }
 
     .boton-mapache:hover {
@@ -79,4 +79,22 @@ body {
 
 .contenedor-boton:hover .oreja {
     display: block;
+}
+
+/*BOTON MAPACHE: SOLO PARA BOTONES DE ACEPTAR(LOGIN)*/
+.boton-mapacheAceptar {
+    border: 2px solid transparent;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    height: 50px;
+    width: 100px;
+    background-color: #b0abab;
+}
+
+.boton-mapacheAceptar:hover {
+    border: 3px solid black;
+    border-radius: 10px;
+    font-weight: bold;
 }
