@@ -13,6 +13,8 @@ public partial class Alcaldia
     public int IdMunicipio { get; set; }
     [Required(ErrorMessage = "El Correo es obligatorio.")]
     [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]
+
+    [Display(Name = "Correo Electrónico")]
     public string Correo { get; set; } = null!;
     [Required(ErrorMessage = "La contraseña es obligatoria.")]
     [DataType(DataType.Password)]
