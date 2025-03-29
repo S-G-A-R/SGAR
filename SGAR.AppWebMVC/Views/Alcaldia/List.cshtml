@@ -1,32 +1,27 @@
-﻿@model IEnumerable<SGAR.AppWebMVC.Models.Zona>
+﻿@model IEnumerable<SGAR.AppWebMVC.Models.Alcaldia>
 
 @{
-    ViewData["Title"] = "Lista de zonas";
+    ViewData["Title"] = "Lista de alcaldias";
 }
 
 <h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
 
-<form asp-action="Index" class="mb-3">
+<form asp-action="List" class="mb-3">
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-6">
             <div class="form-group">
                 <label class="control-label">Departamento</label>
                 <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-6">
             <div class="form-group">
                 <label class="control-label">Municipio</label>
-                <select id="municipioId" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                <select id="municipios" name="idMunicipio" class="form-control" asp-items="ViewBag.MunicipioId"></select>
             </div>
         </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label class="control-label">Distrito</label>
-                <select id="distritos" name="idDistrito" class="form-control" asp-items="ViewBag.DistritoId"></select>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -59,14 +54,12 @@
             <thead class="table-dark">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Nombre)
+                        @Html.DisplayNameFor(model => model.Correo)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+                        @Html.DisplayNameFor(model => model.IdMunicipioNavigation)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IdDistritoNavigation)
-                    </th>
+
                     <th></th>
                 </tr>
             </thead>
@@ -75,18 +68,14 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Nombre)
+                            @Html.DisplayFor(modelItem => item.Correo)
                         </td>
                         <td>
                             @{
                                 var municipios = ((SelectList)ViewBag.AlcaldiaId);
-                                var municipio = municipios.FirstOrDefault(s => s.Value == item.IdAlcaldiaNavigation.IdMunicipio.ToString());
+                                var municipio = municipios.FirstOrDefault(s => s.Value == item.IdMunicipio.ToString());
                                 @municipio.Text
                             }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IdDistritoNavigation.Nombre)
-
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
@@ -109,9 +98,7 @@
         $("#departamentoId").change(function () {
             getMunicipiosFromDepartamentoId();
         })
-        $("#municipioId").change(function () {
-            getDistritosFromMunicipioId();
-        })
+
 
         var getMunicipiosFromDepartamentoId = function () {
             $.ajax({
@@ -121,36 +108,17 @@
                     departamentoId: $('#departamentoId').val(),
                 },
                 success: function (data) {
-                    $('#municipioId').find('option').remove()
-                    $('#municipioId').append('<option value="0">SELECCIONAR</option>')
-                    $('#distritos').find('option').remove()
-                    $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                    $('#municipios').find('option').remove()
+                    $('#municipios').append('<option value="0">SELECCIONAR</option>')
                     $(data).each(
                         function (i, item) {
-                            $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                            $('#municipios').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
                         }
                     )
                 }
             })
         }
 
-        var getDistritosFromMunicipioId = function () {
-            $.ajax({
-                url: '@Url.Action("GetDistritosFromMunicipioId", "Zona")',
-                type: 'GET',
-                data: {
-                    municipioId: $('#municipioId').val(),
-                },
-                success: function (data) {
-                    $('#distritos').find('option').remove()
-                    $('#distritos').append('<option value="0">SELECCIONAR</option>')
-                    $(data).each(
-                        function (i, item) {
-                            $('#distritos').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
-                        }
-                    )
-                }
-            })
-        }
+       
     </script>
 }

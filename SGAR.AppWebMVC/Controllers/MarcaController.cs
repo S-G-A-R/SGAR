@@ -29,7 +29,7 @@ namespace SGAR.AppWebMVC.Controllers
             if(topRegistro > 0)
                 query = query.Take(topRegistro);
             query = query.OrderByDescending(s => s.Id);
-            return View(await query.ToListAsync());
+            return View(await query.OrderByDescending(s => s.Id).ToListAsync());
         }
 
         // GET: Marca/Details/5

@@ -19,8 +19,8 @@ public partial class Alcaldia
     [StringLength(60, MinimumLength = 5, ErrorMessage = "La contraseña debe tener entre 5 y 60 caracteres.")]
     [Display(Name = "Contraseña")]
     public string Password { get; set; } = null!;
-
-    public virtual Municipio IdMunicipioNavigation { get; set; } = null!;
+    [Display(Name = "Municipio")]
+    public virtual Municipio? IdMunicipioNavigation { get; set; } = null!;
 
     public virtual ICollection<Operador> Operadores { get; set; } = new List<Operador>();
 

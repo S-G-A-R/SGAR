@@ -1,42 +1,83 @@
 ﻿@model SGAR.AppWebMVC.Models.Alcaldia
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Alcaldia";
 }
 
-<h1>Create</h1>
-
-<h4>Alcaldia</h4>
+<h1><i class="bi bi-ticket-perforated me-3"></i> @ViewData["Title"]</h1>
+<hr />
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdMunicipio" class="control-label"></label>
-                <select asp-for="IdMunicipio" class ="form-control" asp-items="ViewBag.IdMunicipio"></select>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">Departamento</label>
+                        <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">Municipio</label>
+                        <select id="municipioId" asp-for="IdMunicipio" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="Correo" class="control-label"></label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            
+            <div class="row mt-2">
+                <div class="form-group col-1">
+                    <input type="submit" value="Crear" class="btn btn-success" />
+                </div>
+                <div class="col-1">
+                    <a asp-action="List" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $("#departamentoId").change(function () {
+        getMunicipiosFromDepartamentoId();
+    })
+
+    var getMunicipiosFromDepartamentoId = function () {
+        $.ajax({
+            url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Zona")',
+            type: 'GET',
+            data: {
+                departamentoId: $('#departamentoId').val(),
+            },
+            success: function (data) {
+                $('#municipioId').find('option').remove()
+                $('#municipioId').append('<option value="0">SELECCIONAR</option>')
+                $(data).each(
+                    function (i, item) {
+                        $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                    }
+                )
+            }
+        })
+    }
+
+  
+</script>
 }

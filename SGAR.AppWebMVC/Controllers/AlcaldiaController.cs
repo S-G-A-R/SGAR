@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
+using System.Security.Policy;
 
 namespace SGAR.AppWebMVC.Controllers
 {
@@ -64,10 +65,41 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Alcaldia
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var sgarDbContext = _context.Alcaldias.Include(a => a.IdMunicipioNavigation);
-            return View(await sgarDbContext.ToListAsync());
+            return View();
+        }
+
+        // GET: ListAlcaldias
+        public async Task<IActionResult> List(Alcaldia alcaldia, int topRegistro = 10)
+        {
+
+            var query = _context.Alcaldias.AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(alcaldia.Correo))
+                query = query.Where(s => s.Correo.Contains(alcaldia.Correo));
+            if (alcaldia.IdMunicipio > 0)
+                query = query.Where(s => s.IdMunicipio == alcaldia.IdMunicipio);
+            if (topRegistro > 0)
+                query = query.Take(topRegistro);
+            query = query
+                .Include(p => p.IdMunicipioNavigation);
+            query = query.OrderByDescending(s => s.Id);
+
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+            var alcaldias = _context.Municipios.ToList();
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+            ViewData["AlcaldiaId"] = new SelectList(alcaldias, "Id", "Nombre");
+
+            return View(await query.OrderByDescending(s => s.Id).ToListAsync());
+        }
+
+        public JsonResult GetMunicipiosFromDepartamentoId(int departamentoId)
+        {
+            return Json(_context.Municipios.Where(m => m.IdDepartamento == departamentoId).ToList());
         }
 
         // GET: Alcaldia/Details/5
@@ -92,7 +124,11 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Alcaldia/Create
         public IActionResult Create()
         {
-            ViewData["IdMunicipio"] = new SelectList(_context.Municipios, "Id", "Nombre");
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
             return View();
         }
 
@@ -103,13 +139,26 @@ namespace SGAR.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,IdMunicipio,Correo,Password")] Alcaldia alcaldia)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(alcaldia);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    alcaldia.Password = GenerarHash256(alcaldia.Password);
+                    _context.Add(alcaldia);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(List));
+                }
             }
-            ViewData["IdMunicipio"] = new SelectList(_context.Municipios, "Id", "Nombre", alcaldia.IdMunicipio);
+            catch
+            {
+                return RedirectToAction(nameof(List));
+            }
+
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
             return View(alcaldia);
         }
 
@@ -126,7 +175,17 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdMunicipio"] = new SelectList(_context.Municipios, "Id", "Nombre", alcaldia.IdMunicipio);
+
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+
+            var miMunicipio = _context.Municipios.FirstOrDefault(a => a.Id == alcaldia.IdMunicipio);
+            municipios.Add(new Municipio { Nombre = miMunicipio.Nombre, Id = miMunicipio.Id, IdDepartamento = miMunicipio.IdDepartamento });
+
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", miMunicipio.Id);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+
             return View(alcaldia);
         }
 
@@ -135,15 +194,14 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IdMunicipio,Correo,Password")] Alcaldia alcaldia)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdMunicipio,Correo")] Alcaldia alcaldia)
         {
             if (id != alcaldia.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           
                 try
                 {
                     _context.Update(alcaldia);
@@ -157,12 +215,15 @@ namespace SGAR.AppWebMVC.Controllers
                     }
                     else
                     {
-                        throw;
+                        return RedirectToAction(nameof(List));
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdMunicipio"] = new SelectList(_context.Municipios, "Id", "Nombre", alcaldia.IdMunicipio);
+
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
             return View(alcaldia);
         }
 
