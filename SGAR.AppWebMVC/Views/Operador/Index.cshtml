@@ -1,0 +1,125 @@
+﻿@model IEnumerable<SGAR.AppWebMVC.Models.Operador>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TelefonoPersonal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorreoPersonal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dui)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ayudantes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CodigoOperador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TelefonoLaboral)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorreoLaboral)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LicenciaDoc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AntecedentesDoc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SolvenciaDoc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehiculo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelefonoPersonal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorreoPersonal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dui)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Foto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ayudantes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodigoOperador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelefonoLaboral)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorreoLaboral)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LicenciaDoc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AntecedentesDoc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SolvenciaDoc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdAlcaldiaNavigation.Correo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vehiculo.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
