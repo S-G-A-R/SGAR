@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 
 namespace SGAR.AppWebMVC.Controllers
 {
+    [Authorize(Roles = "Ciudadano, Alcaldia")]
     public class CiudadanoController : Controller
     {
         private readonly SgarDbContext _context;
@@ -38,30 +39,45 @@ namespace SGAR.AppWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Ciudadano ciudadano)
         {
-            ciudadano.Password = GenerarHash256(ciudadano.Password);
-            var ciudadanoAuth = await _context.Ciudadanos
-                .FirstOrDefaultAsync(s => s.Correo == ciudadano.Correo && s.Password == ciudadano.Password);
-            var zona = await _context.Zonas.FirstOrDefaultAsync(s => s.Id == ciudadanoAuth.ZonaId);
-            var alcaldia = await _context.Alcaldias.FirstOrDefaultAsync(s => s.Id == zona.IdAlcaldia);
-            if (ciudadanoAuth != null && ciudadanoAuth.Id > 0 && ciudadanoAuth.Correo == ciudadano.Correo)
+            try
             {
-                var claims = new[] {
+                ciudadano.Password = GenerarHash256(ciudadano.Password);
+                var ciudadanoAuth = await _context.Ciudadanos
+                    .FirstOrDefaultAsync(s => s.Correo == ciudadano.Correo && s.Password == ciudadano.Password);
+                var zona = await _context.Zonas.FirstOrDefaultAsync(s => s.Id == ciudadanoAuth.ZonaId);
+                var alcaldia = await _context.Alcaldias.FirstOrDefaultAsync(s => s.Id == zona.IdAlcaldia);
+                if (ciudadanoAuth != null && ciudadanoAuth.Id > 0 && ciudadanoAuth.Correo == ciudadano.Correo)
+                {
+                    var claims = new[] {
                     new Claim("Id", ciudadanoAuth.Id.ToString()),
                     new Claim("Zona", zona.Nombre),
                     new Claim("Alcaldia", alcaldia.Id.ToString()),
-                    new Claim(ClaimTypes.Role, ciudadanoAuth.GetType().Name)
-                    };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-                return RedirectToAction("Menu", "Ciudadano");
+                    new Claim("Nombre", ciudadanoAuth.Nombre + " " + ciudadanoAuth.Apellido),
+                    new Claim(ClaimTypes.Role, ciudadanoAuth.GetType().Name) };
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                    return RedirectToAction("Menu", "Ciudadano");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "El email o contraseña estan incorrectos");
+                    return View();
+                }
             }
-            else
+            catch
             {
-                ModelState.AddModelError("", "El email o contraseña estan incorrectos");
-                return View();
+                return View(ciudadano);
             }
+            
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
         // GET: Ciudadano
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Index()
         {
             var sgarDbContext = _context.Ciudadanos.Include(c => c.Zona);
@@ -69,6 +85,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Ciudadano/Details/5
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -86,11 +103,33 @@ namespace SGAR.AppWebMVC.Controllers
 
             return View(ciudadano);
         }
+        public JsonResult GetMunicipiosFromDepartamentoId(int departamentoId)
+        {
+            return Json(_context.Municipios.Where(m => m.IdDepartamento == departamentoId).ToList());
+        }
+
+        public JsonResult GetDistritosFromMunicipioId(int municipioId)
+        {
+            return Json(_context.Distritos.Where(m => m.IdMunicipio == municipioId).ToList());
+        }
+        public JsonResult GetZonasFromDistritoId(int distritoId)
+        {
+            return Json(_context.Zonas.Where(m => m.IdDistrito == distritoId).ToList());
+        }
 
         // GET: Ciudadano/Create
+        [AllowAnonymous]
         public IActionResult Create()
         {
-            ViewData["ZonaId"] = new SelectList(_context.Zonas, "Id", "Nombre");
+            List<Zona> zonas = [new Zona { Nombre = "SELECCIONAR", Id = 0, IdDistrito = 0, IdAlcaldia = 0 }];
+            List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.Where(s => s.Id != 1).ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+            ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", 0);
             return View();
         }
 
@@ -99,19 +138,35 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dui,Correo,Password,ZonaId")] Ciudadano ciudadano)
         {
-            if (ModelState.IsValid)
+            try
             {
+                ciudadano.Password = GenerarHash256(ciudadano.Password);
                 _context.Add(ciudadano);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Login));
             }
-            ViewData["ZonaId"] = new SelectList(_context.Zonas, "Id", "Nombre", ciudadano.ZonaId);
-            return View(ciudadano);
+
+            catch
+            {
+                List<Zona> zonas = [new Zona { Nombre = "SELECCIONAR", Id = 0, IdDistrito = 0, IdAlcaldia = 0 }];
+                List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+                List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+                var departamentos = _context.Departamentos.Where(s => s.Id != 1).ToList();
+                departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+                ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+                ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+                ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+                ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", ciudadano.ZonaId);
+                return View(ciudadano);
+            }
+            
         }
 
         // GET: Ciudadano/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

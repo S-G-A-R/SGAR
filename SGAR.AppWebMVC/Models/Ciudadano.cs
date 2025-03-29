@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -29,4 +30,11 @@ public partial class Ciudadano
     public virtual ICollection<Queja> Quejas { get; set; } = new List<Queja>();
     [Display(Name = "Zona")]
     public virtual Zona? Zona { get; set; } = null!;
+
+    [NotMapped]
+    [StringLength(60, MinimumLength = 5, ErrorMessage = "La contraseña debe tener entre 5 y 60 caracteres.")]
+    [Display(Name = "Confirmar Contraseña")]
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
+    public string? ConfirmarPassword { get; set; } = null!;
 }
