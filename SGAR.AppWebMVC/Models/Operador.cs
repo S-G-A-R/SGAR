@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -26,7 +27,7 @@ public partial class Operador
     public string TelefonoLaboral { get; set; } = null!;
 
     public string CorreoLaboral { get; set; } = null!;
-
+    [Display(Name = "Vehiculo")]
     public int? VehiculoId { get; set; }
 
     public byte[] LicenciaDoc { get; set; } = null!;
@@ -37,10 +38,13 @@ public partial class Operador
 
     public string Password { get; set; } = null!;
 
+
+    [Display(Name = "Alcaldia")]
     public int IdAlcaldia { get; set; }
 
     public virtual ICollection<Horario> Horarios { get; set; } = new List<Horario>();
 
+    [Display(Name = "Alcaldia")]
     public virtual Alcaldia IdAlcaldiaNavigation { get; set; } = null!;
 
     public virtual ICollection<Mantenimiento> Mantenimientos { get; set; } = new List<Mantenimiento>();
