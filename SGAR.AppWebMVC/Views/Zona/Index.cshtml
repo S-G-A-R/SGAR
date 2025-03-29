@@ -1,0 +1,156 @@
+﻿@model IEnumerable<SGAR.AppWebMVC.Models.Zona>
+
+@{
+    ViewData["Title"] = "Lista de zonas";
+}
+
+<h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
+
+<form asp-action="Index" class="mb-3">
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Departamento</label>
+                <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Municipio</label>
+                <select id="municipioId" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Distrito</label>
+                <select id="distritos" name="idDistrito" class="form-control" asp-items="ViewBag.DistritoId"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="control-label">Cant. Registros</label>
+                    <select name="topRegistry" class="form-control">
+                        <option selected value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="60">60</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="0">Todos</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <input type="submit" value="Buscar" class="btn btn-primary" />
+            <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle-fill"></i></a>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-10 mx-auto">
+        <table class="table table-striped mt-4 shadow" id="myTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdDistritoNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @{
+                                var municipios = ((SelectList)ViewBag.AlcaldiaId);
+                                var municipio = municipios.FirstOrDefault(s => s.Value == item.IdAlcaldiaNavigation.IdMunicipio.ToString());
+                                @municipio.Text
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdDistritoNavigation.Nombre)
+
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": languageTable
+            });
+        });
+        $("#departamentoId").change(function () {
+            getMunicipiosFromDepartamentoId();
+        })
+        $("#municipioId").change(function () {
+            getDistritosFromMunicipioId();
+        })
+
+        var getMunicipiosFromDepartamentoId = function () {
+            $.ajax({
+                url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Zona")',
+                type: 'GET',
+                data: {
+                    departamentoId: $('#departamentoId').val(),
+                },
+                success: function (data) {
+                    $('#municipioId').find('option').remove()
+                    $('#municipioId').append('<option value="0">SELECCIONAR</option>')
+                    $('#distritos').find('option').remove()
+                    $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                    $(data).each(
+                        function (i, item) {
+                            $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                        }
+                    )
+                }
+            })
+        }
+
+        var getDistritosFromMunicipioId = function () {
+            $.ajax({
+                url: '@Url.Action("GetDistritosFromMunicipioId", "Zona")',
+                type: 'GET',
+                data: {
+                    municipioId: $('#municipioId').val(),
+                },
+                success: function (data) {
+                    $('#distritos').find('option').remove()
+                    $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                    $(data).each(
+                        function (i, item) {
+                            $('#distritos').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                        }
+                    )
+                }
+            })
+        }
+    </script>
+}

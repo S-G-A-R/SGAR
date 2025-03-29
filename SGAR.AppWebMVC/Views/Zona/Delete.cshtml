@@ -1,4 +1,4 @@
-﻿@model SGAR.AppWebMVC.Models.Marca
+﻿@model SGAR.AppWebMVC.Models.Zona
 
 @{
     ViewData["Title"] = "Eliminar";
@@ -7,8 +7,10 @@
 <h1><i class="bi bi-trash-fill me-3"></i>@ViewData["Title"]</h1>
 
 <h3>Confirmar eliminación?</h3>
-<hr/>
+<hr />
 <div>
+    <h4>Zona</h4>
+    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
@@ -17,16 +19,26 @@
             @Html.DisplayFor(model => model.Nombre)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Modelo)
+            @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Modelo)
+            @Html.DisplayFor(model => model.Descripcion)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.YearOfFabrication)
+            @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.YearOfFabrication)
+            @{
+                var municipios = ((SelectList)ViewBag.AlcaldiaId);
+                var municipio = municipios.FirstOrDefault(s => s.Value == Model.IdAlcaldiaNavigation.IdMunicipio.ToString());
+                @municipio.Text
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdDistritoNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdDistritoNavigation.Nombre)
         </dd>
     </dl>
 

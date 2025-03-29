@@ -1,0 +1,110 @@
+﻿@model SGAR.AppWebMVC.Models.Zona
+
+@{
+    ViewData["Title"] = "Crear Zona";
+}
+
+<h1><i class="bi bi-ticket-perforated me-3"></i> @ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="row">
+                <div class="form-group col-12">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="control-label">Departamento</label>
+                        <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="control-label">Municipio</label>
+                        <select id="municipioId" asp-for="IdAlcaldia" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="control-label">Distrito</label>
+                        <select id="distritos" asp-for="IdDistrito" class="form-control" asp-items="ViewBag.DistritoId"></select>
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <input asp-for="Descripcion" class="form-control" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+            </div>
+
+            
+            <div class="row mt-2">
+                <div class="form-group col-1">
+                    <input type="submit" value="Crear" class="btn btn-success" />
+                </div>
+                <div class="col-1">
+                    <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $("#departamentoId").change(function () {
+        getMunicipiosFromDepartamentoId();
+    })
+    $("#municipioId").change(function () {
+        getDistritosFromMunicipioId();
+    })
+
+    var getMunicipiosFromDepartamentoId = function () {
+        $.ajax({
+            url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Zona")',
+            type: 'GET',
+            data: {
+                departamentoId: $('#departamentoId').val(),
+            },
+            success: function (data) {
+                $('#municipioId').find('option').remove()
+                $('#municipioId').append('<option value="0">SELECCIONAR</option>')
+                $('#distritos').find('option').remove()
+                $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                $(data).each(
+                    function (i, item) {
+                        $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                    }
+                )
+            }
+        })
+    }
+
+    var getDistritosFromMunicipioId = function () {
+        $.ajax({
+            url: '@Url.Action("GetDistritosFromMunicipioId", "Zona")',
+            type: 'GET',
+            data: {
+                municipioId: $('#municipioId').val(),
+            },
+            success: function (data) {
+                $('#distritos').find('option').remove()
+                $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                $(data).each(
+                    function (i, item) {
+                        $('#distritos').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                    }
+                )
+            }
+        })
+    }
+</script>
+}

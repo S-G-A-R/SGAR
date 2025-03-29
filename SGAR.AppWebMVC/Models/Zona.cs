@@ -10,7 +10,7 @@ public partial class Zona
 
     [Required(ErrorMessage = "El nombre es obligatorio.")]
     public string Nombre { get; set; } = null!;
-    [Display(Name = "Departamento")]
+    [Display(Name = "Distrito")]
     [Required(ErrorMessage = "Seleccione un distrito.")]
     public int IdDistrito { get; set; }
     [Display(Name = "Alcaldia")]
@@ -22,8 +22,8 @@ public partial class Zona
     public virtual ICollection<Ciudadano> Ciudadanos { get; set; } = new List<Ciudadano>();
 
     public virtual ICollection<Horario> Horarios { get; set; } = new List<Horario>();
-
-    public virtual Alcaldia IdAlcaldiaNavigation { get; set; } = null!;
-
-    public virtual Distrito IdDistritoNavigation { get; set; } = null!;
+    [Display(Name = "Alcaldia")]
+    public virtual Alcaldia? IdAlcaldiaNavigation { get; set; } = null!;
+    [Display(Name = "Distrito")]
+    public virtual Distrito? IdDistritoNavigation { get; set; } = null!;
 }
