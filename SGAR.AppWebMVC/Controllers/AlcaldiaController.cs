@@ -212,6 +212,7 @@ namespace SGAR.AppWebMVC.Controllers
                 {
                     _context.Update(alcaldia);
                     await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {

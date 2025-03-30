@@ -76,14 +76,7 @@ namespace SGAR.AppWebMVC.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
-        // GET: Ciudadano
-        [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Index()
-        {
-            var sgarDbContext = _context.Ciudadanos.Include(c => c.Zona);
-            return View(await sgarDbContext.ToListAsync());
-        }
-
+       
         // GET: Ciudadano/Details/5
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Details(int? id)
@@ -167,6 +160,25 @@ namespace SGAR.AppWebMVC.Controllers
 
         // GET: Ciudadano/Edit/5
 
+        public async Task<IActionResult> Perfil(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var datosCiudadano = await _context.Ciudadanos.FindAsync(id);
+            if(datosCiudadano == null)
+            {
+                return NotFound();
+            }
+
+            var zonas = _context.Zonas.ToList();
+            ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre");
+
+            return View(datosCiudadano);
+        }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -179,7 +191,19 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["ZonaId"] = new SelectList(_context.Zonas, "Id", "Nombre", ciudadano.ZonaId);
+            List<Zona> zonas = [new Zona { Nombre = "SELECCIONAR", Id = 0, IdDistrito = 0, IdAlcaldia = 0 }];
+            List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+            var departamentos = _context.Departamentos.Where(s => s.Id != 1).ToList();
+            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+
+            var zona = _context.Zonas.FirstOrDefault(s => s.Id == ciudadano.ZonaId);
+            zonas.Add(new Zona { Nombre = zona.Nombre, Id = zona.Id, IdAlcaldia = zona.IdAlcaldia, IdDistrito = zona.IdDistrito, Descripcion = zona.Descripcion });
+
+            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+            ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+            ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", ciudadano.ZonaId);
             return View(ciudadano);
         }
 
@@ -188,69 +212,70 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Dui,Correo,Password,ZonaId")] Ciudadano ciudadano)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Correo,ZonaId")] Ciudadano ciudadano)
         {
             if (id != ciudadano.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            var ciudadanoUpdate = _context.Ciudadanos.FirstOrDefault(s => s.Id == ciudadano.Id);
                 try
                 {
-                    _context.Update(ciudadano);
+                    ciudadanoUpdate.Nombre = ciudadano.Nombre;
+                    ciudadanoUpdate.Apellido = ciudadano.Apellido;
+                    ciudadanoUpdate.Correo = ciudadano.Correo;
+                    ciudadanoUpdate.ZonaId = ciudadano.ZonaId;
+
+                    _context.Update(ciudadanoUpdate);
                     await _context.SaveChangesAsync();
-                }
+                    return RedirectToAction("Menu","Ciudadano");
+            }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CiudadanoExists(ciudadano.Id))
+                    List<Zona> zonas = [new Zona { Nombre = "SELECCIONAR", Id = 0, IdDistrito = 0, IdAlcaldia = 0 }];
+                    List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+                    List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+                    var departamentos = _context.Departamentos.Where(s => s.Id != 1).ToList();
+                    departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+
+                    var zona = _context.Zonas.FirstOrDefault(s => s.Id == ciudadano.ZonaId);
+                    zonas.Add(new Zona { Nombre = zona.Nombre, Id = zona.Id, IdAlcaldia = zona.IdAlcaldia, IdDistrito = zona.IdDistrito, Descripcion = zona.Descripcion });
+
+                    ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+                    ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+                    ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+                    ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", ciudadano.ZonaId);
+                    
+                if (!CiudadanoExists(ciudadano.Id))
                     {
                         return NotFound();
                     }
                     else
                     {
-                        throw;
+                        return View(ciudadano);
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ZonaId"] = new SelectList(_context.Zonas, "Id", "Nombre", ciudadano.ZonaId);
-            return View(ciudadano);
+
+
+           
         }
 
-        // GET: Ciudadano/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var ciudadano = await _context.Ciudadanos
-                .Include(c => c.Zona)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ciudadano == null)
-            {
-                return NotFound();
-            }
-
-            return View(ciudadano);
-        }
 
         // POST: Ciudadano/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var ciudadano = await _context.Ciudadanos.FindAsync(id);
             if (ciudadano != null)
             {
                 _context.Ciudadanos.Remove(ciudadano);
             }
-
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         private bool CiudadanoExists(int id)
