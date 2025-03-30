@@ -1,1 +1,42 @@
-﻿<h1>Menú en construcción</h1>
+﻿@model SGAR.AppWebMVC.Models.Horario
+
+@{
+    ViewData["Title"] = "Menú";
+}
+
+<div class="container text-center p-5">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Calendar" asp-controller="Horario" class="card-link w-50 ">
+                        <i class="bi bi-calendar2-week-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                    </a>
+                    <p class="mt-2">Horarios</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Index" asp-controller="Ciudadano" class="card-link w-50 ">
+                        <i class="bi bi-file-earmark-richtext-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                    </a>
+                    <p class="mt-2">Informes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Index" asp-controller="Ciudadano" class="card-link w-50 ">
+                        <i class="bi bi-geo-alt-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                    </a>
+                    <p class="mt-2">Ubicación</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
