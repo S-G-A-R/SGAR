@@ -9,90 +9,193 @@
 <h4>Operador</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-12">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TelefonoPersonal" class="control-label"></label>
+                    <input asp-for="TelefonoPersonal" class="form-control" />
+                    <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="CorreoPersonal" class="control-label"></label>
+                    <input asp-for="CorreoPersonal" class="form-control" />
+                    <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Dui" class="control-label"></label>
+                    <input asp-for="Dui" class="form-control" />
+                    <span asp-validation-for="Dui" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="TelefonoPersonal" class="control-label"></label>
-                <input asp-for="TelefonoPersonal" class="form-control" />
-                <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="CodigoOperador" class="control-label"></label>
+                    <input asp-for="CodigoOperador" class="form-control" />
+                    <span asp-validation-for="CodigoOperador" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CorreoLaboral" class="control-label"></label>
+                    <input asp-for="CorreoLaboral" class="form-control" />
+                    <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TelefonoLaboral" class="control-label"></label>
+                    <input asp-for="TelefonoLaboral" class="form-control" />
+                    <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CorreoPersonal" class="control-label"></label>
-                <input asp-for="CorreoPersonal" class="form-control" />
-                <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="VehiculoId" class="control-label"></label>
+                    <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.VehiculoId"></select>
+                    <span asp-validation-for="VehiculoId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Ayudantes" class="control-label"></label>
+                    <input asp-for="Ayudantes" class="form-control" />
+                    <span asp-validation-for="Ayudantes" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Dui" class="control-label"></label>
-                <input asp-for="Dui" class="form-control" />
-                <span asp-validation-for="Dui" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="FotoFile" class="control-label">Foto</label>
+                    <div class="input-group">
+                        <input type="file" id="FotoFile" name="FotoFile" class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('FotoFile','FotoPreview')">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (Model.Foto != null && Model.Foto.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(Model.Foto);
+                        string imageUrl = $"data:image/png;base64,{base64Image}";
+
+                        <div id="FotoPreviewDiv">
+                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="FotoPreviewDiv" style="display: none;">
+                            <img id="FotoPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="SolvenciaFile" class="control-label">Solvencia</label>
+                    <div class="input-group">
+                        <input type="file" id="SolvenciaFile" name="SolvenciaFile" class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('SolvenciaFile','SolvenciaPreview')">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (Model.SolvenciaDoc != null && Model.SolvenciaDoc.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(Model.SolvenciaDoc);
+                        string imageUrl = $"data:image/png;base64,{base64Image}";
+
+                        <div id="SolvenciaPreviewDiv">
+                            <img id="SolvenciaPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="SolvenciaPreviewDiv" style="display: none;">
+                            <img id="SolvenciaPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Ayudantes" class="control-label"></label>
-                <input asp-for="Ayudantes" class="form-control" />
-                <span asp-validation-for="Ayudantes" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="LicenciaFile" class="control-label">Licencia</label>
+                    <div class="input-group">
+                        <input type="file" id="LicenciaFile" name="LicenciaFile" class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('LicenciaFile','LicenciaPreview')">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (Model.LicenciaDoc != null && Model.LicenciaDoc.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(Model.LicenciaDoc);
+                        string imageUrl = $"data:image/png;base64,{base64Image}";
+
+                        <div id="LicenciaPreviewDiv">
+                            <img id="LicenciaPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="LicenciaPreviewDiv" style="display: none;">
+                            <img id="LicenciaPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CodigoOperador" class="control-label"></label>
-                <input asp-for="CodigoOperador" class="form-control" />
-                <span asp-validation-for="CodigoOperador" class="text-danger"></span>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="AntecedentesFile" class="control-label">Antecedentes</label>
+                    <div class="input-group">
+                        <input type="file" id="AntecedentesFile" name="AntecedentesFile" class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('AntecedentesFile','AntecedentesPreview')">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (Model.AntecedentesDoc != null && Model.AntecedentesDoc.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(Model.AntecedentesDoc);
+                        string imageUrl = $"data:image/png;base64,{base64Image}";
+
+                        <div id="AntecedentesPreviewDiv">
+                            <img id="AntecedentesPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="AntecedentesPreviewDiv" style="display: none;">
+                            <img id="AntecedentesPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="TelefonoLaboral" class="control-label"></label>
-                <input asp-for="TelefonoLaboral" class="form-control" />
-                <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CorreoLaboral" class="control-label"></label>
-                <input asp-for="CorreoLaboral" class="form-control" />
-                <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VehiculoId" class="control-label"></label>
-                <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.VehiculoId"></select>
-                <span asp-validation-for="VehiculoId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LicenciaDoc" class="control-label"></label>
-                <input asp-for="LicenciaDoc" class="form-control" />
-                <span asp-validation-for="LicenciaDoc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AntecedentesDoc" class="control-label"></label>
-                <input asp-for="AntecedentesDoc" class="form-control" />
-                <span asp-validation-for="AntecedentesDoc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SolvenciaDoc" class="control-label"></label>
-                <input asp-for="SolvenciaDoc" class="form-control" />
-                <span asp-validation-for="SolvenciaDoc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="IdAlcaldia" class="control-label"></label>
                 <select asp-for="IdAlcaldia" class="form-control" asp-items="ViewBag.IdAlcaldia"></select>
                 <span asp-validation-for="IdAlcaldia" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -104,6 +207,64 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    document.getElementById('FotoFile').addEventListener('change', function (event) {
+        previewImage(event, 'FotoPreview', 'FotoPreviewDiv');
+    });
+    document.getElementById('SolvenciaFile').addEventListener('change', function (event) {
+        previewImage(event, 'SolvenciaPreview', 'SolvenciaPreviewDiv');
+    });
+    document.getElementById('LicenciaFile').addEventListener('change', function (event) {
+        previewImage(event, 'LicenciaPreview', 'LicenciaPreviewDiv');
+    });
+    document.getElementById('AntecedentesFile').addEventListener('change', function (event) {
+        previewImage(event, 'AntecedentesPreview', 'AntecedentesPreviewDiv');
+    });
+
+    function previewImage(event, previewImageId, previewDivId) {
+        const file = event.target.files[0];
+        const preview = document.getElementById(previewDivId);
+        const imagePreview = document.getElementById(previewImageId);
+
+        if (file) {
+            const fileReader = new FileReader();
+
+            fileReader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+
+            fileReader.readAsDataURL(file);
+        } else {
+            imagePreview.src = '#';
+            preview.style.display = 'none';
+        }
+    }
+
+    function resetInputFieldAndPreview(inputFileId, previewImageId) {
+        resetInputField(inputFileId);
+        const previewImage = document.getElementById(previewImageId);
+        const preview = document.getElementById(previewImageId + 'Div');
+        if (previewImage) {
+            previewImage.src = "#";
+            preview.style.display = "none";
+        }
+    }
+
+    function resetInputField(inputFileId) {
+        const inputFile = document.getElementById(inputFileId);
+        if (inputFile) {
+            const tempInputFile = document.createElement("input");
+            tempInputFile.type = "file";
+            tempInputFile.value = "";
+            inputFile.value = tempInputFile.value;
+            tempInputFile.remove();
+        }
+    }
+</script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

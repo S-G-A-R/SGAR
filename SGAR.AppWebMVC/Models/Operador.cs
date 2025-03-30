@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -27,6 +28,7 @@ public partial class Operador
     public string TelefonoLaboral { get; set; } = null!;
 
     public string CorreoLaboral { get; set; } = null!;
+
     [Display(Name = "Vehiculo")]
     public int? VehiculoId { get; set; }
 
@@ -35,6 +37,18 @@ public partial class Operador
     public byte[] AntecedentesDoc { get; set; } = null!;
 
     public byte[] SolvenciaDoc { get; set; } = null!;
+
+    [NotMapped]
+    public IFormFile? SolvenciaFile { get; set; }
+
+    [NotMapped]
+    public IFormFile? LicenciaFile { get; set; }
+
+    [NotMapped]
+    public IFormFile? AntecedentesFile { get; set; }
+
+    [NotMapped]
+    public IFormFile? FotoFile { get; set; }
 
     public string Password { get; set; } = null!;
 

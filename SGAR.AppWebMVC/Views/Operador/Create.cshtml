@@ -8,19 +8,19 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-            <div class="form-group col-4">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group col-4">
-                <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-            </div>
+                <div class="form-group col-4">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group col-4">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
                 <div class="form-group col-4">
                     <label asp-for="TelefonoPersonal" class="control-label"></label>
                     <input asp-for="TelefonoPersonal" class="form-control" />
@@ -29,24 +29,19 @@
             </div>
 
             <div class="row">
-            <div class="form-group col-4">
-                <label asp-for="CorreoPersonal" class="control-label"></label>
-                <input asp-for="CorreoPersonal" class="form-control" />
-                <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
-            </div>
-                <div class="form-group col-4">
+                <div class="form-group col-6">
+                    <label asp-for="CorreoPersonal" class="control-label"></label>
+                    <input asp-for="CorreoPersonal" class="form-control" />
+                    <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
                     <label asp-for="Dui" class="control-label"></label>
                     <input asp-for="Dui" class="form-control" />
                     <span asp-validation-for="Dui" class="text-danger"></span>
                 </div>
-                <div class="form-group col-4">
-                    <label asp-for="Foto" class="control-label"></label>
-                    <input asp-for="Foto" class="form-control" />
-                    <span asp-validation-for="Foto" class="text-danger"></span>
-                </div>
             </div>
-           
-           <div class="row">
+
+            <div class="row">
                 <div class="form-group col-4">
                     <label asp-for="CodigoOperador" class="control-label"></label>
                     <input asp-for="CodigoOperador" class="form-control" />
@@ -82,27 +77,54 @@
             </div>
 
             <div class="row">
-            <div class="form-group col-4">
-                <label asp-for="LicenciaDoc" class="control-label"></label>
-                <input asp-for="LicenciaDoc" class="form-control" />
-                <span asp-validation-for="LicenciaDoc" class="text-danger"></span>
+                <div class="form-group col-5">
+                    <label asp-for="FotoFile" class="control-label">Foto</label>
+                    <input asp-for="FotoFile" type="file" class="form-control" />
+                    <span asp-validation-for="FotoFile" class="text-danger"></span>
+                </div>
+                <div class="col-5">
+                    <div id="fotoPreview" style="display: none;">
+                        <img id="fotoImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                </div>
+                <div class="form-group col-5">
+                    <label asp-for="LicenciaFile" class="control-label">Licencia de Conducir</label>
+                    <input asp-for="LicenciaFile" type="file" class="form-control" />
+                    <span asp-validation-for="LicenciaFile" class="text-danger"></span>
+                </div>
+                <div class="col-5">
+                    <div id="licenciaPreview" style="display: none;">
+                        <img id="licenciaImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-4">
-                <label asp-for="AntecedentesDoc" class="control-label"></label>
-                <input asp-for="AntecedentesDoc" class="form-control" />
-                <span asp-validation-for="AntecedentesDoc" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-5">
+                    <label asp-for="AntecedentesFile" class="control-label">Antecedentes Penales</label>
+                    <input asp-for="AntecedentesFile" type="file" class="form-control" />
+                    <span asp-validation-for="AntecedentesFile" class="text-danger"></span>
+                </div>
+                <div class="col-5">
+                    <div id="antecedentesPreview" style="display: none;">
+                        <img id="antecedentesImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                </div>
+                <div class="form-group col-5">
+                    <label asp-for="SolvenciaFile" class="control-label">Solvencia</label>
+                    <input asp-for="SolvenciaFile" type="file" class="form-control" />
+                    <span asp-validation-for="SolvenciaFile" class="text-danger"></span>
+                </div>
+                <div class="col-5">
+                    <div id="solvenciaPreview" style="display: none;">
+                        <img id="solvenciaImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-4">
-                <label asp-for="SolvenciaDoc" class="control-label"></label>
-                <input asp-for="SolvenciaDoc" class="form-control" />
-                <span asp-validation-for="SolvenciaDoc" class="text-danger"></span>
-            </div>
-            </div>
-            <div class="form-group col-6">
+            <div class="form-group col-5">
                 <label asp-for="IdAlcaldia" class="control-label"></label>
                 <select asp-for="IdAlcaldia" class="form-control" asp-items="ViewBag.IdAlcaldia"></select>
             </div>
-           
+
             <div class="form-group mb-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -114,6 +136,38 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    //Funciones de previsualización para cada archivo.
+    function setupPreview(fileInputId, previewId, imagePreviewId){
+        document.getElementById(fileInputId).addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
+            const imagePreview = document.getElementById(imagePreviewId);
+
+            if (file) {
+                const fileReader = new FileReader();
+
+                fileReader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+
+                fileReader.readAsDataURL(file);
+            } else {
+                imagePreview.src = '#';
+                preview.style.display = 'none';
+            }
+        });
+    }
+
+    setupPreview('FotoFile', 'fotoPreview', 'fotoImagePreview');
+    setupPreview('LicenciaFile', 'licenciaPreview', 'licenciaImagePreview');
+    setupPreview('AntecedentesFile', 'antecedentesPreview', 'antecedentesImagePreview');
+    setupPreview('SolvenciaFile', 'solvenciaPreview', 'solvenciaImagePreview');
+</script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

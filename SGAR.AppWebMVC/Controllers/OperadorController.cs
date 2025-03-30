@@ -54,7 +54,7 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Operador/Create
         public IActionResult Create()
         {
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id");
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio");
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id");
             return View();
         }
@@ -64,19 +64,39 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,TelefonoPersonal,CorreoPersonal,Dui,Foto,Ayudantes,CodigoOperador,TelefonoLaboral,CorreoLaboral,VehiculoId,LicenciaDoc,AntecedentesDoc,SolvenciaDoc,Password,IdAlcaldia")] Operador operador)
+        public async Task<IActionResult> Create(Operador operador)
         {
             if (ModelState.IsValid)
             {
+                if (operador.SolvenciaFile != null)
+                {
+                    operador.SolvenciaDoc = await GenerarByteImage(operador.SolvenciaFile);
+                }
+
+                if (operador.LicenciaFile != null)
+                {
+                    operador.LicenciaDoc = await GenerarByteImage(operador.LicenciaFile);
+                }
+
+                if (operador.AntecedentesFile != null)
+                {
+                    operador.AntecedentesDoc = await GenerarByteImage(operador.AntecedentesFile);
+                }
+
+                if (operador.FotoFile != null)
+                {
+                    operador.Foto = await GenerarByteImage(operador.FotoFile);
+                }
+
                 _context.Add(operador);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id", operador.IdAlcaldia);
+
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
             return View(operador);
         }
-
         // GET: Operador/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -90,7 +110,7 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "Id", operador.IdAlcaldia);
+            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
             return View(operador);
         }
@@ -100,7 +120,7 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (int id, [Bind("Id,Nombre,Apellido,TelefonoPersonal,CorreoPersonal,Dui,Foto,Ayudantes,CodigoOperador,TelefonoLaboral,CorreoLaboral,VehiculoId,LicenciaDoc,AntecedentesDoc,SolvenciaDoc,IdAlcaldia")] Operador operador)
+        public async Task<IActionResult> Edit(int id, Operador operador)
         {
             if (id != operador.Id)
             {
@@ -109,7 +129,7 @@ namespace SGAR.AppWebMVC.Controllers
 
             var operadorUpdate = await _context.Operadores
                 .FirstOrDefaultAsync(o => o.Id == operador.Id);
-             
+
             try
             {
                 operadorUpdate.Nombre = operador.Nombre;
@@ -117,16 +137,33 @@ namespace SGAR.AppWebMVC.Controllers
                 operadorUpdate.TelefonoPersonal = operador.TelefonoPersonal;
                 operadorUpdate.CorreoPersonal = operador.CorreoPersonal;
                 operadorUpdate.Dui = operador.Dui;
-                operadorUpdate.Foto = operador.Foto;
                 operadorUpdate.Ayudantes = operador.Ayudantes;
                 operadorUpdate.CodigoOperador = operador.CodigoOperador;
                 operadorUpdate.CorreoLaboral = operador.CorreoLaboral;
                 operadorUpdate.TelefonoLaboral = operador.CorreoLaboral;
                 operadorUpdate.VehiculoId = operador.VehiculoId;
-                operadorUpdate.LicenciaDoc = operador.LicenciaDoc;
-                operadorUpdate.AntecedentesDoc = operador.AntecedentesDoc;
-                operadorUpdate.SolvenciaDoc = operador.SolvenciaDoc;
                 operadorUpdate.IdAlcaldia = operador.IdAlcaldia;
+
+                var solvenciaAnterior = await _context.Operadores
+                    .Where(s => s.Id == operador.Id)
+                    .Select(s => s.SolvenciaDoc).FirstOrDefaultAsync();
+                operadorUpdate.SolvenciaDoc = await GenerarByteImage(operador.SolvenciaFile, solvenciaAnterior);
+
+                var licenciaAnterior = await _context.Operadores
+                    .Where(s => s.Id == operador.Id)
+                    .Select(s => s.LicenciaDoc).FirstOrDefaultAsync();
+                operadorUpdate.LicenciaDoc = await GenerarByteImage(operador.LicenciaFile, licenciaAnterior);
+
+                var antecendeAnterior = await _context.Operadores
+                    .Where(s => s.Id == operador.Id)
+                    .Select(s => s.AntecedentesDoc).FirstOrDefaultAsync(); // Se corrige la propiedad
+                operadorUpdate.AntecedentesDoc = await GenerarByteImage(operador.AntecedentesFile, antecendeAnterior);
+
+                var fotoAnterior = await _context.Operadores
+                    .Where(s => s.Id == operador.Id)
+                    .Select(s => s.Foto).FirstOrDefaultAsync();
+                operadorUpdate.Foto = await GenerarByteImage(operador.FotoFile, fotoAnterior);
+
                 _context.Update(operadorUpdate);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -142,7 +179,6 @@ namespace SGAR.AppWebMVC.Controllers
                     return View(operador);
                 }
             }
-
         }
 
         // GET: Operador/Delete/5
@@ -178,6 +214,21 @@ namespace SGAR.AppWebMVC.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<byte[]?> GenerarByteImage(IFormFile? file, byte[]? bytesImage = null)
+        {
+            byte[]? bytes = bytesImage;
+            if (file != null && file.Length > 0)
+            {
+                // Construir la ruta del archivo               
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    bytes = memoryStream.ToArray(); // Devuelve los bytes del archivo
+                }
+            }
+            return bytes;
         }
 
         private bool OperadorExists(int id)
