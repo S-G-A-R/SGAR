@@ -6,37 +6,52 @@
 
 <div class="container text-center p-5">
     <div class="row align-items-center">
+
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a asp-action="Calendar" asp-controller="Horario" class="card-link w-50 ">
-                        <i class="bi bi-calendar2-week-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
-                    </a>
-                    <p class="mt-2">Horarios</p>
+            <div class="contenedor-tarjeta">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <a asp-action="Calendar" asp-controller="Horario" class="card-link w-25">
+                            <i class="bi bi-calendar2-week-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                        </a>
+                        <h3>Horarios</h3>
+                    </div>
                 </div>
+                <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+                <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
             </div>
         </div>
 
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a asp-action="Index" asp-controller="Ciudadano" class="card-link w-50 ">
-                        <i class="bi bi-file-earmark-richtext-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
-                    </a>
-                    <p class="mt-2">Informes</p>
+            <div class="contenedor-tarjeta">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <a asp-action="Error" asp-controller="Home" class="card-link w-50 ">
+                            <i class="bi bi-file-earmark-richtext-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                        </a>
+                        <h3>Informes</h3>
+                    </div>
                 </div>
+                <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+                <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
             </div>
         </div>
 
         <div class="col">
-            <div class="card">
+        <div class="contenedor-tarjeta">
+            <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <a asp-action="Index" asp-controller="Ciudadano" class="card-link w-50 ">
-                        <i class="bi bi-geo-alt-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
-                    </a>
-                    <p class="mt-2">Ubicación</p>
+                        <a asp-action="Error" asp-controller="Home" class="card-link w-50 ">
+                            <i class="bi bi-geo-alt-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
+                        </a>
+                        <h3>Ubicación</h3>
                 </div>
             </div>
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
         </div>
+        </div>
+
     </div>
 </div>
+

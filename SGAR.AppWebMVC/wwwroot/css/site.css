@@ -98,3 +98,38 @@ body {
     border-radius: 10px;
     font-weight: bold;
 }
+
+
+/*OREJAS PARA LAS TARJETAS DE MENU CIUDADANO*/
+.contenedor-tarjeta {
+    position: relative;
+    display: inline-block; 
+}
+
+.oreja {
+    position: absolute;
+    width: 30px; /* Ajusta el tamaño de las orejas */
+    height: 30px;
+    display: none;
+}
+
+.oreja-izquierda {
+    top: -25px; /* Ajusta la posición vertical */
+    left: 10px; /* Ajusta la posición horizontal */
+}
+
+.oreja-derecha {
+    top: -25px;
+    right: 10px;
+}
+
+.contenedor-tarjeta:hover .oreja {
+    display: block;
+}
+
+/* Estilo de la tarjeta al pasar el cursor */
+.contenedor-tarjeta:hover .card {
+    border: 3px solid black;
+    border-radius: 10px;
+    font-weight: bold; 
+}
