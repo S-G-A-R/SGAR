@@ -1,10 +1,19 @@
 ﻿@model ErrorViewModel
+
 @{
     ViewData["Title"] = "Error";
 }
 
 <div class="container mt-5 text-center">
-    <img src="/css/errorsgar.jpeg" alt="Página en Construcción" class="img-fluid mb-4" style="max-width: 300px;">
+    <img src="/css/errorsgar.jpeg" alt="Página en Construcción" class="img-fluid mb-4" style="max-width: 260px;">
     <h1 class="mb-3">Lamentamos la molestia</h1>
     <p class="lead">La página/vista aún no está hecha o se encuentra en construcción. Intenta después.</p>
+
+    <div class="d-flex justify-content-center">
+        <div class="contenedor-boton">
+            <button onclick="history.back()" class="boton-mapacheAceptar text-center">Volver</button> @* Boton para volver atras *@
+            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        </div>
+    </div>
 </div>

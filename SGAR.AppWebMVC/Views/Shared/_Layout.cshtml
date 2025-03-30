@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/css/iconsgar.png"> 
     <title>@ViewData["Title"]</title>
     <!--<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -92,7 +93,7 @@
                                 <a class="nav-link text-dark m-2 text-start" asp-area="" asp-controller="Ciudadano" asp-action="Menu"><i class="bi bi-house"></i> Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-route-id="@Convert.ToInt32(User.FindFirst("Id").Value)" asp-area="" asp-controller="Ciudadano" asp-action="Perfil"><i class="bi bi-person-badge-fill"></i>Ver Perfil</a>
+                                <a class="nav-link text-dark btn btn-outline-secondary m-2 text-start" asp-route-id="@Convert.ToInt32(User.FindFirst("Id").Value)" asp-area="" asp-controller="Ciudadano" asp-action="Perfil"><i class="bi bi-person-badge-fill"></i>Ver Perfil</a>
                             </li>
                             <li class="nav-item align-items-end">
                                 <a class="nav-link btn btn-outline-secondary m-2 text-black" asp-area="" asp-controller="Ciudadano" asp-action="CerrarSesion"> <i class="bi bi-arrow-bar-left"></i> Cerrar sesion</a>
@@ -151,8 +152,8 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" asp-controller="Ciudadano" asp-action="Login">Ciudadano</a></li>
-                                <li><a class="dropdown-item" href="#">Operador</a></li>
-                                <li><a class="dropdown-item" href="#">Supervisor</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Error">Operador</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Error">Supervisor</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Alcaldia" asp-action="Login">Alcaldia</a></li>
                             </ul>
