@@ -4,38 +4,166 @@
     ViewData["Title"] = "Iniciar Sesión";
 }
 
-<div class="d-flex justify-content-center">
-    <img src="~/css/sgarlogo.jpeg" width="200" height="200" />
-</div>
+<style>
+    body {
+        background: linear-gradient(to bottom,#666666,#B0B0B0, #d6d6d6, #DCDCDC, #ffffff); /* Gris difuminado a blanco */
+    }
 
+    .form-control {
+        border: 2px solid #ccc !important; /* Borde gris */
+        border-radius: 10px !important; /* Bordes más redondeados */
+        padding-left: 40px; /* Ajuste para dejar espacio suficiente para el icono */
+    }
+
+        .form-control:focus {
+            border-color: #6c757d !important; /* Gris más intenso al enfocar */
+            box-shadow: 0 0 8px rgba(108, 117, 125, 0.5) !important; /* Sombra más sutil */
+        }
+
+    .card {
+        border: 2px solid #ccc !important; /* Borde gris */
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1) !important; /* Sombra más reducida */
+        border-radius: 20px !important; /* Bordes más redondeados para la tarjeta */
+    }
+
+    .input-group-text {
+        border-radius: 10px !important; /* Bordes más redondeados en los íconos */
+    }
+
+    .toggle-password {
+        cursor: pointer;
+        z-index: 10;
+    }
+
+        .toggle-password i {
+            font-size: 0.9rem !important; /* Hacer más pequeño el icono del ojo */
+        }
+
+    /* Nuevos estilos para integrar el icono dentro del campo de entrada */
+    .input-group {
+        position: relative;
+        width: 100%;
+    }
+
+        /* Ajuste de la posición del icono */
+        .input-group .input-group-text {
+            position: relative;
+            top: 50%;
+            margin-right: 20px;
+            transform: translateY(-50%);
+            background: none !important; 
+            border: none !important; 
+            padding-left: 10px;
+            background-color: transparent;
+            border: none;
+            z-index: 10;
+        }
+
+    .input-group-text i {
+        font-size: 18px; /* Ajustar el tamaño del icono */
+        color: #6c757d; /* Color gris del icono */
+    }
+
+    .form-group {
+        position: relative;
+        width: 100%;
+    }
+
+    /* Estilos para las etiquetas fuera del borde */
+    .input-label {
+        position: absolute;
+        top: -10px; /* Ajusta la posición de la etiqueta */
+        left: 10px; /* Ajusta la posición de la etiqueta */
+        font-size: 14px;
+        color: #6c757d; /* Color gris para la etiqueta */
+        background-color: white; /* Fondo blanco para la etiqueta */
+        padding: 0 5px;
+        z-index: 5;
+    }
+
+</style>
 
 <div class="row mb-4">
     <div class="col-md-6 mx-auto">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger form-control is-invalid" id="floatingInputGroup2"></div>
-            <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control border-0 border-bottom border-secondary" placeholder="correo@Alcaldia.sv" />
-                <span asp-validation-for="Correo" class="text-danger" id="floatingInputGroup2"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control border-0 border-bottom border-secondary" placeholder="*****" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="d-flex justify-content-center">
-                <div class="contenedor-boton">
-                    <button type="submit" class="boton-mapacheAceptar text-center">Aceptar</button>
-                    <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
-                    <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+        <div class="card p-3 rounded-4">
+            <div class="card-body">
+                <!-- Logo centrado -->
+                <div class="d-flex justify-content-center mb-3">
+                    <img src="~/css/sgarlogo.jpeg" width="200" height="200" />
                 </div>
+
+
+                <form asp-action="Login">
+                    <!-- Validaciones -->
+                    <div asp-validation-summary="ModelOnly" class="text-danger form-control is-invalid"></div>
+
+                    <!-- Campo de usuario con icono dentro -->
+                    <div class="form-group mb-3 position-relative">
+                        <div class="input-group">
+                            <input asp-for="Correo"
+                                   class="form-control border-start-0 rounded-3 ps-6 pe-4"
+                                   placeholder="correo@Alcaldia.sv"
+                                   autocomplete="email" />
+                            <span class="input-group-text bg-white position-absolute start-0 top-50 translate-middle-y border-end-0">
+                                <i class="bi bi-person"></i>
+                            </span>
+                        </div>
+                        <label for="Correo" class="input-label">Correo</label>
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+
+  
+                    <!-- Campo de contraseña con icono dentro y ojo -->
+                    <div class="form-group mb-4 position-relative">
+                        <div class="input-group">
+                            <input asp-for="Password"
+                                   type="password"
+                                   id="password"
+                                   class="form-control border-start-0 rounded-3 ps-6 pe-4"
+                                   placeholder="*****"
+                                   autocomplete="current-password" />
+                            <span class="input-group-text bg-white position-absolute start-0 top-50 translate-middle-y border-end-0">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                        </div>
+                        <label for="password" class="input-label">Contraseña</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+
+
+                    <!-- Botón de login con orejas -->
+                    <div class="d-flex justify-content-center">
+                        <div class="contenedor-boton">
+                            <button type="submit" class="boton-mapacheAceptar text-center">Aceptar</button>
+                            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+                            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
-    
 </div>
+
+<!-- Script para alternar la visibilidad de la contraseña -->
+<script>
+       function togglePassword() {
+        var passwordField = document.getElementById('password');
+        var toggleIcon = document.getElementById('togglePasswordIcon');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        }
+    }
+
+</script>
+
 <div class="d-flex justify-content-center">
     <div class="mx-auto">
         <p>¿No tienes cuenta? <a asp-controller="Ciudadano" asp-action="Create">Registrate.</a></p>
