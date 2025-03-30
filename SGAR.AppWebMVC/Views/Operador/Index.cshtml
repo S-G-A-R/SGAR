@@ -55,59 +55,49 @@
             <thead class="table-dark">
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dui)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CodigoOperador)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TelefonoLaboral)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vehiculo)
-            </th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dui)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodigoOperador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TelefonoLaboral)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdAlcaldiaNavigation.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vehiculo.Id)
-            </td>
-            <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-            </td>
-        </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model) {
+
+
+             <tr>
+                <td>
+                    @if(item.Foto != null && item.Foto.Length > 0){
+
+                        string base64image = Convert.ToBase64String(item.Foto);
+                        string imageUrl = $"data:image/png;base64,{base64image}";
+                        <div id="preview">
+                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 50px; max-height:50px;"/>
+                        </div>
+                    }
+                    else { 
+                        <div id="preview" style="display: none;">
+                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 50px; max-height:50px;" />
+                        </div>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoOperador)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                </td>
+            </tr>
 }
     </tbody>
 </table>

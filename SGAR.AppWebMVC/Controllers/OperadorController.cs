@@ -66,7 +66,7 @@ namespace SGAR.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Operador operador)
         {
-            if (ModelState.IsValid)
+            try
             {
                 if (operador.SolvenciaFile != null)
                 {
@@ -92,10 +92,15 @@ namespace SGAR.AppWebMVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch
+            {
+                ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
+                ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
+                return View(operador);
+            }
+            
 
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
-            return View(operador);
+            
         }
         // GET: Operador/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -140,7 +145,7 @@ namespace SGAR.AppWebMVC.Controllers
                 operadorUpdate.Ayudantes = operador.Ayudantes;
                 operadorUpdate.CodigoOperador = operador.CodigoOperador;
                 operadorUpdate.CorreoLaboral = operador.CorreoLaboral;
-                operadorUpdate.TelefonoLaboral = operador.CorreoLaboral;
+                operadorUpdate.TelefonoLaboral = operador.TelefonoLaboral;
                 operadorUpdate.VehiculoId = operador.VehiculoId;
                 operadorUpdate.IdAlcaldia = operador.IdAlcaldia;
 
