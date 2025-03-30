@@ -1,58 +1,46 @@
 ﻿@model SGAR.AppWebMVC.Models.Horario
 @{
     ViewData["Title"] = "Crear Horario";
-    Layout = null;
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-header text-center">
-            <h5> Crear Horario</h5>
+            <h5>Crear Horario</h5>
         </div>
         <div class="card-body text-center">
             <form asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <!-- Título (nombre del operador) -->
-                <div class="form-group">
-                    <label>Operador</label>
-                    <input asp-for="IdOperador" class="form-control" placeholder="ID Operador" />
-                    <span asp-validation-for="IdOperador" class="text-danger"></span>
-                </div>
-
-                <!-- Turno -->
-                <div class="form-group">
-                    <label>Turno</label>
-                    <input asp-for="Turno" class="form-control" placeholder="Turno" />
-                    <span asp-validation-for="Turno" class="text-danger"></span>
-                </div>
-
-                <!-- Día de la semana (como un campo de días binarios) -->
-                <div class="form-group">
-                    <label>Días</label>
-                    <input asp-for="Dia" class="form-control" placeholder="Formato binario (Ej: 1001011)" />
-                    <span asp-validation-for="Dia" class="text-danger"></span>
-                </div>
-
-                <!-- Hora de entrada -->
                 <div class="form-group">
                     <label>Hora de Entrada</label>
-                    <input asp-for="HoraEntrada" class="form-control" placeholder="Hora de Entrada" type="time" />
+                    <input asp-for="HoraEntrada" type="time" class="form-control" />
                     <span asp-validation-for="HoraEntrada" class="text-danger"></span>
                 </div>
 
-                <!-- Hora de salida -->
                 <div class="form-group">
                     <label>Hora de Salida</label>
-                    <input asp-for="HoraSalida" class="form-control" placeholder="Hora de Salida" type="time" />
+                    <input asp-for="HoraSalida" type="time" class="form-control" />
                     <span asp-validation-for="HoraSalida" class="text-danger"></span>
                 </div>
 
-                <div class="card-footer">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+                <div class="form-group">
+                    <label>Días de la Semana</label>
+                    <div>
+                        <input type="checkbox" name="DiasSeleccionados" value="Lunes" /> Lunes
+                        <input type="checkbox" name="DiasSeleccionados" value="Martes" /> Martes
+                        <input type="checkbox" name="DiasSeleccionados" value="Miércoles" /> Miércoles
+                        <input type="checkbox" name="DiasSeleccionados" value="Jueves" /> Jueves
+                        <input type="checkbox" name="DiasSeleccionados" value="Viernes" /> Viernes
+                        <input type="checkbox" name="DiasSeleccionados" value="Sábado" /> Sábado
+                        <input type="checkbox" name="DiasSeleccionados" value="Domingo" /> Domingo
                     </div>
+                   
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
                 </div>
             </form>
         </div>

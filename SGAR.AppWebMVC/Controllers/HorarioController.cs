@@ -63,13 +63,18 @@ namespace SGAR.AppWebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Convierte los días seleccionados a formato binario
                 horario.Dia = ConvertirDiasABinario(DiasSeleccionados);
+
+                // Agrega el horario al contexto y guarda los cambios
                 _context.Add(horario);
                 await _context.SaveChangesAsync();
+
+                // Muestra un mensaje de éxito y redirige a la vista de Index
                 TempData["AlertMessage"] = "Horario creado exitosamente!!!";
                 return RedirectToAction("Index");
             }
-            return View(horario);
+            return View(horario); // Si la validación falla, vuelve a la vista de creación con el modelo.
         }
 
         // GET: Horario/Edit/5
@@ -170,7 +175,10 @@ namespace SGAR.AppWebMVC.Controllers
 
         private string ConvertirDiasABinario(List<string> dias)
         {
+            // Inicializa un arreglo de 7 días, todos a "0" (sin seleccionar)
             string[] semana = new string[] { "0", "0", "0", "0", "0", "0", "0" };
+
+            // Recorre los días seleccionados y marca "1" en la posición correspondiente
             foreach (var dia in dias)
             {
                 switch (dia)
@@ -184,6 +192,8 @@ namespace SGAR.AppWebMVC.Controllers
                     case "Domingo": semana[6] = "1"; break;
                 }
             }
+
+            // Devuelve la cadena binaria resultante
             return string.Join("", semana);
         }
 
@@ -194,17 +204,29 @@ namespace SGAR.AppWebMVC.Controllers
 
             foreach (Horario horario in horarios)
             {
-                var item = new
+                var dias = horario.Dia; // Esto es un string como "1001011", donde cada 1 indica un día activo
+                for (int i = 0; i < dias.Length; i++)
                 {
-                    id = horario.Id,
-                    title = $"Operador {horario.IdOperador} - Turno {horario.Turno}",
-                    start = DateTime.Today.Add(horario.HoraEntrada.ToTimeSpan()).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    end = DateTime.Today.Add(horario.HoraSalida.ToTimeSpan()).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    dias = horario.Dia // Aquí se almacenan los días en formato "1001011"
-                };
-                items.Add(item);
+                    if (dias[i] == '1') // Si el día está activo, lo agregamos como evento
+                    {
+                        // Calculamos la fecha para cada día activo (agregando los días de la semana al día de hoy)
+                        var fechaEvento = DateTime.Today.AddDays(i); // Agrega el índice al día actual
+
+                        // Creamos el evento con la fecha y la hora de entrada y salida
+                        var item = new
+                        {
+                            id = horario.Id,
+                            title = $"Operador {horario.IdOperador} - Turno {horario.Turno}",
+                            start = fechaEvento.Add(horario.HoraEntrada.ToTimeSpan()).ToString("yyyy-MM-ddTHH:mm:ss"),
+                            end = fechaEvento.Add(horario.HoraSalida.ToTimeSpan()).ToString("yyyy-MM-ddTHH:mm:ss"),
+                            dias = dias[i] // Aquí se almacena el día activo
+                        };
+                        items.Add(item);
+                    }
+                }
             }
 
+            // Convertimos los datos a formato JSON y lo pasamos a la vista
             ViewBag.Horarios = JsonConvert.SerializeObject(items);
             return View();
         }
