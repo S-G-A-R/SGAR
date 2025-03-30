@@ -55,29 +55,56 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 <script>
-    $("#departamentoId").change(function () {
+    // Este código utiliza jQuery para seleccionar el elemento HTML con el id "departamentoId".
+    // .change(function () { ... }); adjunta un manejador de eventos a este elemento.
+    // El manejador de eventos se ejecuta cada vez que el valor del elemento "departamentoId" cambia.
+   $("#departamentoId").change(function () {
+        // Llama a la función getMunicipiosFromDepartamentoId cada vez que el valor del elemento "departamentoId" cambia.
         getMunicipiosFromDepartamentoId();
-    })
 
+    });
+    // Define una función llamada getMunicipiosFromDepartamentoId. Esta función se encarga de obtener los municipios correspondientes al departamento seleccionado.
     var getMunicipiosFromDepartamentoId = function () {
+        // Utiliza la función $.ajax de jQuery para realizar una solicitud AJAX al servidor.
         $.ajax({
+            // Url.Action("GetMunicipiosFromDepartamentoId", "Zona") es una sintaxis de Razor (ASP.NET MVC) que genera la URL correcta para la acción GetMunicipiosFromDepartamentoId en el controlador Zona.
+            // Esto asegura que la URL sea correcta incluso si la aplicación se implementa en un subdirectorio.
+            // Esta URL es el punto final al que se enviará la solicitud AJAX.
             url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Zona")',
-            type: 'GET',
-            data: {
-                departamentoId: $('#departamentoId').val(),
-            },
-            success: function (data) {
-                $('#municipioId').find('option').remove()
-                $('#municipioId').append('<option value="0">SELECCIONAR</option>')
-                $(data).each(
-                    function (i, item) {
-                        $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
-                    }
-                )
-            }
-        })
-    }
 
-  
+            // Especifica que la solicitud HTTP es de tipo GET. Esto significa que los datos se enviarán como parámetros en la URL.
+            type: 'GET',
+
+            // data es un objeto que contiene los datos que se enviarán al servidor.
+            data: {
+                // departamentoId: $('#departamentoId').val() obtiene el valor seleccionado del elemento HTML con el id "departamentoId" y lo envía como un parámetro llamado "departamentoId".
+                departamentoId: $('#departamentoId').val(),  
+            },
+            // success es una función de devolución de llamada que se ejecuta si la solicitud AJAX es exitosa.
+            // El parámetro data contiene los datos devueltos por el servidor (en este caso, una lista de municipios en formato JSON).
+            success: function (data) {
+                // Elimina todas las opciones (elementos <option>) actuales del elemento HTML con el id "municipioId".
+                // Esto limpia el control desplegable de municipios antes de agregar las nuevas opciones.
+                $('#municipioId').find('option').remove();
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "municipioId".
+                // Esto asegura que el usuario tenga una opción predeterminada para seleccionar.
+                $('#municipioId').append('<option value="0">SELECCIONAR</option>');
+                // Itera a través de los datos recibidos (la lista de municipios) utilizando la función each de jQuery.
+                $(data).each(
+                    // Función que se ejecuta para cada elemento en la lista.
+                    // i es el índice del elemento actual en la lista.
+                    // item es el objeto municipio actual.
+                    function (i, item) {
+                        // Agrega una nueva opción al elemento HTML con el id "municipioId" para cada municipio en la lista.
+                        // El valor de la opción (value) es el id del municipio.
+                        // El texto de la opción es el nombre del municipio.
+                        $('#municipioId').append('<option value="' + item.id + '">' + item.nombre + '</option>');    
+                    }
+                );
+            }
+        });
+    };
+
+
 </script>
 }

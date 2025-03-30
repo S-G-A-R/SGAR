@@ -70,77 +70,124 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+<script>
+    // Esta línea agrega un event listener al elemento HTML con el id "departamentoId".
+    // El evento "change" se dispara cuando el valor del elemento cambia (por ejemplo, cuando se selecciona una opción diferente en un dropdown).
     $("#departamentoId").change(function () {
+        // Cuando el evento "change" se dispara, se llama a la función getMunicipiosFromDepartamentoId().
         getMunicipiosFromDepartamentoId();
     })
+
+    // Similar a lo anterior, esta línea agrega un event listener al elemento HTML con el id "municipioId".
     $("#municipioId").change(function () {
+        // Cuando el evento "change" se dispara, se llama a la función getDistritosFromMunicipioId().
         getDistritosFromMunicipioId();
     })
+
+    // Similar a lo anterior, esta línea agrega un event listener al elemento HTML con el id "distritos".
     $("#distritos").change(function () {
+        // Cuando el evento "change" se dispara, se llama a la función getZonasFromDistritoId().
         getZonasFromDistritoId();
     })
 
+    // Definición de la función getMunicipiosFromDepartamentoId().
     var getMunicipiosFromDepartamentoId = function () {
+        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
         $.ajax({
+            // Especifica la URL a la que se enviará la solicitud. Url.Action() es una función de Razor que genera la URL para la acción GetMunicipiosFromDepartamentoId del controlador Ciudadano.
             url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Ciudadano")',
+            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
             type: 'GET',
+            // Envía el valor seleccionado del elemento HTML con el id "departamentoId" como parámetro "departamentoId" en la solicitud.
             data: {
                 departamentoId: $('#departamentoId').val(),
             },
+            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
             success: function (data) {
+                // Elimina todas las opciones existentes del elemento HTML con el id "municipioId".
                 $('#municipioId').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "municipioId".
                 $('#municipioId').append('<option value="0">SELECCIONAR</option>')
+                // Elimina todas las opciones existentes del elemento HTML con el id "distritos".
                 $('#distritos').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "distritos".
                 $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
                 $('#zonas').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
                 $('#zonas').append('<option value="0">SELECCIONAR</option>')
+                // Itera a través de los elementos de la respuesta JSON (data).
                 $(data).each(
+                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "municipioId".
                     function (i, item) {
-                        $('#municipioId').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                        $('#municipioId').append('<option value="' + item.id + '">' + item.nombre + '</option>')
                     }
                 )
             }
         })
     }
 
+    // Definición de la función getDistritosFromMunicipioId().
     var getDistritosFromMunicipioId = function () {
+        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
         $.ajax({
+            // Especifica la URL a la que se enviará la solicitud. @Url.Action() es una función de Razor que genera la URL para la acción GetDistritosFromMunicipioId del controlador Ciudadano.
             url: '@Url.Action("GetDistritosFromMunicipioId", "Ciudadano")',
+            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
             type: 'GET',
+            // Envía el valor seleccionado del elemento HTML con el id "municipioId" como parámetro "municipioId" en la solicitud.
             data: {
                 municipioId: $('#municipioId').val(),
+
             },
+            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
             success: function (data) {
+                // Elimina todas las opciones existentes del elemento HTML con el id "distritos".
                 $('#distritos').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "distritos".
                 $('#distritos').append('<option value="0">SELECCIONAR</option>')
+                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
                 $('#zonas').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
                 $('#zonas').append('<option value="0">SELECCIONAR</option>')
+                // Itera a través de los elementos de la respuesta JSON (data).
                 $(data).each(
+                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "distritos".
                     function (i, item) {
-                        $('#distritos').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                        $('#distritos').append('<option value="' + item.id + '">' + item.nombre + '</option>')
                     }
                 )
             }
         })
     }
+
+    // Definición de la función getZonasFromDistritoId().
     var getZonasFromDistritoId = function () {
+        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
         $.ajax({
+            // Especifica la URL a la que se enviará la solicitud. Url.Action() es una función de Razor que genera la URL para la acción GetZonasFromDistritoId del controlador Ciudadano.
             url: '@Url.Action("GetZonasFromDistritoId", "Ciudadano")',
+            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
             type: 'GET',
+            // Envía el valor seleccionado del elemento HTML con el id "distritos" como parámetro "distritoId" en la solicitud.
             data: {
                 distritoId: $('#distritos').val(),
             },
+            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
             success: function (data) {
+                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
                 $('#zonas').find('option').remove()
+                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
                 $('#zonas').append('<option value="0">SELECCIONAR</option>')
+                // Itera a través de los elementos de la respuesta JSON (data).
                 $(data).each(
-                    function (i, item) {
-                        $('#zonas').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
+                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "zonas".
+                    function (i, item) { 
+                        $('#zonas').append('<option value="' + item.id + '">' + item.nombre + '</option>')
                     }
                 )
             }
         })
-        }
-    </script>
+    }
+</script>
 }

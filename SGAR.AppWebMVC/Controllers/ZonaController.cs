@@ -101,27 +101,23 @@ namespace SGAR.AppWebMVC.Controllers
             try
             {
                 zona.IdAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.IdMunicipio == zona.IdAlcaldia).Id;
-                if (ModelState.IsValid)
-                {
-                    _context.Add(zona);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+
+                _context.Add(zona);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
             }
             catch
             {
-
-                return RedirectToAction(nameof(Index));
+                List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+                List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+                var departamentos = _context.Departamentos.ToList();
+                departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+                ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+                ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+                ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+                return View(zona);
             }
-            List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
-            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
-            var departamentos = _context.Departamentos.ToList();
-            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
-            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
-            ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
-            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
-            return View(zona);
-
         }
 
         // GET: Zona/Edit/5
@@ -168,38 +164,26 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-
-            
-
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
 
-                    zona.IdAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.IdMunicipio == zona.IdAlcaldia).Id;
-                    _context.Update(zona);
-                    await _context.SaveChangesAsync();
-                }
-                catch 
-                {
-                    if (!ZonaExists(zona.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                zona.IdAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.IdMunicipio == zona.IdAlcaldia).Id;
+                _context.Update(zona);
+                await _context.SaveChangesAsync();
             }
-            List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
-            List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
-            var departamentos = _context.Departamentos.ToList();
-            departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
-            ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
-            ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
-            ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+            catch
+            {
+
+                List<Distrito> distritos = [new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 }];
+                List<Municipio> municipios = [new Municipio { Nombre = "SELECCIONAR", Id = 0, IdDepartamento = 0 }];
+                var departamentos = _context.Departamentos.ToList();
+                departamentos.Add(new Departamento { Nombre = "SELECCIONAR", Id = 0 });
+                ViewData["MunicipioId"] = new SelectList(municipios, "Id", "Nombre", 0);
+                ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+                ViewData["DepartamentoId"] = new SelectList(departamentos, "Id", "Nombre", 0);
+                return View(zona);
+
+            }
             return View(zona);
         }
 
