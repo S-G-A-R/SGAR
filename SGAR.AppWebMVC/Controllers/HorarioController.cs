@@ -49,8 +49,12 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Horario/Create
         public IActionResult Create()
         {
-            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id");
-            ViewData["IdZona"] = new SelectList(_context.Zonas, "Id", "Nombre");
+            List<Zona> zonas = [new Zona { Nombre = "SELECCIONAR", Id = 0, IdDistrito = 0, IdAlcaldia = 0 }];
+            var thisAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+            var distritos = _context.Distritos.Where(s=> s.IdMunicipio == thisAlcaldia.IdMunicipio).ToList();
+            distritos.Add(new Distrito { Nombre = "SELECCIONAR", Id = 0, IdMunicipio = 0 });
+            ViewData["DistritoId"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", 0);
             return View();
         }
 
@@ -60,12 +64,11 @@ namespace SGAR.AppWebMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Horario horario, List<string> DiasSeleccionados)
-        {
-            if (ModelState.IsValid)
+        {   
+            try
             {
                 // Convierte los días seleccionados a formato binario
                 horario.Dia = ConvertirDiasABinario(DiasSeleccionados);
-
                 // Agrega el horario al contexto y guarda los cambios
                 _context.Add(horario);
                 await _context.SaveChangesAsync();
@@ -74,7 +77,11 @@ namespace SGAR.AppWebMVC.Controllers
                 TempData["AlertMessage"] = "Horario creado exitosamente!!!";
                 return RedirectToAction("Index");
             }
-            return View(horario); // Si la validación falla, vuelve a la vista de creación con el modelo.
+            catch
+            {
+                return RedirectToAction(nameof(Index)); // Si la validación falla, vuelve a la vista de creación con el modelo.
+            }
+            
         }
 
         // GET: Horario/Edit/5
