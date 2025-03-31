@@ -36,7 +36,7 @@ public partial class Operador
     [Required(ErrorMessage = "La Licencia de Conducir es obligatoria.")]
     public byte[] LicenciaDoc { get; set; } = null!;
     [Display(Name = "Antecedentes Penales")]
-    [Required(ErrorMessage = "El Correo Laboral sob obligatorios.")]
+    [Required(ErrorMessage = "El Correo Laboral son obligatorios.")]
     public byte[] AntecedentesDoc { get; set; } = null!;
     [Display(Name = "Solvencia PNC")]
     [Required(ErrorMessage = "La Solvencia es obligatoria.")]
