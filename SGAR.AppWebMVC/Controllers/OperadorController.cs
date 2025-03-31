@@ -323,6 +323,12 @@ namespace SGAR.AppWebMVC.Controllers
             var operador = await _context.Operadores.FindAsync(id);
             if (operador != null)
             {
+                var horarios = await _context.Horarios.Where(s=>s.IdOperador == operador.Id).ToListAsync();
+                foreach (var horario in horarios)
+                {
+                    _context.Horarios.Remove(horario);
+                    await _context.SaveChangesAsync();
+                }
                 _context.Operadores.Remove(operador);
             }
 
