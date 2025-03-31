@@ -1,0 +1,103 @@
+﻿@model SGAR.AppWebMVC.Models.Vehiculo
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Vehiculo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="IdMarca" class="control-label"></label>
+                <select asp-for="IdMarca" class="form-control" asp-items="ViewBag.IdMarca"></select>
+                <span asp-validation-for="IdMarca" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Placa" class="control-label"></label>
+                <input asp-for="Placa" class="form-control" />
+                <span asp-validation-for="Placa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Codigo" class="control-label"></label>
+                <input asp-for="Codigo" class="form-control" />
+                <span asp-validation-for="Codigo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdTipoVehiculo" class="control-label"></label>
+                <select asp-for="IdTipoVehiculo" class="form-control" asp-items="ViewBag.IdTipoVehiculo"></select>
+                <span asp-validation-for="IdTipoVehiculo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mecanico" class="control-label"></label>
+                <input asp-for="Mecanico" class="form-control" />
+                <span asp-validation-for="Mecanico" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Taller" class="control-label"></label>
+                <input asp-for="Taller" class="form-control" />
+                <span asp-validation-for="Taller" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOperador" class="control-label"></label>
+                <select asp-for="IdOperador" class="form-control" asp-items="ViewBag.IdOperador"></select>
+                <span asp-validation-for="IdOperador" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-control" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="file" class="control-label">Imagen</label>
+                    @*  <input asp-for="ImagenRuta" id="productImage" type="hidden" /> *@
+                    <div class="input-group">
+                        <input type="file" id="imageFile" name="file" class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('imageFile','imagePreview')">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (Model.Foto != null && Model.Foto.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(Model.Foto);
+                        string imageUrl = $"data:image/png;base64,{base64Image}";
+
+                        <div id="preview">
+                            <img id="imagePreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 100px; max-height: 100px;">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="preview" style="display: none;">
+                            <img id="imagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 100px; max-height: 100px;">
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
