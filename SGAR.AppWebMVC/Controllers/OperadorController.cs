@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SGAR.AppWebMVC.Models;
 
 namespace SGAR.AppWebMVC.Controllers
 {
+    [Authorize(Roles = "Alcaldia, Operador")]
     public class OperadorController : Controller
     {
         private readonly SgarDbContext _context;
@@ -20,6 +22,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Operador
+        [Authorize(Roles = "Alcaldia")]
         public async Task<IActionResult> Index(Operador operador, int topRegistro = 10)
         {
             var query = _context.Operadores.AsQueryable();
@@ -30,6 +33,8 @@ namespace SGAR.AppWebMVC.Controllers
             if (topRegistro > 0)
                 query = query.Take(topRegistro);
             query = query.OrderByDescending(s => s.Id);
+            if (!(User.FindFirst("Id").Value == "1"))
+                query = query.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value));
             return View(await query.ToListAsync());
         }
         // GET: Operador/Details/5
@@ -74,7 +79,6 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Operador/Create
         public IActionResult Create()
         {
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio");
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id");
             return View(new Operador());
         }
@@ -108,7 +112,7 @@ namespace SGAR.AppWebMVC.Controllers
                 {
                     operador.Foto = await GenerarByteImage(operador.FotoFile);
                 }
-
+                operador.IdAlcaldia = Convert.ToInt32(User.FindFirst("Id").Value);
 
                 _context.Add(operador);
                 await _context.SaveChangesAsync();
@@ -126,7 +130,6 @@ namespace SGAR.AppWebMVC.Controllers
             }
             catch
             {
-                ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
                 ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
                 
                 tipos.Add(1, "Personal");
@@ -170,7 +173,6 @@ namespace SGAR.AppWebMVC.Controllers
                 tipos.Add(2, "Laboral");
                 ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             }
-            ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
             return View(operador);
         }
@@ -202,7 +204,6 @@ namespace SGAR.AppWebMVC.Controllers
                 operadorUpdate.CorreoLaboral = operador.CorreoLaboral;
                 operadorUpdate.TelefonoLaboral = operador.TelefonoLaboral;
                 operadorUpdate.VehiculoId = operador.VehiculoId;
-                operadorUpdate.IdAlcaldia = operador.IdAlcaldia;
 
                 var solvenciaAnterior = await _context.Operadores
                     .Where(s => s.Id == operador.Id)

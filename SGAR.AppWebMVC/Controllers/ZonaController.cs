@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SGAR.AppWebMVC.Models;
 
 namespace SGAR.AppWebMVC.Controllers
 {
+    [Authorize(Policy = "Admin")]
     public class ZonaController : Controller
     {
         private readonly SgarDbContext _context;

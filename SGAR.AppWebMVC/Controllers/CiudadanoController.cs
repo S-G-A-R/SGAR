@@ -267,6 +267,8 @@ namespace SGAR.AppWebMVC.Controllers
 
         // Comentario que indica que esta acción responde a solicitudes HTTP GET y muestra el formulario para editar el perfil de un ciudadano específico.
         // GET: Ciudadano/Edit/5 
+        // Este atributo restringe el acceso a la acción a usuarios que tengan el rol "Ciudadano".
+        [Authorize(Roles = "Ciudadano")]
         // Definición de la acción Perfil, que es asíncrona y devuelve un IActionResult.
         public async Task<IActionResult> Perfil(int? id) 
         {
@@ -295,6 +297,8 @@ namespace SGAR.AppWebMVC.Controllers
             return View(datosCiudadano); 
         }
 
+        // Este atributo restringe el acceso a la acción a usuarios que tengan el rol "Ciudadano".
+        [Authorize(Roles = "Ciudadano")]
         // Definición de la acción Edit, que es asíncrona y devuelve un IActionResult.
         public async Task<IActionResult> Edit(int? id) 
         {
@@ -347,6 +351,8 @@ namespace SGAR.AppWebMVC.Controllers
         [HttpPost]
         // Atributo que protege contra ataques de falsificación de solicitudes entre sitios (CSRF).
         [ValidateAntiForgeryToken]
+        // Este atributo restringe el acceso a la acción a usuarios que tengan el rol "Ciudadano".
+        [Authorize(Roles = "Ciudadano")]
         // Definición de la acción Edit, que es asíncrona y devuelve un IActionResult.
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Correo,ZonaId")] Ciudadano ciudadano) 
         {
@@ -422,6 +428,8 @@ namespace SGAR.AppWebMVC.Controllers
         [HttpPost]
         // Atributo que protege contra ataques de falsificación de solicitudes entre sitios (CSRF).
         [ValidateAntiForgeryToken]
+        // Este atributo restringe el acceso a la acción a usuarios que tengan el rol "Ciudadano".
+        [Authorize(Roles = "Ciudadano")]
         // Definición de la acción Delete, que es asíncrona y devuelve un IActionResult.
         public async Task<IActionResult> Delete(int id) 
         {
