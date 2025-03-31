@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,9 +44,28 @@ namespace SGAR.AppWebMVC.Controllers
                 .Include(o => o.IdAlcaldiaNavigation)
                 .Include(o => o.Vehiculo)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var referentes =  _context.ReferentesOperadores
+                .Where(s => s.IdOperador == operador.Id).ToList();
+
+            operador.ReferentesOperador = referentes;
+
+            var tipos = new SortedList<int, string>();
             if (operador == null)
             {
                 return NotFound();
+            }
+            if (operador.ReferentesOperador != null)
+            {
+                int numItem = 1;
+                foreach (var item in operador.ReferentesOperador)
+                {
+                    item.NumItem = numItem;
+                    numItem++;
+                }
+                tipos.Add(1, "Personal");
+                tipos.Add(2, "Laboral");
+                ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             }
 
             return View(operador);
@@ -56,7 +76,7 @@ namespace SGAR.AppWebMVC.Controllers
         {
             ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio");
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id");
-            return View();
+            return View(new Operador());
         }
 
         // POST: Operador/Create
@@ -66,6 +86,7 @@ namespace SGAR.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Operador operador)
         {
+            var tipos = new SortedList<int, string>();
             try
             {
                 if (operador.SolvenciaFile != null)
@@ -88,19 +109,34 @@ namespace SGAR.AppWebMVC.Controllers
                     operador.Foto = await GenerarByteImage(operador.FotoFile);
                 }
 
+
                 _context.Add(operador);
                 await _context.SaveChangesAsync();
+
+                var operadorId = _context.Operadores.FirstOrDefault(s => s.CodigoOperador == operador.CodigoOperador).Id;
+
+                foreach (var item in operador.ReferentesOperador)
+                {
+                    item.IdOperador = operadorId;
+                    _context.ReferentesOperadores.Add(item);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
                 ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
                 ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
+                
+                tipos.Add(1, "Personal");
+                tipos.Add(2, "Laboral");
+                ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
                 return View(operador);
             }
-            
 
-            
+
+
         }
         // GET: Operador/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -111,9 +147,28 @@ namespace SGAR.AppWebMVC.Controllers
             }
 
             var operador = await _context.Operadores.FindAsync(id);
+
+            var referentes = _context.ReferentesOperadores
+                .Where(s => s.IdOperador == operador.Id).ToList();
+
+            operador.ReferentesOperador = referentes;
+
+            var tipos = new SortedList<int, string>();
             if (operador == null)
             {
                 return NotFound();
+            }
+            if (operador.ReferentesOperador != null)
+            {
+                int numItem = 1;
+                foreach (var item in operador.ReferentesOperador)
+                {
+                    item.NumItem = numItem;
+                    numItem++;
+                }
+                tipos.Add(1, "Personal");
+                tipos.Add(2, "Laboral");
+                ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             }
             ViewData["IdAlcaldia"] = new SelectList(_context.Alcaldias, "Id", "IdMunicipio", operador.IdAlcaldia);
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
@@ -169,8 +224,42 @@ namespace SGAR.AppWebMVC.Controllers
                     .Select(s => s.Foto).FirstOrDefaultAsync();
                 operadorUpdate.Foto = await GenerarByteImage(operador.FotoFile, fotoAnterior);
 
+                var listaIds = operador.ReferentesOperador.Select(s => s.Id).ToList();
+                var referentes = await _context.ReferentesOperadores.Where(s=>s.IdOperador == operador.Id).Select(s=>s.Id).ToListAsync();
                 _context.Update(operadorUpdate);
                 await _context.SaveChangesAsync();
+
+                var referentDel = new List<ReferentesOperador>();
+                foreach(var referente in referentes)
+                {
+                    var existe = listaIds.FirstOrDefault(s => s == referente);
+                    if (!(existe > 0))
+                    {
+                        var find = await _context.ReferentesOperadores.FirstOrDefaultAsync(s => s.Id == referente);
+                        if (find != null)
+                            referentDel.Add(find);
+                    }
+                    else
+                    {
+                        var fetch = await _context.ReferentesOperadores.FirstOrDefaultAsync(s => s.Id == referente);
+                        var refe = operador.ReferentesOperador.FirstOrDefault(s => s.Id == referente);
+
+                        fetch.Parentesco = refe.Parentesco;
+                        fetch.Tipo = refe.Tipo;
+                        fetch.Nombre = refe.Nombre;
+                        _context.ReferentesOperadores.Update(fetch);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                if(referentDel.Count > 0)
+                {
+                    foreach(var item in referentDel) 
+                        _context.ReferentesOperadores.Remove(item);
+                    await _context.SaveChangesAsync();
+                }
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -198,9 +287,28 @@ namespace SGAR.AppWebMVC.Controllers
                 .Include(o => o.IdAlcaldiaNavigation)
                 .Include(o => o.Vehiculo)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var referentes = _context.ReferentesOperadores
+                .Where(s => s.IdOperador == operador.Id).ToList();
+
+            operador.ReferentesOperador = referentes;
+
+            var tipos = new SortedList<int, string>();
             if (operador == null)
             {
                 return NotFound();
+            }
+            if (operador.ReferentesOperador != null)
+            {
+                int numItem = 1;
+                foreach (var item in operador.ReferentesOperador)
+                {
+                    item.NumItem = numItem;
+                    numItem++;
+                }
+                tipos.Add(1, "Personal");
+                tipos.Add(2, "Laboral");
+                ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             }
 
             return View(operador);
@@ -239,6 +347,50 @@ namespace SGAR.AppWebMVC.Controllers
         private bool OperadorExists(int id)
         {
             return _context.Operadores.Any(e => e.Id == id);
+        }
+
+        public IActionResult AddReferenteOp(Operador operador)
+        {
+            var tipos = new SortedList<int, string>();
+            
+            if (operador.ReferentesOperador == null)
+                operador.ReferentesOperador = new List<ReferentesOperador>();
+            operador.ReferentesOperador.Add(new ReferentesOperador
+            {
+                Nombre = "",
+                NumItem = operador.ReferentesOperador.Count + 1,
+                Parentesco = "",
+                Tipo = 1
+            });
+
+            tipos.Add(1, "Personal");
+            tipos.Add(2, "Laboral");
+            ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
+            
+            return PartialView("_ReferentesOperador", operador.ReferentesOperador);
+        }
+
+        public IActionResult DeleteReferenteOp(int id, Operador operador)
+        {
+            var tipos = new SortedList<int, string>();
+            int num = id;
+            if (operador.ReferentesOperador.Count == 0)
+                operador.ReferentesOperador = new List<ReferentesOperador>();
+            var referenteDel = operador.ReferentesOperador.FirstOrDefault(s => s.NumItem == num);
+            if (referenteDel != null)
+            {
+                operador.ReferentesOperador.Remove(referenteDel);
+                int numItemNew = 1;
+                foreach (var item in operador.ReferentesOperador)
+                {
+                    item.NumItem = numItemNew;
+                    numItemNew++;
+                }
+            }
+            tipos.Add(1, "Personal");
+            tipos.Add(2, "Laboral");
+            ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
+            return PartialView("_ReferentesOperador", operador.ReferentesOperador);
         }
     }
 }

@@ -41,6 +41,10 @@
                 </div>
             </div>
 
+            <div class="row m-2" id="divReferentesOp">
+                <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+            </div>
+
             <div class="row">
                 <div class="form-group col-4">
                     <label asp-for="CodigoOperador" class="control-label"></label>
@@ -164,6 +168,27 @@
     setupPreview('LicenciaFile', 'licenciaPreview', 'licenciaImagePreview');
     setupPreview('AntecedentesFile', 'antecedentesPreview', 'antecedentesImagePreview');
     setupPreview('SolvenciaFile', 'solvenciaPreview', 'solvenciaImagePreview');
+
+
+    function addReferenteOp() {
+    $.ajax({
+        url: '@Url.Action("AddReferenteOp")',
+        data: $("#divReferentesOp *[name]").serialize(),
+        success: function (html) {
+            $("#divReferentesOp").html(html);
+        }
+    });
+}
+
+    function deleteReferenteOp(numItem) {
+    $.ajax({
+        url: '@Url.Action("DeleteReferenteOp")' + "/" + numItem,
+        data: $("#divReferentesOp *[name]").serialize(),
+        success: function (html) {
+            $("#divReferentesOp").html(html);
+        }
+    });
+}
 </script>
 
 @section Scripts {

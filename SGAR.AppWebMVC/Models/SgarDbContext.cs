@@ -296,7 +296,7 @@ public partial class SgarDbContext : DbContext
 
         modelBuilder.Entity<ReferentesOperador>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.Id).HasName("PK__Referent__3214EC075BBA809D");
 
             entity.Property(e => e.Nombre)
                 .HasMaxLength(120)

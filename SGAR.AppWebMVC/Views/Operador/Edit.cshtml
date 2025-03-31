@@ -43,6 +43,11 @@
                     <span asp-validation-for="Dui" class="text-danger"></span>
                 </div>
             </div>
+
+            <div class="row m-2" id="divReferentesOp">
+                <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+            </div>
+
             <div class="row">
                 <div class="form-group">
                     <label asp-for="CodigoOperador" class="control-label"></label>
@@ -261,6 +266,25 @@
             tempInputFile.remove();
         }
     }
+
+        function addReferenteOp() {
+            $.ajax({
+                url: '@Url.Action("AddReferenteOp")',
+                data: $("#divReferentesOp *[name]").serialize(),
+                success: function (html) {
+                    $("#divReferentesOp").html(html);
+                }
+            });
+        }
+
+    function deleteReferenteOp(numItem) {
+        $.ajax({
+            url: '@Url.Action("DeleteReferenteOp")' + "/" + numItem,
+            data: $("#divReferentesOp *[name]").serialize(),
+            success: function (html) {
+                $("#divReferentesOp").html(html);
+            }
+        });s
 </script>
 
 @section Scripts {

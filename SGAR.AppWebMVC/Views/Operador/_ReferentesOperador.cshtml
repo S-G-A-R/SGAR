@@ -1,0 +1,57 @@
+﻿@model List<SGAR.AppWebMVC.Models.ReferentesOperador>
+@{
+    Func<int, string, string> getName = (int index, string prop) =>
+    {
+        return String.Format("referentesOperador[{0}].{1}", index, prop);
+    };
+}
+
+    <table class="table">
+        <tr>
+            <td style="text-align:right" colspan="6">
+                <button type="button" data-create onclick="addReferenteOp()" class="btn btn-success">+</button>
+            </td>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>Nombre</td>
+            <td>Parentesco</td>
+            <td>Tipo</td>
+            <td data-edit>Acciones</td>
+        </tr>
+        @if (Model != null && Model.Count > 0)
+        {
+            int index = 0;
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.NumItem
+                            <input type="hidden" name="@getName(index,"NumItem")" value="@item.NumItem" />
+                            <input type="hidden" name="@getName(index,"IdOperador")" value="@item.IdOperador" />
+                            <input type="hidden" name="@getName(index,"Id")" value="@item.Id" />
+                        </td>
+                        <td>
+                            <input type="text" data-disabled class="form-control" name="@getName(index,"Nombre")" value="@item.Nombre" />
+
+                        </td>
+                        <td>
+                            <input type="text" data-disabled class="form-control" name="@getName(index,"Parentesco")" value="@item.Parentesco" />
+
+                        </td>
+                        <td>
+                            @{
+                                var tipos = ((SelectList)ViewBag.Tipos);
+                            }
+                            <select class="form-control" data-disabled name="@getName(index,"Tipo")" asp-items="tipos"></select>
+                        </td>
+                        <td data-edit>
+                            <button type="button" class="btn btn-danger" onclick="deleteReferenteOp('@item.NumItem')">Eliminar</button>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        }
+    </table>

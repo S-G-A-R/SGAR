@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -16,4 +17,6 @@ public partial class ReferentesSupervisor
     public byte Tipo { get; set; }
 
     public virtual Supervisor IdSupervisorNavigation { get; set; } = null!;
+    [NotMapped]
+    public int NumItem { get; set; }
 }
