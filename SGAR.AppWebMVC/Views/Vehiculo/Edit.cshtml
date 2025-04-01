@@ -59,13 +59,14 @@
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="row">
+
+
                 <div class="form-group col-6">
-                    <label for="file" class="control-label">Imagen</label>
-                    @*  <input asp-for="ImagenRuta" id="productImage" type="hidden" /> *@
+                    <label for="fotofile" class="control-label">Imagen</label>
                     <div class="input-group">
-                        <input type="file" id="imageFile" name="file" class="form-control" />
+                        <input type="file" id="fotofile" name="fotofile" class="form-control" />
                         <div class="input-group-append">
-                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('imageFile','imagePreview')">Quitar</button>
+                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('fotofile','FotoPreview')">Quitar</button>
                         </div>
                     </div>
                 </div>
@@ -75,16 +76,17 @@
                         string base64Image = Convert.ToBase64String(Model.Foto);
                         string imageUrl = $"data:image/png;base64,{base64Image}";
 
-                        <div id="preview">
-                            <img id="imagePreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 100px; max-height: 100px;">
+
+                        <div id="FotoPreviewDiv">
+                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
                         </div>
                     }
-                    else
-                    {
-                        <div id="preview" style="display: none;">
-                            <img id="imagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 100px; max-height: 100px;">
-                        </div>
-                    }
+                            else
+                        {
+                            <div id="FotoPreviewDiv" style="display: none;">
+                                <img id="FotoPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                            </div>
+                        }
                 </div>
             </div>
             <div class="form-group">
@@ -98,6 +100,74 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+<script>
+    document.getElementById('fotofile').addEventListener('change', function (event) {
+          previewImage(event, 'FotoPreview', 'FotoPreviewDiv'});
+
+      function previewImage(event, previewImageId, previewDivId) {
+        const file = event.target.files[0];
+        const preview = document.getElementById(previewDivId);
+        const imagePreview = document.getElementById(previewImageId);
+
+        if (file) {
+            const fileReader = new FileReader();
+
+            fileReader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+
+            fileReader.readAsDataURL(file);
+        } else {
+            imagePreview.src = '#';
+            preview.style.display = 'none';
+        }
+    }
+
+         function resetInputFieldAndPreview(inputFileId, previewImageId) {
+            resetInputField(inputFileId);
+            const previewImage = document.getElementById(previewImageId);
+            const preview = document.getElementById(previewImageId + 'Div');
+            if (previewImage) {
+                previewImage.src = "#";
+                preview.style.display = "none";
+            }
+        }
+
+        function resetInputField(inputFileId) {
+            const inputFile = document.getElementById(inputFileId);
+            if (inputFile) {
+                const tempInputFile = document.createElement("input");
+                tempInputFile.type = "file";
+                tempInputFile.value = "";
+                inputFile.value = tempInputFile.value;
+                tempInputFile.remove();
+            }
+        }
+
+        function addReferenteSu() {
+        $.ajax({
+            url: '@Url.Action("AddReferenteSu")',
+            data: $("#divReferentesSu *[name]").serialize(),
+            success: function (html) {
+                $("#divReferentesSu").html(html);
+            }
+        });
+    }
+
+        function deleteReferenteSu(numItem) {
+        $.ajax({
+            url: '@Url.Action("DeleteReferenteSu")' + "/" + numItem,
+            data: $("#divReferentesSu *[name]").serialize(),
+            success: function (html) {
+                $("#divReferentesSu").html(html);
+            }
+        });
+
+</script>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

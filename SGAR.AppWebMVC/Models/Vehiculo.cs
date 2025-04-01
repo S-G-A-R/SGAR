@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGAR.AppWebMVC.Models;
 
@@ -26,7 +27,7 @@ public partial class Vehiculo
     [Required(ErrorMessage = "Debe introducir una descripción.")]
     public string? Descripcion { get; set; }
 
-    public byte[]? Foto { get; set; }
+
     [Display(Name = "Navegación Marca")]
     public virtual Marca IdMarcaNavigation { get; set; } = null!;
     [Display(Name = "Navegación operador")]
@@ -35,4 +36,8 @@ public partial class Vehiculo
     public virtual TiposVehiculo IdTipoVehiculoNavigation { get; set; } = null!;
 
     public virtual ICollection<Operador> Operadores { get; set; } = new List<Operador>();
+    public byte[]? Foto { get; set; }
+
+    [NotMapped]
+    public IFormFile? fotofile { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
+
 
 namespace SGAR.AppWebMVC.Controllers
 {
@@ -52,7 +54,7 @@ namespace SGAR.AppWebMVC.Controllers
             ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo");
             ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id");
             ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion");
-            return View();
+            return View(new Vehiculo());
         }
 
         public async Task<byte[]?> GenerarByteImage(IFormFile? file, byte[]? bytesImage = null)
@@ -75,19 +77,26 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IdMarca,Placa,Codigo,IdTipoVehiculo,Mecanico,Taller,IdOperador,Estado,Descripcion,Foto")] Vehiculo vehiculo, IFormFile? file = null)
+        public async Task<IActionResult> Create(Vehiculo vehiculo)
         {
-            if (ModelState.IsValid)
+            try
             {
-                vehiculo.Foto = await GenerarByteImage(file);
-                _context.Add(vehiculo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (vehiculo.fotofile != null)
+                {
+                    vehiculo.Foto = await GenerarByteImage(vehiculo.fotofile);
+                }
+
+            _context.Add(vehiculo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             }
+            catch
+            {
             ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
             ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
             ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
             return View(vehiculo);
+            }
         }
 
         // GET: Vehiculo/Edit/5
@@ -95,6 +104,7 @@ namespace SGAR.AppWebMVC.Controllers
         {
             if (id == null)
             {
+
                 return NotFound();
             }
 
@@ -104,7 +114,7 @@ namespace SGAR.AppWebMVC.Controllers
                 return NotFound();
             }
             ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
-            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
+            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Nombre", vehiculo.IdOperador);
             ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
             return View(vehiculo);
         }
@@ -114,21 +124,42 @@ namespace SGAR.AppWebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IdMarca,Placa,Codigo,IdTipoVehiculo,Mecanico,Taller,IdOperador,Estado,Descripcion,Foto")] Vehiculo vehiculo, IFormFile? file = null)
+        public async Task<IActionResult> Edit(int id, Vehiculo vehiculo)
         {
             if (id != vehiculo.Id)
             {
                 return NotFound();
             }
+            
+                var vehiculoUpdate = await _context.Vehiculos
+                    .FirstOrDefaultAsync(o => o.Id == vehiculo.Id);
 
-            if (ModelState.IsValid)
-            {
+                if (vehiculoUpdate == null)
+                {
+                    return NotFound();
+                }
+
                 try
                 {
+                    
+                    vehiculoUpdate.IdMarca = vehiculo.IdMarca;
+                    vehiculoUpdate.IdOperador = vehiculo.IdOperador;
+                    vehiculoUpdate.IdTipoVehiculo = vehiculo.IdTipoVehiculo;
+                    vehiculoUpdate.Placa = vehiculo.Placa;
+                    vehiculoUpdate.Descripcion = vehiculo.Descripcion;
 
-                    vehiculo.Foto = await GenerarByteImage(file);
-                    _context.Update(vehiculo);
+                var fotoAnterior = await _context.Supervisores
+                   .Where(s => s.Id == vehiculo.Id)
+                   .Select(s => s.Foto).FirstOrDefaultAsync();
+                vehiculoUpdate.Foto = await GenerarByteImage(vehiculo.fotofile, fotoAnterior);
+
+                if (vehiculo.fotofile != null)
+                    {
+                        vehiculoUpdate.Foto = await GenerarByteImage(vehiculo.fotofile, vehiculoUpdate.Foto);
+                    }
+
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -138,14 +169,19 @@ namespace SGAR.AppWebMVC.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("", "Ocurrió un error de concurrencia. Por favor, intente de nuevo.");
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
-            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
-            ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Ocurrió un error inesperado, por favor intente de nuevo.");
+                }
+
+                ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
+                ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
+                ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
+                return View(vehiculo);
+            
             return View(vehiculo);
         }
 

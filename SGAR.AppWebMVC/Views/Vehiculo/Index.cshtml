@@ -72,13 +72,13 @@
                         string base64Image = Convert.ToBase64String(item.Foto);
                         string imageUrl = $"data:image/png;base64,{base64Image}";
                         <div id="preview">
-                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 50px; max-height:50px;" />
+                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 100px; max-height:100px;" />
                         </div>
                     }
                     else
                     {
                         <div id="preview" style="display: none;">
-                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 50px; max-height:50px;" />
+                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 100px; max-height:100px;" />
                         </div>
                     }
                 </td>
@@ -86,7 +86,7 @@
                 @Html.DisplayFor(modelItem => item.IdMarcaNavigation.Modelo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdOperadorNavigation.Id)
+                @Html.DisplayFor(modelItem => item.IdOperadorNavigation.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdTipoVehiculoNavigation.Descripcion)
