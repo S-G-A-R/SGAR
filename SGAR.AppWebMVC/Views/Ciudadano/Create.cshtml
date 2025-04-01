@@ -4,88 +4,168 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="d-flex justify-content-center">
-    <img src="~/css/sgarlogo.jpeg" width="200" height="200" />
-</div>
+<style>
+    body {
+        background: linear-gradient(to bottom, #666666, #B0B0B0, #d6d6d6, #DCDCDC, #ffffff); /* Gris difuminado a blanco */
+    }
 
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row mb-3">
-                <div class="form-group col-3">
-                    <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" autocomplete="off" />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-                <div class="form-group col-3">
-                    <label asp-for="Apellido" class="control-label"></label>
-                    <input asp-for="Apellido" class="form-control" autocomplete="off" />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-                <div class="form-group col-3">
-                    <label asp-for="Dui" class="control-label"></label>
-                    <input asp-for="Dui" class="form-control" autocomplete="off" />
-                    <span asp-validation-for="Dui" class="text-danger"></span>
-                </div>
-                <div class="form-group col-3">
-                    <label asp-for="Correo" class="control-label"></label>
-                    <input asp-for="Correo" class="form-control" autocomplete="off" />
-                    <span asp-validation-for="Correo" class="text-danger"></span>
-                </div>
+    .custom-card {
+        background-color: #f8f9fa; /* Gris muy claro para el fondo de la tarjeta */
+        border: 1px solid #dee2e6; /* Borde sutil */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    }
+
+    .form-label {
+        font-weight: 500; /* Peso de fuente semi-negrita para etiquetas */
+        color: #343a40; /* Color de texto más oscuro para etiquetas */
+        position: absolute; /* Posiciona la etiqueta encima del borde */
+        top: -10px; /* Ajusta la posición vertical */
+        left: 10px; /* Ajusta la posición horizontal */
+        background-color: #f8f9fa;
+        
+        padding: 0 5px; /* Espacio alrededor del texto */
+        font-size: 14px; /* Tamaño de la fuente */
+    }
+
+    .form-control {
+        border-radius: 8px; /* Bordes redondeados para campos de entrada */
+        border: 1px solid #ced4da; /* Borde más claro */
+        padding: 10px 15px; /* Espaciado interno mejorado */
+        padding-top: 10px; /* Asegura que el texto no se superponga con la etiqueta */
+    }
+
+        .form-control:focus {
+            border-color: #007bff; /* Color de borde al enfocar */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Sombra al enfocar */
+        }
+
+    .btn-success {
+        background-color: #28a745; /* Verde éxito */
+        border-color: #28a745;
+        width: 80px; /* Nuevo ancho para el botón */
+        padding: 5px 10px; /* Ajuste del padding */
+        font-size: 12px; /* Ajuste del tamaño de la fuente */
+    }
+
+        .btn-success:hover {
+            background-color: #218838; /* Verde más oscuro al pasar el ratón */
+            border-color: #1e7e34;
+        }
+
+    .btn-outline-secondary {
+        border-color: #6c757d; /* Borde gris secundario */
+        color: #6c757d;
+        width: 80px; /* Nuevo ancho para el botón */
+        padding: 5px 10px; /* Ajuste del padding */
+        font-size: 12px; /* Ajuste del tamaño de la fuente */
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #e2e6ea; /* Fondo gris claro al pasar el ratón */
+        }
+
+    .rounded-circle {
+        object-fit: cover; /* Asegura que la imagen se ajuste bien */
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0 !important; /* Borde gris */
+        border-radius: 10px !important; /* Bordes más redondeados */
+        padding-left: 40px; /* Ajuste para dejar espacio suficiente para el icono */
+    }
+
+    /* Ajustes para reducir el espacio entre los botones */
+    .form-group.w-25 {
+        margin-right: 2px;
+    }
+
+    .w-25 {
+        margin-left: 2px;
+    }
+
+    .d-flex.justify-content-center {
+        gap: 5px;
+    }
+
+    .form-group {
+        position: relative; /* Establece el contexto de posicionamiento para las etiquetas */
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-md-10 mx-auto">
+        <div class="card p-4 rounded-4 shadow-sm custom-card">
+            <div class="d-flex justify-content-center mb-4">
+                <img src="~/css/sgarlogo.jpeg" width="200" height="200" alt="Logo" class="rounded-circle">
             </div>
-            <div class="row mb-3">
-                <div class="form-group col-3">
-                    <label class="control-label">Departamento</label>
-                    <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-3">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Apellido" class="form-label">Apellido</label>
+                        <input asp-for="Apellido" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Dui" class="form-label">DUI</label>
+                        <input asp-for="Dui" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Dui" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Correo" class="form-label">Correo</label>
+                        <input asp-for="Correo" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-3">
+                        <label class="form-label">Departamento</label>
+                        <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="form-label">Municipio</label>
+                        <select id="municipioId" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="form-label">Distrito</label>
+                        <select id="distritos" class="form-control" asp-items="ViewBag.DistritoId"></select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="ZonaId" class="form-label">Zona</label>
+                        <select id="zonas" asp-for="ZonaId" class="form-control" asp-items="ViewBag.ZonaId"></select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-4">
+                        <label asp-for="Password" class="form-label">Contraseña</label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="ConfirmarPassword" class="form-label">Confirmar Contraseña</label>
+                        <input asp-for="ConfirmarPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+                    </div>
                 </div>
 
-
-                <div class="form-group col-3">
-                    <label class="control-label">Municipio</label>
-                    <select id="municipioId" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                <div class="d-flex justify-content-center">
+                    <div class="form-group  d-flex justify-content-center me-2">
+                        <input type="submit" value="Crear" class="btn btn-success " />
+                    </div>
+                    <div class=" d-flex justify-content-center">
+                        <a asp-action="Login" class="btn btn-outline-secondary "><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+                    </div>
                 </div>
-
-
-                <div class="form-group col-3">
-                    <label class="control-label">Distrito</label>
-                    <select id="distritos" class="form-control" asp-items="ViewBag.DistritoId"></select>
-                </div>
-
-                <div class="form-group col-3">
-                    <label asp-for="ZonaId" class="control-label"></label>
-                    <select id="zonas" asp-for="ZonaId" class="form-control" asp-items="ViewBag.ZonaId"></select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="form-group col-4">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" type="password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="ConfirmarPassword" class="control-label"></label>
-                    <input asp-for="ConfirmarPassword" class="form-control" type="password" />
-                    <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
-                </div>
-            </div>
-
-
-            <div class="d-flex justify-content-center">
-
-                <div class="form-group w-25 d-flex justify-content-center">
-                    <input type="submit" value="Crear" class="btn btn-success w-50" />
-                </div>
-                <div class="w-25 d-flex justify-content-center">
-                    <a asp-action="Login" class="btn btn-info w-50 "><i class="bi bi-arrow-90deg-left"></i> Volver</a>
-                </div>
-
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
 
 
 @section Scripts {
