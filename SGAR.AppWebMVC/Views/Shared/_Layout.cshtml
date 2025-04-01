@@ -185,13 +185,13 @@
                             <li>
                                 <h3>Hola, @nombre</h3>
                             </li>
-                            @*<li class="nav-item">
-                                <a class="nav-link text-dark m-2 text-start" asp-area="" asp-controller="Ciudadano" asp-action="Menu"><i class="bi bi-house"></i> Inicio</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark m-2 text-start" asp-area="" asp-controller="Supervisor" asp-action="Menu"><i class="bi bi-house"></i> Inicio</a>
                             </li>
 
                             <li class="nav-item align-items-end">
-                                <a class="nav-link btn btn-outline-secondary m-2 text-black" asp-area="" asp-controller="Ciudadano" asp-action="CerrarSesion"> <i class="bi bi-arrow-bar-left"></i> Cerrar sesion</a>
-                            </li>*@
+                                <a class="nav-link btn btn-outline-secondary m-2 text-black" asp-area="" asp-controller="Supervisor" asp-action="CerrarSesion"> <i class="bi bi-arrow-bar-left"></i> Cerrar sesion</a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -247,7 +247,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" asp-controller="Ciudadano" asp-action="Login">Ciudadano</a></li>
                                 <li><a class="dropdown-item" asp-controller="Operador" asp-action="Login">Operador</a></li>
-                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Error">Supervisor</a></li>
+                                <li><a class="dropdown-item" asp-controller="Supervisor" asp-action="Login">Supervisor</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Alcaldia" asp-action="Login">Alcaldia</a></li>
                             </ul>

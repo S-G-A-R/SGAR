@@ -1,0 +1,101 @@
+﻿@model SGAR.AppWebMVC.Models.Supervisor
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Supervisor</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Apellido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Apellido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CorreoPersonal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CorreoPersonal)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dui)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Dui)
+        </dd>
+
+        <div class="row m-2" id="divReferentesOp">
+            <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
+        </div>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Foto != null && Model.Foto.Length > 0)
+            {
+                string base64Image = Convert.ToBase64String(Model.Foto);
+                string imageUrl = $"data:image/png;base64,{base64Image}";
+                <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 200px; max-height: 200px;" />
+            }
+            else
+            {
+                <span>No hay foto disponible.</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Codigo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Codigo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CorreoLaboral)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CorreoLaboral)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TelefonoLaboral)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TelefonoLaboral)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdAlcaldiaNavigation.Correo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning"><i class="bi bi-pen me-3"></i> Ir a editar</a>
+    <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("*[data-create]").hide();
+            $("*[data-edit]").hide();
+            $("*[data-disabled]").attr("disabled","disabled");
+        });
+    </script>
+}

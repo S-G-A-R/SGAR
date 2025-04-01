@@ -1,7 +1,7 @@
-﻿@model SGAR.AppWebMVC.Models.Operador
+﻿@model SGAR.AppWebMVC.Models.Supervisor
 
 @{
-    ViewData["Title"] = "Crear Operador";
+    ViewData["Title"] = "Crear Supervisor";
 }
 
 <h1><i class="bi bi-ticket-perforated me-3"></i> @ViewData["Title"]</h1>
@@ -22,9 +22,9 @@
                     <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
-                    <label asp-for="TelefonoPersonal" class="control-label"></label>
-                    <input asp-for="TelefonoPersonal" class="form-control" />
-                    <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
+                    <label asp-for="Telefono" class="control-label"></label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
             </div>
 
@@ -41,15 +41,15 @@
                 </div>
             </div>
 
-            <div class="row m-2" id="divReferentesOp">
-                <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+            <div class="row m-2" id="divReferentesSu">
+                <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
             </div>
 
             <div class="row">
                 <div class="form-group col-4">
-                    <label asp-for="CodigoOperador" class="control-label"></label>
-                    <input asp-for="CodigoOperador" class="form-control" />
-                    <span asp-validation-for="CodigoOperador" class="text-danger"></span>
+                    <label asp-for="Codigo" class="control-label"></label>
+                    <input asp-for="Codigo" class="form-control" />
+                    <span asp-validation-for="Codigo" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
                     <label asp-for="TelefonoLaboral" class="control-label"></label>
@@ -64,15 +64,7 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-4">
-                    <label asp-for="VehiculoId" class="control-label"></label>
-                    <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.VehiculoId"></select>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="Ayudantes" class="control-label"></label>
-                    <input asp-for="Ayudantes" class="form-control" />
-                    <span asp-validation-for="Ayudantes" class="text-danger"></span>
-                </div>
+
                 <div class="form-group col-4">
                     <label asp-for="Password" class="control-label"></label>
                     <input asp-for="Password" class="form-control" />
@@ -91,38 +83,6 @@
                         <img id="fotoImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
                     </div>
                 </div>
-                <div class="form-group col-5">
-                    <label asp-for="LicenciaFile" class="control-label">Licencia de Conducir</label>
-                    <input asp-for="LicenciaFile" type="file" class="form-control" />
-                    <span asp-validation-for="LicenciaFile" class="text-danger"></span>
-                </div>
-                <div class="col-5">
-                    <div id="licenciaPreview" style="display: none;">
-                        <img id="licenciaImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-5">
-                    <label asp-for="AntecedentesFile" class="control-label">Antecedentes Penales</label>
-                    <input asp-for="AntecedentesFile" type="file" class="form-control" />
-                    <span asp-validation-for="AntecedentesFile" class="text-danger"></span>
-                </div>
-                <div class="col-5">
-                    <div id="antecedentesPreview" style="display: none;">
-                        <img id="antecedentesImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
-                    </div>
-                </div>
-                <div class="form-group col-5">
-                    <label asp-for="SolvenciaFile" class="control-label">Solvencia</label>
-                    <input asp-for="SolvenciaFile" type="file" class="form-control" />
-                    <span asp-validation-for="SolvenciaFile" class="text-danger"></span>
-                </div>
-                <div class="col-5">
-                    <div id="solvenciaPreview" style="display: none;">
-                        <img id="solvenciaImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
-                    </div>
-                </div>
             </div>
 
 
@@ -138,6 +98,9 @@
     </div>
 </div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
 <script>
     //Funciones de previsualización para cada archivo.
@@ -164,27 +127,24 @@
     }
 
     setupPreview('FotoFile', 'fotoPreview', 'fotoImagePreview');
-    setupPreview('LicenciaFile', 'licenciaPreview', 'licenciaImagePreview');
-    setupPreview('AntecedentesFile', 'antecedentesPreview', 'antecedentesImagePreview');
-    setupPreview('SolvenciaFile', 'solvenciaPreview', 'solvenciaImagePreview');
 
 
-    function addReferenteOp() {
+    function addReferenteSu() {
     $.ajax({
-        url: '@Url.Action("AddReferenteOp", "Operador")',
-        data: $("#divReferentesOp *[name]").serialize(),
+        url: '@Url.Action("AddReferenteSu", "Supervisor")',
+        data: $("#divReferentesSu *[name]").serialize(),
         success: function (html) {
-            $("#divReferentesOp").html(html);
+            $("#divReferentesSu").html(html);
         }
     });
 }
 
-    function deleteReferenteOp(numItem) {
+    function deleteReferenteSu(numItem) {
     $.ajax({
-        url: '@Url.Action("DeleteReferenteOp", "Operador")' + "/" + numItem,
-        data: $("#divReferentesOp *[name]").serialize(),
+        url: '@Url.Action("DeleteReferenteSu", "Supervisor")' + "/" + numItem,
+        data: $("#divReferentesSu *[name]").serialize(),
         success: function (html) {
-            $("#divReferentesOp").html(html);
+            $("#divReferentesSu").html(html);
         }
     });
 }

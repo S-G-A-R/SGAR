@@ -24,7 +24,7 @@ public partial class Operador
     public string? Ayudantes { get; set; }
     [Required(ErrorMessage = "El Código es obligatorio.")]
     public string CodigoOperador { get; set; } = null!;
-
+    [Required(ErrorMessage = "El Telefono Laboral es obligatorio.")]
     public string TelefonoLaboral { get; set; } = null!;
     [Required(ErrorMessage = "El Correo Laboral es obligatorio.")]
     [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]
@@ -74,5 +74,6 @@ public partial class Operador
 
     public virtual ICollection<Vehiculo> Vehiculos { get; set; } = new List<Vehiculo>();
     [NotMapped]
+    [Display(Name = "Referentes")]
     public virtual ICollection<ReferentesOperador> ReferentesOperador { get; set; } = new List<ReferentesOperador>();
 }

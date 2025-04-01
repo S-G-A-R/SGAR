@@ -1,4 +1,4 @@
-﻿@model SGAR.AppWebMVC.Models.Operador
+﻿@model SGAR.AppWebMVC.Models.Supervisor
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,9 +6,9 @@
 
 <h1><i class="bi bi-trash-fill me-3"></i>@ViewData["Title"]</h1>
 
-<h3>¿Estás seguro de que quieres eliminar este operador?</h3>
+<h3>¿Estás seguro de que quieres eliminar este supervisor?</h3>
 <div>
-    <h4>Operador</h4>
+    <h4>Supervisor</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -24,10 +24,10 @@
             @Html.DisplayFor(model => model.Apellido)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoPersonal)
+            @Html.DisplayNameFor(model => model.Telefono)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoPersonal)
+            @Html.DisplayFor(model => model.Telefono)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CorreoPersonal)
@@ -43,18 +43,17 @@
         </dd>
 
         <div class="row m-2" id="divReferentesOp">
-            <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+            <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
         </div>
-
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Foto)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-12">
             @if (Model.Foto != null && Model.Foto.Length > 0)
             {
                 string base64Image = Convert.ToBase64String(Model.Foto);
                 string imageUrl = $"data:image/png;base64,{base64Image}";
-                <img src="@imageUrl" alt="Foto del operador" style="max-width: 200px; max-height: 200px;" />
+                <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 200px; max-height: 200px;" />
             }
             else
             {
@@ -62,22 +61,10 @@
             }
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Ayudantes)
+            @Html.DisplayNameFor(model => model.Codigo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Ayudantes)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CodigoOperador)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CodigoOperador)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoLaboral)
+            @Html.DisplayFor(model => model.Codigo)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CorreoLaboral)
@@ -86,55 +73,16 @@
             @Html.DisplayFor(model => model.CorreoLaboral)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.LicenciaDoc)
+            @Html.DisplayNameFor(model => model.TelefonoLaboral)
         </dt>
         <dd class="col-sm-10">
-            @if (Model.LicenciaDoc != null && Model.LicenciaDoc.Length > 0)
-            {
-                <span>Documento de Licencia cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de licencia.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AntecedentesDoc)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.AntecedentesDoc != null && Model.AntecedentesDoc.Length > 0)
-            {
-                <span>Documento de Antecedentes cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de antecedentes.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SolvenciaDoc)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.SolvenciaDoc != null && Model.SolvenciaDoc.Length > 0)
-            {
-                <span>Documento de Solvencia cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de solvencia.</span>
-            }
+            @Html.DisplayFor(model => model.TelefonoLaboral)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdAlcaldiaNavigation.IdMunicipio)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehiculo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehiculo.Id)
+            @Html.DisplayFor(model => model.IdAlcaldiaNavigation.Correo)
         </dd>
     </dl>
 

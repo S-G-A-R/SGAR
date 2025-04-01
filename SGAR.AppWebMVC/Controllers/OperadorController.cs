@@ -82,8 +82,8 @@ namespace SGAR.AppWebMVC.Controllers
         public async Task<IActionResult> Index(Operador operador, int topRegistro = 10)
         {
             var query = _context.Operadores.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(operador.Nombre))
-                query = query.Where(s => s.Nombre.Contains(operador.Nombre));
+            if (!string.IsNullOrWhiteSpace(operador.CodigoOperador))
+                query = query.Where(s => s.CodigoOperador.Contains(operador.CodigoOperador));
             if (!string.IsNullOrWhiteSpace(operador.Dui))
                 query = query.Where(s => s.Dui.Contains(operador.Dui));
             if (topRegistro > 0)

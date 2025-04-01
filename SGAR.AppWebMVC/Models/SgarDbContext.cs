@@ -322,7 +322,7 @@ public partial class SgarDbContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdSupervisorNavigation).WithMany(p => p.ReferentesSupervisores)
+            entity.HasOne(d => d.IdSupervisorNavigation).WithMany()
                 .HasForeignKey(d => d.IdSupervisor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Referente__IdSup__4E88ABD4");
