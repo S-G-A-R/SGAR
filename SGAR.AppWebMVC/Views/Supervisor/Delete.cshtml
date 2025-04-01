@@ -3,102 +3,139 @@
 @{
     ViewData["Title"] = "Delete";
 }
+<div class="floating-box">
+    <h1><i class="bi bi-trash-fill me-3"></i>@ViewData["Title"]</h1>
 
-<h1><i class="bi bi-trash-fill me-3"></i>@ViewData["Title"]</h1>
+    <h3 style="color: red;">¿Estás seguro de que quieres eliminar este supervisor?</h3>
+    <div>
+        <h4>Supervisor</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Apellido)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Apellido)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Telefono)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Telefono)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CorreoPersonal)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CorreoPersonal)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Dui)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Dui)
+            </dd>
 
-<h3>¿Estás seguro de que quieres eliminar este supervisor?</h3>
-<div>
-    <h4>Supervisor</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefono)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Telefono)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CorreoPersonal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CorreoPersonal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Dui)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Dui)
-        </dd>
+            <div class="row m-2" id="divReferentesOp">
+                <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
+            </div>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Foto)
+            </dt>
+            <dd class="col-sm-12">
+                @if (Model.Foto != null && Model.Foto.Length > 0)
+                {
+                    string base64Image = Convert.ToBase64String(Model.Foto);
+                    string imageUrl = $"data:image/png;base64,{base64Image}";
+                    <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 200px; max-height: 200px;" />
+                }
+                else
+                {
+                    <span>No hay foto disponible.</span>
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Codigo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Codigo)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CorreoLaboral)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CorreoLaboral)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TelefonoLaboral)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TelefonoLaboral)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IdAlcaldiaNavigation.Correo)
+            </dd>
+        </dl>
 
-        <div class="row m-2" id="divReferentesOp">
-            <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
-        </div>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd class="col-sm-12">
-            @if (Model.Foto != null && Model.Foto.Length > 0)
-            {
-                string base64Image = Convert.ToBase64String(Model.Foto);
-                string imageUrl = $"data:image/png;base64,{base64Image}";
-                <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 200px; max-height: 200px;" />
-            }
-            else
-            {
-                <span>No hay foto disponible.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Codigo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Codigo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CorreoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CorreoLaboral)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoLaboral)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdAlcaldiaNavigation.Correo)
-        </dd>
-    </dl>
-
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Eliminar" class="btn btn-danger" />
-        <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left me-1"></i> Volver</a>
-    </form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left me-1"></i> Volver</a>
+        </form>
+    </div>
 </div>
+
+<style>
+    .floating-box {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 90%; /* Aumentar el ancho */
+        max-width: 900px; /* Ancho máximo */
+        height: auto; /* Ajustar la altura automáticamente */
+        max-height: 80vh; /* Altura máxima para evitar que sea demasiado alto */
+        margin: 0 auto; /* Centrar horizontalmente */
+        position: fixed; /* Posición fija */
+        top: 10%; /* Ajustar la posición vertical */
+        left: 50%; /* Centrar horizontalmente */
+        transform: translateX(-50%); /* Centrar horizontalmente */
+        z-index: 1000;
+        overflow-y: auto; /* Agregar scroll si el contenido excede la altura */
+    }
+    
+        .floating-box h1,
+        .floating-box h3,
+        .floating-box h4,
+        .floating-box dt,
+        .floating-box dd,
+        .floating-box span,
+        .floating-box a,
+        .floating-box input[type="submit"] {
+            color: #333; /* Color de texto oscuro para resaltar */
+            font-weight: 500; /* Peso de fuente para resaltar */
+        }
+
+        .floating-box .btn {
+            font-weight: bold; /* Resalta los botones */
+        }
+</style>
 
 @section Scripts {
     <script>
         $(function () {
             $("*[data-create]").hide();
             $("*[data-edit]").hide();
-            $("*[data-disabled]").attr("disabled","disabled");
+            $("*[data-disabled]").attr("disabled", "disabled");
         });
     </script>
 }
