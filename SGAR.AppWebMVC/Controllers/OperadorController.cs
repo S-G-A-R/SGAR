@@ -2,7 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,6 +24,57 @@ namespace SGAR.AppWebMVC.Controllers
         public OperadorController(SgarDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult Menu()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(Operador operador)
+        {
+            try
+            {
+                operador.Password = GenerarHash256(operador.Password);
+                var operadorAuth = await _context.Operadores.FirstOrDefaultAsync(s => s.CorreoLaboral == operador.CorreoLaboral && s.Password == operador.Password);
+
+                if (operadorAuth != null && operadorAuth.Id > 0 && operadorAuth.CorreoLaboral == operador.CorreoLaboral)
+                {
+                    var claims = new[] { 
+                        new Claim("Id", operadorAuth.Id.ToString()), 
+                        new Claim("Alcaldia", operadorAuth.IdAlcaldia.ToString()), 
+                        new Claim("Nombre", operadorAuth.Nombre + " " + operadorAuth.Apellido), 
+                        new Claim(ClaimTypes.Role, operadorAuth.GetType().Name)
+                    };
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                    return RedirectToAction("Menu", "Operador");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "El email o contraseña estan incorrectos");
+                    return View();
+                }
+            }
+            catch
+            {
+                return View(operador);
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Operador
@@ -113,6 +169,7 @@ namespace SGAR.AppWebMVC.Controllers
                     operador.Foto = await GenerarByteImage(operador.FotoFile);
                 }
                 operador.IdAlcaldia = Convert.ToInt32(User.FindFirst("Id").Value);
+                operador.Password = GenerarHash256(operador.Password);
 
                 _context.Add(operador);
                 await _context.SaveChangesAsync();
@@ -273,6 +330,21 @@ namespace SGAR.AppWebMVC.Controllers
                 {
                     return View(operador);
                 }
+            }
+        }
+
+        public static string GenerarHash256(string input)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
 

@@ -149,6 +149,8 @@ namespace SGAR.AppWebMVC.Controllers
         // Esta línea define un método público llamado GetMunicipiosFromDepartamentoId.
         // El método toma un entero llamado departamentoId como parámetro.
         // El método devuelve un objeto JsonResult.
+        // Atributo que permite el acceso a esta acción sin requerir autenticación
+        [AllowAnonymous]
         public JsonResult GetMunicipiosFromDepartamentoId(int departamentoId)
         {
             // Esta línea construye y retorna un objeto JsonResult.
@@ -163,6 +165,8 @@ namespace SGAR.AppWebMVC.Controllers
         // Esta línea define un método público llamado GetDistritosFromMunicipioId.
         // El método toma un entero llamado municipioId como parámetro.
         // El método devuelve un objeto JsonResult.
+        // Atributo que permite el acceso a esta acción sin requerir autenticación
+        [AllowAnonymous]
         public JsonResult GetDistritosFromMunicipioId(int municipioId) 
         {
             // Esta línea construye y retorna un objeto JsonResult.
@@ -177,6 +181,8 @@ namespace SGAR.AppWebMVC.Controllers
         // Esta línea define un método público llamado GetZonasFromDistritoId.
         // El método toma un entero llamado distritoId como parámetro.
         // El método devuelve un objeto JsonResult.
+        // Atributo que permite el acceso a esta acción sin requerir autenticación
+        [AllowAnonymous]
         public JsonResult GetZonasFromDistritoId(int distritoId) 
         {
             // Esta línea construye y retorna un objeto JsonResult.

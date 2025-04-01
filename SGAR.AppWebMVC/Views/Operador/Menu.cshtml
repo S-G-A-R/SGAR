@@ -1,4 +1,4 @@
-﻿@model SGAR.AppWebMVC.Models.Ciudadano
+﻿@model SGAR.AppWebMVC.Models.Operador
 
 @{
     ViewData["Title"] = "Menú";
@@ -29,7 +29,7 @@
                         <a asp-action="Error" asp-controller="Home" class="card-link w-50 ">
                             <i class="bi bi-file-earmark-richtext-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
                         </a>
-                        <h3>Informes</h3>
+                        <h3>Mantenimiento</h3>
                     </div>
                 </div>
                 <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
@@ -38,18 +38,18 @@
         </div>
 
         <div class="col">
-        <div class="contenedor-tarjeta">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
+            <div class="contenedor-tarjeta">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
                         <a asp-action="Error" asp-controller="Home" class="card-link w-50 ">
                             <i class="bi bi-geo-alt-fill" style="font-size: 3rem; color: ThreeDDarkShadow"></i>
                         </a>
                         <h3>Ubicación</h3>
+                    </div>
                 </div>
+                <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+                <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
             </div>
-            <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
-            <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
-        </div>
         </div>
 
     </div>

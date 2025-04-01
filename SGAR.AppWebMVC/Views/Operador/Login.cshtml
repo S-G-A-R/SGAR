@@ -1,0 +1,42 @@
+﻿@model SGAR.AppWebMVC.Models.Operador
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center">
+    <img src="~/css/sgarlogo.jpeg" width="200" height="200" />
+</div>
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger form-control is-invalid" id="floatingInputGroup2"></div>
+            <div class="form-group">
+                <label asp-for="CorreoLaboral" class="control-label"></label>
+                <input asp-for="CorreoLaboral" class="form-control border-0 border-bottom border-secondary" placeholder="mail@example.com" />
+                <span asp-validation-for="CorreoLaboral" class="text-danger" id="floatingInputGroup2"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control border-0 border-bottom border-secondary" placeholder="*****" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="d-flex justify-content-center">
+                <div class="contenedor-boton">
+                    <button type="submit" class="boton-mapacheAceptar text-center">Aceptar</button>
+                    <img src="~/css/orejaIz.png" alt="Oreja izquierda" class="oreja oreja-izquierda">
+                    <img src="~/css/orejaDe.png" alt="Oreja derecha" class="oreja oreja-derecha">
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
