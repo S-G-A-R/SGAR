@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Security.Policy;
 
 namespace SGAR.AppWebMVC.Controllers
 {
@@ -34,12 +35,19 @@ namespace SGAR.AppWebMVC.Controllers
         // Acción para mostrar el formulario de crear horario
         public IActionResult Create()
         {
-            // Supongamos que obtienes los distritos desde la base de datos o algún otro servicio
-            var distritos = _context.Distritos.ToList();
+            var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s=>s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+            var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
+            var distritos = _context.Distritos.Where(s=>s.IdMunicipio == yourMunicipio.Id).ToList();
+            distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
+            var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona"}]);
+
+            var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
+            operadores.Add(new Operador { Id = 0 , Nombre = "Seleccione un operador"});
 
             // Agregar la lista de distritos a ViewData
-            ViewData["Distritos"] = distritos;
-
+            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", 0);
+            ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", 0);
             // También puedes agregar el título de la vista
             ViewData["Title"] = "Crear Horario";
 
@@ -52,7 +60,7 @@ namespace SGAR.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Horario horario, List<int> DiasSeleccionados)
         {
-            if (ModelState.IsValid)
+            try
             {
                 // Convertir los días seleccionados en un formato adecuado
                 horario.Dia = string.Join(",", DiasSeleccionados); // O bien usar un formato binario, etc.
@@ -64,11 +72,26 @@ namespace SGAR.AppWebMVC.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+            catch
+            {
+                // Recargar las listas de operadores y zonas en caso de error
 
-            // Recargar las listas de operadores y zonas en caso de error
-            ViewBag.Operadores = _context.Operadores.ToList();
-            ViewBag.Zonas = _context.Zonas.ToList();
-            return View(horario);
+                var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+                var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
+                var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
+                distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
+                var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona" }]);
+
+                var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
+                operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
+                ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+                ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", 0);
+                ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", 0);
+                return View(horario);
+            }  
+            
+
+            
         }
 
 
@@ -86,8 +109,19 @@ namespace SGAR.AppWebMVC.Controllers
                 return NotFound();
             }
 
-            ViewBag.Operadores = _context.Operadores.ToList();
-            ViewBag.Zonas = _context.Zonas.ToList();
+            var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+            var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
+            var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
+            distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
+            var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona" }]);
+
+            var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
+            operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
+
+            // Agregar la lista de distritos a ViewData
+            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
+            ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
             return View(horario);
         }
 
@@ -101,8 +135,19 @@ namespace SGAR.AppWebMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Operadores = _context.Operadores.ToList();
-            ViewBag.Zonas = _context.Zonas.ToList();
+            var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+            var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
+            var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
+            distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
+            var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona" }]);
+
+            var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
+            operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
+
+            // Agregar la lista de distritos a ViewData
+            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
+            ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
             return View(horario);
         }
 
@@ -222,7 +267,6 @@ namespace SGAR.AppWebMVC.Controllers
         {
             var zonas = _context.Zonas
                                 .Where(z => z.IdDistrito == idDistrito) // Filtrar zonas por distrito
-                                .Select(z => new { z.Id, z.Nombre })
                                 .ToList();
             return Json(zonas);
         }

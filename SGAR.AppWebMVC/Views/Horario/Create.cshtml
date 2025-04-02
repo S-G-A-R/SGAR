@@ -8,19 +8,19 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="HoraEntrada" class="control-label"></label>
+        <label asp-for="HoraEntrada" class="control-label required"></label>
         <input asp-for="HoraEntrada" type="time" class="form-control" />
         <span asp-validation-for="HoraEntrada" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HoraSalida" class="control-label"></label>
+        <label asp-for="HoraSalida" class="control-label required"></label>
         <input asp-for="HoraSalida" type="time" class="form-control" />
         <span asp-validation-for="HoraSalida" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label>Días de la semana:</label>
+        <label class="required">Días de la semana:</label>
         <div class="checkbox-group">
             <label><input type="checkbox" name="DiasSeleccionados" value="0" /> Lunes</label>
             <label><input type="checkbox" name="DiasSeleccionados" value="1" /> Martes</label>
@@ -42,26 +42,18 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="IdOperador" class="control-label"></label>
-        <select asp-for="IdOperador" class="form-control">
-            <option value="">Seleccione un operador</option>
-        </select>
+        <label asp-for="IdOperador" class="control-label required"></label>
+        <select asp-for="IdOperador" class="form-control combo" asp-items="ViewBag.Operadores"></select>
     </div>
 
     <div class="form-group">
         <label for="IdDistrito">Distrito</label>
-        <select id="IdDistrito" name="IdDistrito" class="form-control">
-            <option value="">Seleccione un distrito</option>
-           
-        </select>
+        <select id="idDistrito" name="IdDistrito" class="form-control combo" asp-items="ViewBag.Distritos"></select>
     </div>
 
     <div class="form-group">
-        <label for="IdZona">Zona</label>
-        <select id="IdZona" name="IdZona" class="form-control">
-            <option value="">Seleccione una zona</option>
-           
-        </select>
+        <label for="IdZona" class="required">Zona</label>
+        <select id="zonas" name="IdZona" asp-for="IdZona" asp-items="ViewBag.Distritos" class="form-control combo"></select>
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -70,14 +62,14 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            $('#IdDistrito').change(function() {
+            $('#idDistrito').change(function() {
                 var distritoId = $(this).val();
                 if (distritoId) {
                     $.ajax({
                         url: '/Horario/GetZonas',
                         data: { idDistrito: distritoId },
                         success: function(data) {
-                            var zonaSelect = $('#IdZona');
+                            var zonaSelect = $('#zonas');
                             zonaSelect.empty();
                             zonaSelect.append('<option value="">Seleccione una zona</option>');
                             $.each(data, function(index, zona) {
@@ -86,8 +78,8 @@
                         }
                     });
                 } else {
-                    $('#IdZona').empty();
-                    $('#IdZona').append('<option value="">Seleccione una zona</option>');
+                    $('#zonas').empty();
+                    $('#zonas').append('<option value="">Seleccione una zona</option>');
                 }
             });
         });
