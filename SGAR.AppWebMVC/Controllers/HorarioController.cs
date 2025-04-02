@@ -26,6 +26,7 @@ namespace SGAR.AppWebMVC.Controllers
             var horarios = _context.Horarios
                 .Include(h => h.IdOperadorNavigation)
                 .Include(h => h.IdZonaNavigation)
+                .Where(h => h.IdZonaNavigation.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value))
                 .ToList();
             return View(horarios);
         }
@@ -279,6 +280,8 @@ namespace SGAR.AppWebMVC.Controllers
 
         public IActionResult GetHorarios()
         {
+            List<Horario> horarios = new List<Horario>();
+
             var diasSemana = new Dictionary<int, string>
                 {
                     {1, "Lunes"},
@@ -290,10 +293,32 @@ namespace SGAR.AppWebMVC.Controllers
                     {7, "Domingo"}
                 };
 
-            var horarios = _context.Horarios
+
+            if (User.IsInRole("Alcaldia"))
+            {
+                horarios = _context.Horarios
                 .Include(h => h.IdOperadorNavigation)
                 .Include(h => h.IdZonaNavigation)
+                .Where(s=>s.IdOperadorNavigation.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value))
                 .ToList();
+            }
+            if (User.IsInRole("Operador"))
+            {
+                horarios = _context.Horarios
+                .Include(h => h.IdOperadorNavigation)
+                .Include(h => h.IdZonaNavigation)
+                .Where(s => s.IdOperador == Convert.ToInt32(User.FindFirst("Id").Value))
+                .ToList();
+            }
+            if (User.IsInRole("Usuario"))
+            {
+                horarios = _context.Horarios
+                .Include(h => h.IdOperadorNavigation)
+                .Include(h => h.IdZonaNavigation)
+                .Where(s => s.IdZonaNavigation.Nombre == User.FindFirst("Zona").Value)
+                .ToList();
+            }
+
 
             var events = horarios.SelectMany(h => h.Dia.Split(',')
                 .Select(dia => new
