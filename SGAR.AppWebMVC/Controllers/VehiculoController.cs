@@ -86,16 +86,16 @@ namespace SGAR.AppWebMVC.Controllers
                     vehiculo.Foto = await GenerarByteImage(vehiculo.fotofile);
                 }
 
-            _context.Add(vehiculo);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Add(vehiculo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
-            ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
-            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
-            ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
-            return View(vehiculo);
+                ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
+                ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
+                ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
+                return View(vehiculo);
             }
         }
 
@@ -130,58 +130,61 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
-            
-                var vehiculoUpdate = await _context.Vehiculos
-                    .FirstOrDefaultAsync(o => o.Id == vehiculo.Id);
 
-                if (vehiculoUpdate == null)
-                {
-                    return NotFound();
-                }
+            var vehiculoUpdate = await _context.Vehiculos
+                .FirstOrDefaultAsync(o => o.Id == vehiculo.Id);
 
-                try
-                {
-                    
-                    vehiculoUpdate.IdMarca = vehiculo.IdMarca;
-                    vehiculoUpdate.IdOperador = vehiculo.IdOperador;
-                    vehiculoUpdate.IdTipoVehiculo = vehiculo.IdTipoVehiculo;
-                    vehiculoUpdate.Placa = vehiculo.Placa;
-                    vehiculoUpdate.Descripcion = vehiculo.Descripcion;
+            if (vehiculoUpdate == null)
+            {
+                return NotFound();
+            }
 
-                var fotoAnterior = await _context.Supervisores
+            try
+            {
+                vehiculoUpdate.IdMarca = vehiculo.IdMarca;
+                vehiculoUpdate.Mecanico = vehiculo.Mecanico;
+                vehiculoUpdate.Taller = vehiculo.Taller;
+                vehiculoUpdate.Estado = vehiculo.Estado;
+                vehiculoUpdate.Codigo = vehiculo.Codigo;
+                vehiculoUpdate.IdOperador = vehiculo.IdOperador;
+                vehiculoUpdate.IdTipoVehiculo = vehiculo.IdTipoVehiculo;
+                vehiculoUpdate.Placa = vehiculo.Placa;
+                vehiculoUpdate.Descripcion = vehiculo.Descripcion;
+
+                var fotoAnterior = await _context.Vehiculos
                    .Where(s => s.Id == vehiculo.Id)
                    .Select(s => s.Foto).FirstOrDefaultAsync();
                 vehiculoUpdate.Foto = await GenerarByteImage(vehiculo.fotofile, fotoAnterior);
 
                 if (vehiculo.fotofile != null)
-                    {
-                        vehiculoUpdate.Foto = await GenerarByteImage(vehiculo.fotofile, vehiculoUpdate.Foto);
-                    }
-
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehiculoExists(vehiculo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Ocurrió un error de concurrencia. Por favor, intente de nuevo.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Ocurrió un error inesperado, por favor intente de nuevo.");
+                    vehiculoUpdate.Foto = await GenerarByteImage(vehiculo.fotofile, vehiculoUpdate.Foto);
                 }
 
-                ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
-                ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
-                ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
-                return View(vehiculo);
-            
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!VehiculoExists(vehiculo.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Ocurrió un error de concurrencia. Por favor, intente de nuevo.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Ocurrió un error inesperado, por favor intente de nuevo.");
+            }
+
+            ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
+            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
+            ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
+            return View(vehiculo);
+
             return View(vehiculo);
         }
 

@@ -57,6 +57,10 @@
                     string imageUrl = $"data:image/png;base64,{base64Image}";
                     <img src="@imageUrl" alt="Imagen" style="max-width: 75px; max-height: 75px;" />
                 }
+            else
+            {
+                <span>No hay foto disponible.</span>
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IdMarcaNavigation)
