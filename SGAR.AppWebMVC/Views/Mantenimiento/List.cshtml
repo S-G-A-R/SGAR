@@ -1,7 +1,7 @@
-﻿@model IEnumerable<SGAR.AppWebMVC.Models.Queja>
+﻿@model IEnumerable<SGAR.AppWebMVC.Models.Mantenimiento>
 
 @{
-    ViewData["Title"] = "Lista de quejas";
+    ViewData["Title"] = "Quejas";
 }
 
 <h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
@@ -9,10 +9,16 @@
 <form asp-action="Index" class="mb-3">
     <div class="row">
 
-        <div class="col-8">
+        <div class="col-4">
             <div class="form-group">
                 <label class="control-label">Titulo</label>
                 <input name="titulo" class="form-control" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Tipo de Situacion</label>
+                <input name="tipoSituacion" class="form-control" />
             </div>
         </div>
         <div class="col-4">
@@ -31,12 +37,10 @@
     <div class="row mt-3">
         <div class="col-12">
             <input type="submit" value="Buscar" class="btn btn-primary" />
-            <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle-fill"></i></a>
         </div>
     </div>
 
 </form>
-
 <div class="row">
     <div class="col-10 mx-auto">
         <table class="table table-striped mt-4 shadow" id="myTable">
@@ -47,6 +51,9 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Estado)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdOperadorNavigation)
                     </th>
                     <th></th>
                 </tr>
@@ -76,21 +83,18 @@
                             }
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.IdOperadorNavigation.Nombre)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
     </div>
 </div>
-
-
-
-
-
 @section Scripts {
     <script>
         $(document).ready(function () {

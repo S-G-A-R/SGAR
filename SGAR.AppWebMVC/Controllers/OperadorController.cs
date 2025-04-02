@@ -137,7 +137,7 @@ namespace SGAR.AppWebMVC.Controllers
         // GET: Operador/Create
         public IActionResult Create()
         {
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id");
+            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Codigo");
             return View(new Operador());
         }
 
@@ -189,7 +189,7 @@ namespace SGAR.AppWebMVC.Controllers
             }
             catch
             {
-                ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
+                ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Codigo", operador.VehiculoId);
                 
                 tipos.Add(1, "Personal");
                 tipos.Add(2, "Laboral");
@@ -232,7 +232,7 @@ namespace SGAR.AppWebMVC.Controllers
                 tipos.Add(2, "Laboral");
                 ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             }
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Id", operador.VehiculoId);
+            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Codigo", operador.VehiculoId);
             return View(operador);
         }
 
@@ -330,6 +330,7 @@ namespace SGAR.AppWebMVC.Controllers
                 }
                 else
                 {
+                    ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Codigo", operador.VehiculoId);
                     return View(operador);
                 }
             }

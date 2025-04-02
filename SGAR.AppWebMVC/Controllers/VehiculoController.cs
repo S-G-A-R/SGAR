@@ -62,7 +62,7 @@ namespace SGAR.AppWebMVC.Controllers
         public IActionResult Create()
         {
             ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo");
-            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id");
+            ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Nombre");
             ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion");
             return View(new Vehiculo());
         }
@@ -103,7 +103,7 @@ namespace SGAR.AppWebMVC.Controllers
             catch
             {
                 ViewData["IdMarca"] = new SelectList(_context.Marcas, "Id", "Modelo", vehiculo.IdMarca);
-                ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Id", vehiculo.IdOperador);
+                ViewData["IdOperador"] = new SelectList(_context.Operadores, "Id", "Nombre", vehiculo.IdOperador);
                 ViewData["IdTipoVehiculo"] = new SelectList(_context.TiposVehiculos, "Id", "Descripcion", vehiculo.IdTipoVehiculo);
                 return View(vehiculo);
             }
