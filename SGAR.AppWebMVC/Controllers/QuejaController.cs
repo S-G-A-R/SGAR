@@ -172,13 +172,31 @@ namespace SGAR.AppWebMVC.Controllers
 
         }
 
-       
+        // GET: Mantenimiento/Delete/5
+        [Authorize(Roles = "Ciudadano")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var queja = await _context.Quejas
+                .Include(m => m.IdCiudadanoNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (queja == null)
+            {
+                return NotFound();
+            }
+
+            return View(queja);
+        }
 
         // POST: Queja/Delete/5
         [Authorize(Roles = "Ciudadano")]
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var queja = await _context.Quejas.FindAsync(id);
             if (queja != null)
