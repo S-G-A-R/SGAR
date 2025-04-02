@@ -21,8 +21,6 @@ namespace SGAR.AppWebMVC.Controllers
             _context = context;
         }
 
-
-        // Acción para mostrar la lista de horarios en la vista Index
         public IActionResult Index()
         {
             var horarios = _context.Horarios
@@ -32,7 +30,6 @@ namespace SGAR.AppWebMVC.Controllers
             return View(horarios);
         }
 
-        // Acción para mostrar el formulario de crear horario
         public IActionResult Create()
         {
             var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s=>s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
@@ -55,7 +52,6 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
 
-        // Acción POST para crear un nuevo horario
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Horario horario, List<int> DiasSeleccionados)
@@ -89,13 +85,10 @@ namespace SGAR.AppWebMVC.Controllers
                 ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", 0);
                 return View(horario);
             }  
-            
-
+          
             
         }
 
-
-        // Acción Editar
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -108,50 +101,87 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
+            ViewBag.DiasSeleccionados = string.IsNullOrEmpty(horario.Dia)
+            ? new List<int>()
+            : horario.Dia.Split(',').Select(int.Parse).ToList();
 
             var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
             var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
             var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
             distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
-            var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona" }]);
+
+            //var zonas = _context.Zonas.Where(z => z.IdDistrito == horario.IdZonaNavigation.IdDistrito).ToList();
+            //zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
 
             var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
             operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
 
-            // Agregar la lista de distritos a ViewData
-            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+            var distritoId = horario.IdZonaNavigation != null ? horario.IdZonaNavigation.IdDistrito : 0;
+
+            var zonas = _context.Zonas.Where(z => z.IdDistrito == distritoId).ToList();
+            zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
+
+            // Convertir los días guardados en la BD a una lista
+            ViewBag.DiasSeleccionados = horario.Dia.Split(',').Select(int.Parse).ToList();
+
+            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", horario.IdZonaNavigation.IdDistrito);
             ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
             ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
+
             return View(horario);
         }
 
+
         [HttpPost]
-        public IActionResult Edit(Horario horario)
+        public IActionResult Edit(Horario horario, List<int> DiasSeleccionados)
         {
             if (ModelState.IsValid)
             {
-                _context.Update(horario);
+                var horarioExistente = _context.Horarios.Find(horario.Id);
+                if (horarioExistente == null)
+                {
+                    ModelState.AddModelError("", "El horario no existe.");
+                    return View(horario);
+                }
+
+
+                // Guardar días seleccionados en formato adecuado
+                horarioExistente.Dia = string.Join(",", DiasSeleccionados);
+                horarioExistente.IdOperador = horario.IdOperador;
+                horarioExistente.IdZona = horario.IdZona;
+                horarioExistente.HoraEntrada = horario.HoraEntrada;
+                horarioExistente.HoraSalida = horario.HoraSalida;
+                horarioExistente.Turno = horario.Turno;
+
+                _context.Update(horarioExistente);
                 _context.SaveChanges();
+
                 return RedirectToAction(nameof(Index));
             }
 
+            // Recargar datos en caso de error
             var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
             var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
             var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
             distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
-            var zonas = new List<Zona>([new Zona { Id = 0, Nombre = "Seleccione una zona" }]);
+
+            var zonas = _context.Zonas.Where(z => z.IdDistrito == horario.IdZonaNavigation.IdDistrito).ToList();
+            zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
 
             var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
             operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
 
-            // Agregar la lista de distritos a ViewData
-            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", 0);
+            ViewBag.DiasSeleccionados = DiasSeleccionados;
+            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", horario.IdZonaNavigation.IdDistrito);
             ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
             ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
+
             return View(horario);
         }
 
-        // Acción Detalles
+
+
+
         public IActionResult Details(int id)
         {
             var horario = _context.Horarios
@@ -164,10 +194,15 @@ namespace SGAR.AppWebMVC.Controllers
                 return NotFound();
             }
 
+            // Extraer los días seleccionados del atributo Dia
+            var diasSeleccionados = string.IsNullOrEmpty(horario.Dia)
+                ? new List<int>()
+                : horario.Dia.Split(',').Select(int.Parse).ToList();
+
+            ViewBag.DiasSeleccionados = diasSeleccionados;
             return View(horario);
         }
 
-        // Acción Eliminar (GET) - muestra la vista de confirmación
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -181,10 +216,16 @@ namespace SGAR.AppWebMVC.Controllers
                 return NotFound();
             }
 
+            // Extraer los días seleccionados del atributo Dia
+            var diasSeleccionados = string.IsNullOrEmpty(horario.Dia)
+                ? new List<int>()
+                : horario.Dia.Split(',').Select(int.Parse).ToList();
+
+            ViewBag.DiasSeleccionados = diasSeleccionados;
+
             return View(horario);
         }
 
-        // Acción Eliminar (POST) - ejecuta la eliminación
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -199,30 +240,34 @@ namespace SGAR.AppWebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 1️⃣ Obtener horarios para FullCalendar
+
         public IActionResult GetHorarios()
         {
             var horarios = _context.Horarios
-                .Include(h => h.IdOperadorNavigation)
-                .Include(h => h.IdZonaNavigation)
+                .Include(h => h.IdOperadorNavigation) // Cargar el operador
+                .Include(h => h.IdZonaNavigation) // Cargar la zona
                 .Select(h => new
                 {
                     id = h.Id,
-                    title = h.IdOperadorNavigation.Nombre + " - " + h.IdZonaNavigation.Nombre,
+                    title = (h.IdOperadorNavigation != null ? h.IdOperadorNavigation.Nombre : "Sin operador") +
+                            " - " +
+                            (h.IdZonaNavigation != null ? h.IdZonaNavigation.Nombre : "Sin zona"),
                     start = DateTime.Today.Add(h.HoraEntrada.ToTimeSpan()),
-                    end = DateTime.Today.Add(h.HoraSalida.ToTimeSpan())
+                    end = DateTime.Today.Add(h.HoraSalida.ToTimeSpan()),
+                    operadorId = h.IdOperador,
+                    zonaId = h.IdZona
                 })
                 .ToList();
 
             return Json(horarios);
         }
 
+
         public IActionResult FullCalendar()
         {
             return View();
         }
 
-        // 2️⃣ Crear un nuevo horario
         [HttpPost]
         public IActionResult CreateHorario([FromBody] Horario horario)
         {
@@ -235,7 +280,7 @@ namespace SGAR.AppWebMVC.Controllers
             return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
         }
 
-        // 3️⃣ Actualizar un horario
+       
         [HttpPost]
         public IActionResult UpdateHorario([FromBody] Horario horario)
         {
@@ -248,7 +293,7 @@ namespace SGAR.AppWebMVC.Controllers
             return Json(new { success = false });
         }
 
-        // 4️⃣ Eliminar un horario (separado para POST)
+       
         [HttpPost]
         public IActionResult DeleteHorario(int id)
         {
@@ -261,16 +306,6 @@ namespace SGAR.AppWebMVC.Controllers
             }
             return Json(new { success = false });
         }
-
-        // Acción para obtener zonas por distrito
-        public IActionResult GetZonas(int idDistrito)
-        {
-            var zonas = _context.Zonas
-                                .Where(z => z.IdDistrito == idDistrito) // Filtrar zonas por distrito
-                                .ToList();
-            return Json(zonas);
-        }
-
 
     }
 }

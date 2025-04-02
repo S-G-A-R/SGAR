@@ -34,9 +34,9 @@
                 <td>@ConvertirDias(horario.Dia)</td>
                 <td>@(horario.Turno == 1 ? "Matutino" : "Vespertino")</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-warning btn-sm">✏ Editar</a>
-                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-info btn-sm">👁 Ver</a>
-                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger btn-sm">🗑 Eliminar</a>
+                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-success"> Editar</a>
+                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-secondary">Ver</a>
+                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> Eliminar</a>
                 </td>
             </tr>
         }

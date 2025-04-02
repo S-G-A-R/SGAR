@@ -13,7 +13,16 @@
     <strong>Zona:</strong> @Model.IdZonaNavigation.Nombre <br />
     <strong>Hora de Entrada:</strong> @Model.HoraEntrada <br />
     <strong>Hora de Salida:</strong> @Model.HoraSalida <br />
-    <strong>Día(s):</strong> @Model.Dia <br />
+    <p><strong>Días:</strong></p>
+    <div>
+        @for (int i = 0; i < 7; i++)
+        {
+            <label>
+                <input type="checkbox" disabled @(ViewBag.DiasSeleccionados.Contains(i) ? "checked" : "") />
+                @Enum.GetName(typeof(DayOfWeek), i)
+            </label>
+        }
+    </div>
     <strong>Turno:</strong> @(Model.Turno == 1 ? "Matutino" : "Vespertino") <br />
 </div>
 
@@ -21,4 +30,5 @@
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Cancelar</a>
+
 </form>
