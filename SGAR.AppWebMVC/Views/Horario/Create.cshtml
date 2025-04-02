@@ -1,102 +1,95 @@
 ﻿@model SGAR.AppWebMVC.Models.Horario
+
 @{
     ViewData["Title"] = "Crear Horario";
-    Layout = null;
 }
 
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header text-center">
-            <h5> Crear Horario</h5>
-        </div>
-        <div class="card-body text-center">
-            <form asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h1>@ViewData["Title"]</h1>
 
-                <!-- Título (nombre del operador) -->
-                <div class="form-group">
-                    <label>Operador</label>
-                    <input asp-for="IdOperador" class="form-control" placeholder="ID Operador" />
-                    <span asp-validation-for="IdOperador" class="text-danger"></span>
-                </div>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="HoraEntrada" class="control-label"></label>
+        <input asp-for="HoraEntrada" type="time" class="form-control" />
+        <span asp-validation-for="HoraEntrada" class="text-danger"></span>
+    </div>
 
-                <!-- Turno -->
-                <div class="form-group">
-                    <label>Turno</label>
-                    <input asp-for="Turno" class="form-control" placeholder="Turno" />
-                    <span asp-validation-for="Turno" class="text-danger"></span>
-                </div>
+    <div class="form-group">
+        <label asp-for="HoraSalida" class="control-label"></label>
+        <input asp-for="HoraSalida" type="time" class="form-control" />
+        <span asp-validation-for="HoraSalida" class="text-danger"></span>
+    </div>
 
-                <div class="form-group col-3">
-                    <label class="control-label">Distrito</label>
-                    <select id="distritos" class="form-control" asp-items="ViewBag.DistritoId"></select>
-                </div>
-
-                <div class="form-group col-3">
-                    <label asp-for="IdZona" class="control-label"></label>
-                    <select id="zonas" asp-for="IdZona" class="form-control" asp-items="ViewBag.ZonaId"></select>
-                </div>
-
-                <!-- Día de la semana (como un campo de días binarios) -->
-                <div class="form-group">
-                    <label>Días de la Semana</label>
-                    <div>
-                        <input type="checkbox" name="DiasSeleccionados" value="Lunes" /> Lunes
-                        <input type="checkbox" name="DiasSeleccionados" value="Martes" /> Martes
-                        <input type="checkbox" name="DiasSeleccionados" value="Miércoles" /> Miércoles
-                        <input type="checkbox" name="DiasSeleccionados" value="Jueves" /> Jueves
-                        <input type="checkbox" name="DiasSeleccionados" value="Viernes" /> Viernes
-                        <input type="checkbox" name="DiasSeleccionados" value="Sábado" /> Sábado
-                        <input type="checkbox" name="DiasSeleccionados" value="Domingo" /> Domingo
-                    </div>
-                </div>
-                <!-- Hora de entrada -->
-                <div class="form-group">
-                    <label>Hora de Entrada</label>
-                    <input asp-for="HoraEntrada" class="form-control" placeholder="Hora de Entrada" type="time" />
-                    <span asp-validation-for="HoraEntrada" class="text-danger"></span>
-                </div>
-
-                <!-- Hora de salida -->
-                <div class="form-group">
-                    <label>Hora de Salida</label>
-                    <input asp-for="HoraSalida" class="form-control" placeholder="Hora de Salida" type="time" />
-                    <span asp-validation-for="HoraSalida" class="text-danger"></span>
-                </div>
-
-                <div class="card-footer">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
-                    </div>
-                </div>
-            </form>
+    <div class="form-group">
+        <label>Días de la semana:</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="DiasSeleccionados" value="0" /> Lunes</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="1" /> Martes</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="2" /> Miércoles</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="3" /> Jueves</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="4" /> Viernes</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="5" /> Sábado</label>
+            <label><input type="checkbox" name="DiasSeleccionados" value="6" /> Domingo</label>
         </div>
     </div>
-</div>
 
-<script>
 
-    $("#distritos").change(function () {
-        getZonasFromDistritoId();
-    })
+    <div class="form-group">
+        <label asp-for="Turno" class="control-label"></label>
+        <select asp-for="Turno" class="form-control">
+            <option value="1">Matutino</option>
+            <option value="2">Vespertino</option>
+        </select>
+    </div>
 
-    var getZonasFromDistritoId = function () {
-        $.ajax({
-            url: '@Url.Action("GetZonasFromDistritoId", "Ciudadano")',
-            type: 'GET',
-            data: {
-                distritoId: $('#distritos').val(),
-            },
-            success: function (data) {
-                $('#zonas').find('option').remove()
-                $('#zonas').append('<option value="0">SELECCIONAR</option>')
-                $(data).each(
-                    function (i, item) {
-                        $('#zonas').append('<option value="'+ item.id +'">' + item.nombre + '</option>')
-                    }
-                )
-            }
-        })
-    }
-</script>
+    <div class="form-group">
+        <label asp-for="IdOperador" class="control-label"></label>
+        <select asp-for="IdOperador" class="form-control">
+            <option value="">Seleccione un operador</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="IdDistrito">Distrito</label>
+        <select id="IdDistrito" name="IdDistrito" class="form-control">
+            <option value="">Seleccione un distrito</option>
+           
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="IdZona">Zona</label>
+        <select id="IdZona" name="IdZona" class="form-control">
+            <option value="">Seleccione una zona</option>
+           
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#IdDistrito').change(function() {
+                var distritoId = $(this).val();
+                if (distritoId) {
+                    $.ajax({
+                        url: '/Horario/GetZonas',
+                        data: { idDistrito: distritoId },
+                        success: function(data) {
+                            var zonaSelect = $('#IdZona');
+                            zonaSelect.empty();
+                            zonaSelect.append('<option value="">Seleccione una zona</option>');
+                            $.each(data, function(index, zona) {
+                                zonaSelect.append('<option value="' + zona.id + '">' + zona.nombre + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#IdZona').empty();
+                    $('#IdZona').append('<option value="">Seleccione una zona</option>');
+                }
+            });
+        });
+    </script>
+}

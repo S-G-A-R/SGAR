@@ -2,61 +2,54 @@
 
 @{
     ViewData["Title"] = "Editar Horario";
-    Layout = null;
 }
 
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header text-center">
-            <h5> Editar Horario</h5>
-        </div>
-        <div class="card-body text-center">
-            <form asp-action="Edit" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
+<h2>@ViewData["Title"]</h2>
 
-                <!-- Operador -->
-                <div class="form-group">
-                    <label>Operador</label>
-                    <input asp-for="IdOperador" class="form-control" placeholder="ID Operador" />
-                    <span asp-validation-for="IdOperador" class="text-danger"></span>
-                </div>
-
-                <!-- Turno -->
-                <div class="form-group">
-                    <label>Turno</label>
-                    <input asp-for="Turno" class="form-control" placeholder="Turno" />
-                    <span asp-validation-for="Turno" class="text-danger"></span>
-                </div>
-
-                <!-- Día de la semana -->
-                <div class="form-group">
-                    <label>Días</label>
-                    <input asp-for="Dia" class="form-control" placeholder="Formato binario (Ej: 1001011)" />
-                    <span asp-validation-for="Dia" class="text-danger"></span>
-                </div>
-
-                <!-- Hora de entrada -->
-                <div class="form-group">
-                    <label>Hora de Entrada</label>
-                    <input asp-for="HoraEntrada" class="form-control" placeholder="Hora de Entrada" type="time" />
-                    <span asp-validation-for="HoraEntrada" class="text-danger"></span>
-                </div>
-
-                <!-- Hora de salida -->
-                <div class="form-group">
-                    <label>Hora de Salida</label>
-                    <input asp-for="HoraSalida" class="form-control" placeholder="Hora de Salida" type="time" />
-                    <span asp-validation-for="HoraSalida" class="text-danger"></span>
-                </div>
-
-                <div class="card-footer">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+<form asp-action="Edit">
+    <div class="form-group">
+        <label for="HoraEntrada">Hora de Entrada</label>
+        <input type="time" class="form-control" id="HoraEntrada" name="HoraEntrada" value="@Model.HoraEntrada" required />
     </div>
-</div>
+
+    <div class="form-group">
+        <label for="HoraSalida">Hora de Salida</label>
+        <input type="time" class="form-control" id="HoraSalida" name="HoraSalida" value="@Model.HoraSalida" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Dia">Días</label>
+        <input type="text" class="form-control" id="Dia" name="Dia" value="@Model.Dia" required />
+        <!-- Aquí puedes usar una interfaz de tipo checkbox o un campo que se ajuste a tu formato de días binarios -->
+    </div>
+
+    <div class="form-group">
+        <label for="Turno">Turno</label>
+        <select class="form-control" id="Turno" name="Turno">
+            <option value="1" @@(Model.Turno == 1 ? "selected" : "")>Matutino</option>
+            <option value="2" @@(Model.Turno == 2 ? "selected" : "")>Vespertino</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="IdOperador">Operador</label>
+        <select class="form-control" id="IdOperador" name="IdOperador">
+            @foreach (var operador in ViewBag.Operadores)
+            {
+                <option value="@operador.Id" @@(operador.Id == Model.IdOperador ? "selected" : "")>@operador.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="IdZona">Zona</label>
+        <select class="form-control" id="IdZona" name="IdZona">
+            @foreach (var zona in ViewBag.Zonas)
+            {
+                <option value="@zona.Id" @@(zona.Id == Model.IdZona ? "selected" : "")>@zona.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+</form>

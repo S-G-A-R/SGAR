@@ -1,94 +1,43 @@
-﻿showInPopup = (url, title) => {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        success: function (res) {
-            $('#form-modal .modal-body').html(res);
-            $('#form-modal .modal-title').html(title);
-            $('#form-modal').modal('show');
-
-        }
-    })
-}
-
-jQueryAjaxPost = form => {
-    try {
-        $.ajax({
-            type: 'POST',
-            url: form.action,
-            data: new FormData(form),
-            contentType: false,
-            processData: false,
-            success: function (res) {
-                if (res.isValid) {
-                    $('#view-all').html(res.html)
-                    $('#form-modal .modal-body').html('');
-                    $('#form-modal .modal-title').html('');
-                    $('#form-modal').modal('hide');
-                    // reload the table         
-                    location.reload()
-
+﻿$(document).ready(function () {
+    var calendar = new FullCalendar.Calendar($('#calendar')[0], {
+        initialView: 'dayGridMonth',
+        events: function (info, successCallback, failureCallback) {
+            // Puedes cargar los eventos desde la base de datos si es necesario
+            $.ajax({
+                url: '/Calendario/GetHorarios', // Ruta donde obtienes los eventos
+                dataType: 'json',
+                success: function (data) {
+                    var events = data.map(function (event) {
+                        return {
+                            title: event.title, // Título del evento (por ejemplo, nombre del operador)
+                            start: event.start,  // Fecha y hora de inicio
+                            end: event.end,      // Fecha y hora de fin
+                            id: event.id         // ID para editar o eliminar el evento
+                        };
+                    });
+                    successCallback(events);
                 }
-                else
+            });
+        },
+        eventClick: function (info) {
+            // Abrir el modal con los detalles del evento para edición
+            $('#horarioModal').modal('show');
+            var event = info.event;
 
-                    $('#form-modal .modal-body').html(res.html);
-            },
-            error: function (err) {
-                console.log(err)
-            }
-        })
-        //to prevent default form submit event
-        return false;
-    } catch (ex) {
-        console.log(ex)
-    }
-}
-
-(function (modalDeleteDialog) {
-
-    var methods = {
-        "openModal": openModal,
-        "deleteItem": deleteItem
-    };
-
-    var item_to_delete;
-
-    /**
-         * Open a modal by class name or Id.
-         *
-         * @return string id item.
-         */
-    function openModal(modalName, classOrId, sourceEvent, deletePath, eventClassOrId) {
-        var textEvent;
-        if (classOrId) {
-            textEvent = "." + modalName;
-        } else {
-            textEvent = "#" + modalName;
+            // Cargar los datos del evento en el formulario del modal
+            // Asumiendo que tienes datos como id, operador, zona, turno, días en la base de datos
+            $('#horarioForm #Dia').val(event.extendedProps.dia); // Días
+            $('#horarioForm #IdOperador').val(event.extendedProps.operadorId); // Operador
+            $('#horarioForm #IdZona').val(event.extendedProps.zonaId); // Zona
+            $('#horarioForm #Turno').val(event.extendedProps.turno); // Turno
+        },
+        dateClick: function (info) {
+            // Abrir el modal para crear un nuevo evento (horario)
+            $('#horarioModal').modal('show');
+            // Puedes pre-llenar la fecha en el formulario si lo deseas
+            $('#horarioForm input[name="Dia"]').val(info.dateStr);
         }
+    });
 
-        $(textEvent).click((e) => {
-            item_to_delete = e.currentTarget.dataset.id;
-            deleteItem(sourceEvent, deletePath, eventClassOrId);
-        });
-    }
-
-    /**
-     * Path to delete an item.
-     *
-     * @return void.
-     */
-    function deleteItem(sourceEvent, deletePath, eventClassOrId) {
-        var textEvent;
-        if (eventClassOrId) {
-            textEvent = "." + sourceEvent;
-        } else {
-            textEvent = "#" + sourceEvent;
-        }
-        $(textEvent).click(function () {
-            window.location.href = deletePath + item_to_delete;
-        });
-    }
-
-    modalDeleteDialog.sc_deleteDialog = methods;
-
-})(window);
+    calendar.render();
+});
