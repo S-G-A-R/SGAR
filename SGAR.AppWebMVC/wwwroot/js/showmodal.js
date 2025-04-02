@@ -29,5 +29,16 @@
             });
         },
         eventClick: function (info) {
-// Mostrar el
+            var event = info.event;
 
+            console.log("Evento clickeado:", event.extendedProps); // Verifica que los datos llegan correctamente
+
+            $('#modalOperador').text(event.extendedProps.operador || 'No asignado');
+            $('#modalZona').text(event.extendedProps.zona || 'No asignada');
+            $('#modalTurno').text(event.extendedProps.turno || 'No asignado');
+            $('#modalHoraEntrada').text(event.extendedProps.horaEntrada || 'No especificada');
+            $('#modalHoraSalida').text(event.extendedProps.horaSalida || 'No especificada');
+            $('#modalDias').text(event.extendedProps.dias || 'No especificado');
+
+            $('#eventDetailsModal').modal('show');
+        }
