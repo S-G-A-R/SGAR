@@ -85,7 +85,6 @@ namespace SGAR.AppWebMVC.Controllers
                 ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", 0);
                 return View(horario);
             }  
-          
             
         }
 
@@ -101,6 +100,7 @@ namespace SGAR.AppWebMVC.Controllers
             {
                 return NotFound();
             }
+
             ViewBag.DiasSeleccionados = string.IsNullOrEmpty(horario.Dia)
             ? new List<int>()
             : horario.Dia.Split(',').Select(int.Parse).ToList();
@@ -109,8 +109,6 @@ namespace SGAR.AppWebMVC.Controllers
             var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
             var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
             distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
-
-
 
             var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
             operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
@@ -185,12 +183,7 @@ namespace SGAR.AppWebMVC.Controllers
                 return View(horario);
             }
 
-
-           
         }
-
-
-
 
         public IActionResult Details(int id)
         {
@@ -250,27 +243,7 @@ namespace SGAR.AppWebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult GetHorarios()
-        {
-            var horarios = _context.Horarios
-                .Include(h => h.IdOperadorNavigation) // Incluye el operador
-                .Include(h => h.IdZonaNavigation)    // Incluye la zona
-                .ToList();
-
-            // Transformar los horarios para adaptarlos a lo que FullCalendar espera
-            var events = horarios.SelectMany(h => h.Dia.Split(',')  // Asumimos que "Dia" es una cadena con días separados por coma
-                .Select(dia => new
-                {
-                    id = h.Id,
-                    title = $"{h.IdOperadorNavigation.Nombre} - {h.IdZonaNavigation.Nombre}",  // Nombre del operador y la zona
-                    start = GetDateTimeForDay(dia, h.HoraEntrada),  // Fecha y hora de inicio
-                    end = GetDateTimeForDay(dia, h.HoraSalida),    // Fecha y hora de fin
-                    description = $"Operador: {h.IdOperadorNavigation.Nombre}, Zona: {h.IdZonaNavigation.Nombre}",
-                    dia = h.Dia // Días en los que trabaja el operador
-                })).ToList();
-
-            return Json(events);
-        }
+      
 
         public IActionResult GetZonas(int idDistrito)
         {
@@ -299,11 +272,51 @@ namespace SGAR.AppWebMVC.Controllers
             return today.AddDays(daysToAdd).Add(horaEntrada);
         }
 
-
-
         public IActionResult FullCalendar()
         {
             return View();
+        }
+
+        public IActionResult GetHorarios()
+        {
+            var diasSemana = new Dictionary<int, string>
+                {
+                    {1, "Lunes"},
+                    {2, "Martes"},
+                    {3, "Miércoles"},
+                    {4, "Jueves"},
+                    {5, "Viernes"},
+                    {6, "Sábado"},
+                    {7, "Domingo"}
+                };
+
+            var horarios = _context.Horarios
+                .Include(h => h.IdOperadorNavigation)
+                .Include(h => h.IdZonaNavigation)
+                .ToList();
+
+            var events = horarios.SelectMany(h => h.Dia.Split(',')
+                .Select(dia => new
+                {
+                    id = h.Id,
+                    title = $"{h.IdOperadorNavigation.Nombre} - {h.IdZonaNavigation.Nombre}",
+                    start = GetDateTimeForDay(dia, h.HoraEntrada),
+                    end = GetDateTimeForDay(dia, h.HoraSalida),
+                    operador = h.IdOperadorNavigation.Nombre,
+                    zona = h.IdZonaNavigation.Nombre,
+                    turno = h.Turno == 1 ? "Matutino" : "Vespertino",
+                    horaEntrada = h.HoraEntrada.ToString("hh:mm tt"),  // Formato con AM/PM
+                    horaSalida = h.HoraSalida.ToString("hh:mm tt"),
+                    dia = string.Join(", ", h.Dia.Split(',').Select(d => diasSemana.ContainsKey(int.Parse(d)) ? diasSemana[int.Parse(d)] : ""))
+                })).ToList();
+
+            return Json(events);
+        }
+
+
+        private string ObtenerTurno(int turno)
+        {
+            return turno == 1 ? "Matutino" : "Vespertino";
         }
 
         [HttpPost]

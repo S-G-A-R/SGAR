@@ -18,7 +18,7 @@
             <th>Zona</th>
             <th>Hora Entrada</th>
             <th>Hora Salida</th>
-            <th>Días</th>
+            
             <th>Turno</th>
             <th>Acciones</th>
         </tr>
@@ -31,7 +31,7 @@
                 <td>@horario.IdZonaNavigation.Nombre</td>
                 <td>@horario.HoraEntrada</td>
                 <td>@horario.HoraSalida</td>
-                <td>@ConvertirDias(horario.Dia)</td>
+              
                 <td>@(horario.Turno == 1 ? "Matutino" : "Vespertino")</td>
                 <td>
                     <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-success"> Editar</a>

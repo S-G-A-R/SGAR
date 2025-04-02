@@ -6,72 +6,107 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Volver a la Lista</a>
+@if (User.IsInRole("Alcaldia"))
+{
+    <a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Volver a la Lista</a>
+}
 
-<!-- Aquí va el calendario -->
+
+<!-- Incluir FullCalendar y jQuery -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Contenedor del Calendario -->
 <div id="calendar"></div>
 
-<!-- Modal de detalles del evento -->
-<div id="eventDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="eventDetailsLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- Modal para ver detalles del evento -->
+<div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="eventDetailsLabel">Detalles del Evento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="modalTitle">Detalles del Horario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="eventDetails">
-                <!-- Aquí se mostrarán los detalles del evento -->
+            <div class="modal-body">
                 <p><strong>Operador:</strong> <span id="modalOperador"></span></p>
                 <p><strong>Zona:</strong> <span id="modalZona"></span></p>
                 <p><strong>Turno:</strong> <span id="modalTurno"></span></p>
+                <p><strong>Hora de Entrada:</strong> <span id="modalHoraEntrada"></span></p>
+                <p><strong>Hora de Salida:</strong> <span id="modalHoraSalida"></span></p>
                 <p><strong>Días:</strong> <span id="modalDias"></span></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Importar FullCalendar y jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<!-- Script para FullCalendar -->
 @section Scripts {
     <script>
         $(document).ready(function () {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'es', // Traducción a español
                 initialView: 'dayGridMonth',
-                locale: 'es',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                events: '/Horario/GetHorarios', // Ruta del controlador 
-                dateClick: function (info) {
-                    // Si haces clic en un día vacío, puedes abrir el modal para crear un nuevo evento
-                    $('#eventDetailsModal').modal('show');
-                    $('#modalOperador').text('Nuevo evento'); // Puedes pre-poblar aquí
-                    $('#modalZona').text('Selecciona zona');
-                    $('#modalTurno').text('Selecciona turno');
-                    $('#modalDias').text(info.dateStr);
+                buttonText: {
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día',
+                    list: 'Lista'
                 },
-                eventClick: function (info) {
-                    // Abrir el modal con los detalles del evento cuando se hace clic
-                    $('#eventDetailsModal').modal('show');
+                events: function (info, successCallback, failureCallback) {
+                    $.ajax({
+                        url: '/Horario/GetHorarios',
+                        dataType: 'json',
+                        success: function (data) {
+                            var events = data.map(function (event) {
+                                return {
+                                    id: event.id,
+                                    title: event.title,
+                                    start: event.start,
+                                    end: event.end,
+                                    extendedProps: {
+                                        operador: event.operador,
+                                        zona: event.zona,
+                                        turno: event.turno,
+                                        horaEntrada: event.horaEntrada,
+                                        horaSalida: event.horaSalida,
+                                        dias: event.dia
+                                    }
+                                };
+                            });
+                            console.log("Eventos recibidos:", events); // Debug en consola
+                            successCallback(events);
+                        },
+                        error: function () {
+                            failureCallback();
+                        }
+                    });
+                },
+                      eventClick: function (info) {
+            var event = info.event;
+            $('#modalOperador').text(event.extendedProps.operador || 'No asignado');
+            $('#modalZona').text(event.extendedProps.zona || 'No asignada');
+            $('#modalTurno').text(event.extendedProps.turno || 'No asignado');
+            $('#modalHoraEntrada').text(event.extendedProps.horaEntrada || 'No especificada');
+            $('#modalHoraSalida').text(event.extendedProps.horaSalida || 'No especificada');
+            $('#modalDias').text(event.extendedProps.dias || 'No especificado');
 
-                    // Acceder a los datos del evento
-                    var event = info.event;
-                    $('#modalOperador').text(event.extendedProps.operador); // Operador
-                    $('#modalZona').text(event.extendedProps.zona); // Zona
-                    $('#modalTurno').text(event.extendedProps.turno); // Turno
-                    $('#modalDias').text(event.extendedProps.dias); // Días
-                }
+            $('#eventDetailsModal').modal('show');
+        }
+
             });
+
             calendar.render();
         });
     </script>
