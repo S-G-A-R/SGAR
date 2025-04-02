@@ -272,6 +272,15 @@ namespace SGAR.AppWebMVC.Controllers
             return Json(events);
         }
 
+        public IActionResult GetZonas(int idDistrito)
+        {
+            var zonas = _context.Zonas
+                                .Where(z => z.IdDistrito == idDistrito) // Filtrar zonas por distrito
+                                .Select(z => new { z.Id, z.Nombre })
+                                .ToList();
+            return Json(zonas);
+        }
+
         // Método para obtener el DateTime correcto según el día de la semana
         private DateTime GetDateTimeForDay(string dia, TimeOnly hora)
         {

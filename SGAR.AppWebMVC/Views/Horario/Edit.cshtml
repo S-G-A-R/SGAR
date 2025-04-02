@@ -24,7 +24,7 @@
             bool isChecked = ViewBag.DiasSeleccionados != null && ViewBag.DiasSeleccionados.Contains(i);
             <input type="checkbox" name="DiasSeleccionados" value="@i" @(isChecked ? "checked" : "") />
             @Enum.GetName(typeof(DayOfWeek), i)
-            <br />
+
         }
     </div>
 
