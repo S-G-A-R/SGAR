@@ -1,38 +1,78 @@
 ﻿@model SGAR.AppWebMVC.Models.Horario
+
 @{
     ViewData["Title"] = "Calendario de Horarios";
 }
 
-<h2>Calendario de Horarios</h2>
+<h2>@ViewData["Title"]</h2>
 
 <a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Volver a la Lista</a>
 
+<!-- Aquí va el calendario -->
 <div id="calendar"></div>
 
+<!-- Modal de detalles del evento -->
+<div id="eventDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="eventDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventDetailsLabel">Detalles del Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="eventDetails">
+                <!-- Aquí se mostrarán los detalles del evento -->
+                <p><strong>Operador:</strong> <span id="modalOperador"></span></p>
+                <p><strong>Zona:</strong> <span id="modalZona"></span></p>
+                <p><strong>Turno:</strong> <span id="modalTurno"></span></p>
+                <p><strong>Días:</strong> <span id="modalDias"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Importar FullCalendar y jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: '/Horarios/GetHorarios',
-            dateClick: function (info) {
-                alert('Fecha seleccionada: ' + info.dateStr);
-            },
-            eventClick: function (info) {
-                alert('Horario: ' + info.event.title);
-            }
-        });
-        calendar.render();
-    });
-</script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: '/Horario/GetHorarios', // Ruta del controlador 
+                dateClick: function (info) {
+                    // Si haces clic en un día vacío, puedes abrir el modal para crear un nuevo evento
+                    $('#eventDetailsModal').modal('show');
+                    $('#modalOperador').text('Nuevo evento'); // Puedes pre-poblar aquí
+                    $('#modalZona').text('Selecciona zona');
+                    $('#modalTurno').text('Selecciona turno');
+                    $('#modalDias').text(info.dateStr);
+                },
+                eventClick: function (info) {
+                    // Abrir el modal con los detalles del evento cuando se hace clic
+                    $('#eventDetailsModal').modal('show');
 
-            
+                    // Acceder a los datos del evento
+                    var event = info.event;
+                    $('#modalOperador').text(event.extendedProps.operador); // Operador
+                    $('#modalZona').text(event.extendedProps.zona); // Zona
+                    $('#modalTurno').text(event.extendedProps.turno); // Turno
+                    $('#modalDias').text(event.extendedProps.dias); // Días
+                }
+            });
+            calendar.render();
+        });
+    </script>
+}

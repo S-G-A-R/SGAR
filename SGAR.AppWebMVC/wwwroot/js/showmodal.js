@@ -4,7 +4,7 @@
         events: function (info, successCallback, failureCallback) {
             // Cargar los eventos desde el servidor
             $.ajax({
-                url: '/Calendario/GetHorarios', // Ruta del controlador que devuelve los eventos
+                url: '/Horario/GetHorarios', // Ruta del controlador que devuelve los eventos
                 dataType: 'json',
                 success: function (data) {
                     var events = data.map(function (event) {

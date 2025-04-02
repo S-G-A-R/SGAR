@@ -250,7 +250,6 @@ namespace SGAR.AppWebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         public IActionResult GetHorarios()
         {
             var horarios = _context.Horarios
@@ -259,17 +258,36 @@ namespace SGAR.AppWebMVC.Controllers
                 .ToList();
 
             // Transformar los horarios para adaptarlos a lo que FullCalendar espera
-            var events = horarios.Select(h => new
-            {
-                id = h.Id,
-                title = $"{h.IdOperadorNavigation.Nombre} - {h.IdZonaNavigation.Nombre}",  // Nombre del operador y la zona
-                start = DateTime.Today.Add(h.HoraEntrada.ToTimeSpan()),  // Fecha y hora de inicio
-                end = DateTime.Today.Add(h.HoraSalida.ToTimeSpan()),    // Fecha y hora de fin
-                description = $"Operador: {h.IdOperadorNavigation.Nombre}, Zona: {h.IdZonaNavigation.Nombre}",
-                dia = h.Dia // Días en los que trabaja el operador
-            }).ToList();
+            var events = horarios.SelectMany(h => h.Dia.Split(',')  // Asumimos que "Dia" es una cadena con días separados por coma
+                .Select(dia => new
+                {
+                    id = h.Id,
+                    title = $"{h.IdOperadorNavigation.Nombre} - {h.IdZonaNavigation.Nombre}",  // Nombre del operador y la zona
+                    start = GetDateTimeForDay(dia, h.HoraEntrada),  // Fecha y hora de inicio
+                    end = GetDateTimeForDay(dia, h.HoraSalida),    // Fecha y hora de fin
+                    description = $"Operador: {h.IdOperadorNavigation.Nombre}, Zona: {h.IdZonaNavigation.Nombre}",
+                    dia = h.Dia // Días en los que trabaja el operador
+                })).ToList();
 
             return Json(events);
+        }
+
+        // Método para obtener el DateTime correcto según el día de la semana
+        private DateTime GetDateTimeForDay(string dia, TimeOnly hora)
+        {
+            var today = DateTime.Today;
+            var dayOfWeek = Enum.Parse<DayOfWeek>(dia, true); // Convertimos el nombre del día a DayOfWeek
+
+            // Calculamos la fecha correcta del día de la semana (de acuerdo con el día actual)
+            int daysToAdd = (int)dayOfWeek - (int)today.DayOfWeek;
+            if (daysToAdd < 0)
+                daysToAdd += 7;
+
+            // Convertimos TimeOnly a TimeSpan
+            TimeSpan horaEntrada = hora.ToTimeSpan();
+
+            // Fecha final con la hora combinada
+            return today.AddDays(daysToAdd).Add(horaEntrada);
         }
 
 
