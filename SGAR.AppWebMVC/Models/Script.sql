@@ -230,6 +230,14 @@ GO
 ALTER TABLE ReferentesOperadores
 ADD Id INT PRIMARY KEY IDENTITY(1,1);
 
+ALTER TABLE Quejas
+ADD Estado TINYINT,
+Motivo VARCHAR(255)
+
+ALTER TABLE Mantenimiento
+ADD Estado TINYINT,
+Motivo VARCHAR(255)
+
 ALTER TABLE Zonas
 ADD CONSTRAINT FK_Zonas_Alcaldias
 FOREIGN KEY (IdAlcaldia)
