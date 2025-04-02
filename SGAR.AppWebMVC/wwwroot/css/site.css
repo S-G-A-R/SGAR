@@ -2,6 +2,11 @@ html {
   font-size: 14px;
 }
 
+.required:after {
+    content : " *";
+    color : red;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;

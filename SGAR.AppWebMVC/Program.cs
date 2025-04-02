@@ -13,7 +13,7 @@ builder.Services.AddDbContext<SgarDbContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie((o) =>
 {
     o.LoginPath = new PathString("/Alcaldia/Login");
-    o.AccessDeniedPath = new PathString("/Home/Unauthorized");
+    o.AccessDeniedPath = new PathString("/Home/Error");
     o.ExpireTimeSpan = TimeSpan.FromHours(8);
     o.SlidingExpiration = true;
     o.Cookie.HttpOnly = true;

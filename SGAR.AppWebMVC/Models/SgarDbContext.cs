@@ -161,6 +161,7 @@ public partial class SgarDbContext : DbContext
             entity.Property(e => e.Titulo)
                 .HasMaxLength(80)
                 .IsUnicode(false);
+            entity.Property(e => e.Motivo).IsUnicode(false);
 
             entity.HasOne(d => d.IdOperadorNavigation).WithMany(p => p.Mantenimientos)
                 .HasForeignKey(d => d.IdOperador)
@@ -287,6 +288,7 @@ public partial class SgarDbContext : DbContext
             entity.Property(e => e.Titulo)
                 .HasMaxLength(80)
                 .IsUnicode(false);
+            entity.Property(e => e.Motivo).IsUnicode(false);
 
             entity.HasOne(d => d.IdCiudadanoNavigation).WithMany(p => p.Quejas)
                 .HasForeignKey(d => d.IdCiudadano)

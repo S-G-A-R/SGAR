@@ -1,0 +1,83 @@
+﻿@model SGAR.AppWebMVC.Models.Queja
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Queja</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="col-8">
+                    <div class="form-group m-2">
+                        <label asp-for="Titulo" class="control-label "></label>
+                        <input asp-for="Titulo" class="form-control" disabled />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group m-2">
+                        <label asp-for="TipoSituacion" class="control-label "></label>
+                        <input asp-for="TipoSituacion" class="form-control" disabled />
+                        <span asp-validation-for="TipoSituacion" class="text-danger"></span>
+                    </div>
+                    <div class="form-group m-2">
+                        <label asp-for="Descripcion" class="control-label"></label>
+                        <textarea asp-for="Descripcion" class="form-control" disabled></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+                    <div class="form-group m-2">
+                        <label asp-for="Archivo" class="control-label"></label>
+                        <br />
+                        @if (Model.Archivo != null && Model.Archivo.Length > 0)
+                        {
+                            string base64Image = Convert.ToBase64String(Model.Archivo);
+                            string imageUrl = $"data:image/png;base64,{base64Image}";
+                            <img src="@imageUrl" alt="Foto" style="max-width: 75px; max-height: 75px;" />
+                        }
+                        else
+                        {
+                            <span>No hay foto disponible.</span>
+                        }
+                        <span asp-validation-for="Archivo" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="col-4">
+                    <div class="form-group m-2">
+                        <label asp-for="Estado" class="control-label required"></label>
+                        <select asp-for="Estado" class="form-control">
+                            <option value="1">En Espera</option>
+                            <option value="2">Solucionada</option>
+                            <option value="3">Denegada</option>
+                        </select>
+                        <span asp-validation-for="Estado" class="text-danger"></span>
+                    </div>
+                    <div class="form-group m-2">
+                        <label asp-for="Motivo" class="control-label"></label>
+                        <textarea asp-for="Motivo" class="form-control" ></textarea>
+                        <span asp-validation-for="Motivo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-2">
+                <div class="form-group col-1">
+                    <input type="submit" value="Guardar" class="btn btn-success" />
+                </div>
+                <div class="col-1">
+                    <a asp-action="List" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

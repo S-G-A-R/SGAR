@@ -41,7 +41,7 @@
                                 <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Operador" asp-action="Index"><i class="bi bi-car-front-fill"></i> Operadores</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Alcaldia" asp-action="Index"><i class="bi bi-person-vcard-fill"></i> Supervisores</a>
+                                <a class="nav-link text-dark btn btn-outline-success m-2 text-start" asp-area="" asp-controller="Supervisor" asp-action="Index"><i class="bi bi-person-vcard-fill"></i> Supervisores</a>
                             </li>
                             @if (User.FindFirst("Id").Value == "1")
                             {
@@ -228,6 +228,16 @@
                             <span>@nombre <i class="bi bi-person-circle"></i></span>
                         }
                         @if (User.IsInRole("Ciudadano"))
+                        {
+                            var nombre = (User.FindFirst("Nombre").Value).Split(" ");
+                            <span>@nombre[0] <i class="bi bi-person-circle"></i></span>
+                        }
+                        @if (User.IsInRole("Operador"))
+                        {
+                            var nombre = (User.FindFirst("Nombre").Value).Split(" ");
+                            <span>@nombre[0] <i class="bi bi-person-circle"></i></span>
+                        }
+                        @if (User.IsInRole("Supervisor"))
                         {
                             var nombre = (User.FindFirst("Nombre").Value).Split(" ");
                             <span>@nombre[0] <i class="bi bi-person-circle"></i></span>
