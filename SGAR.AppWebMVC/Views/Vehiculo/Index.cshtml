@@ -9,94 +9,41 @@
 <p>
     <a asp-action="Create">Agregar vehiculo</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Placa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Codigo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mecanico)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Taller)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdMarcaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdOperadorNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTipoVehiculoNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Placa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Codigo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mecanico)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Taller)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-                <td>
-                    @if (item.Foto != null && item.Foto.Length > 0)
-                    {
-                        string base64Image = Convert.ToBase64String(item.Foto);
-                        string imageUrl = $"data:image/png;base64,{base64Image}";
-                        <div id="preview">
-                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 100px; max-height:100px;" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="preview" style="display: none;">
-                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 100px; max-height:100px;" />
-                        </div>
-                    }
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdMarcaNavigation.Modelo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdOperadorNavigation.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTipoVehiculoNavigation.Descripcion)
-            </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row justify-content-center">
+    @foreach (var item in Model)
+    {
+
+        <div class="card text-center col-4 m-3" style="width: 18rem;">
+            @if (item.Foto != null && item.Foto.Length > 0)
+            {
+                string base64Image = Convert.ToBase64String(item.Foto);
+                string imageUrl = $"data:image/png;base64,{base64Image}";
+                <div id="preview ">
+                    <img id="imgPreview" src="@imageUrl" alt="Foto" class="card-img-top m-2" style="max-width: 100px; max-height:100px;" />
+                </div>
+            }
+            else
+            {
+                <div id="preview" style="display: none;">
+                    <img id="imgPreview" src="#" alt="Foto" class="card-img-top" style="max-width: 100px; max-height:100px;" />
+                </div>
+            }
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">@Html.Display(item.IdMarcaNavigation.Nombre + " " + item.IdMarcaNavigation.Modelo)</li>
+                    <li class="list-group-item">@Html.DisplayFor(modelItem => item.Placa)</li>
+                    <li class="list-group-item">@Html.DisplayFor(modelItem => item.IdOperadorNavigation.Nombre)</li>
+                </ul>
+                <div class="row p-3">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning col-4"><i class="bi bi-pencil-square"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info col-4"><i class="bi bi-info-square-fill"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger col-4"><i class="bi bi-trash-fill"></i></a>
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+</div>
+

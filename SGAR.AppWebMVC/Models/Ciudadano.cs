@@ -27,7 +27,7 @@ public partial class Ciudadano
     [Required(ErrorMessage = "Seleccione su zona (tras seleccionar departamento y municipio).")]
     public int ZonaId { get; set; }
 
-    public virtual ICollection<Queja> Quejas { get; set; } = new List<Queja>();
+    public virtual ICollection<Queja>? Quejas { get; set; } = new List<Queja>();
     [Display(Name = "Zona")]
     public virtual Zona? Zona { get; set; } = null!;
 

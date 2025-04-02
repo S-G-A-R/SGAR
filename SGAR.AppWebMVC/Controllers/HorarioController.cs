@@ -110,8 +110,7 @@ namespace SGAR.AppWebMVC.Controllers
             var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
             distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
 
-            //var zonas = _context.Zonas.Where(z => z.IdDistrito == horario.IdZonaNavigation.IdDistrito).ToList();
-            //zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
+
 
             var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
             operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
@@ -135,7 +134,7 @@ namespace SGAR.AppWebMVC.Controllers
         [HttpPost]
         public IActionResult Edit(Horario horario, List<int> DiasSeleccionados)
         {
-            if (ModelState.IsValid)
+            try
             {
                 var horarioExistente = _context.Horarios.Find(horario.Id);
                 if (horarioExistente == null)
@@ -158,25 +157,36 @@ namespace SGAR.AppWebMVC.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            catch
+            {
+                // Recargar datos en caso de error
+                var id = horario.Id;
+                horario = _context.Horarios
+                   .Include(h => h.IdOperadorNavigation)
+                   .Include(h => h.IdZonaNavigation)
+                   .FirstOrDefault(h => h.Id == id);
 
-            // Recargar datos en caso de error
-            var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
-            var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
-            var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
-            distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
+                var yourAlcaldia = _context.Alcaldias.FirstOrDefault(s => s.Id == Convert.ToInt32(User.FindFirst("Id").Value));
+                var yourMunicipio = _context.Municipios.FirstOrDefault(s => s.Id == yourAlcaldia.IdMunicipio);
+                var distritos = _context.Distritos.Where(s => s.IdMunicipio == yourMunicipio.Id).ToList();
+                distritos.Add(new Distrito { Id = 0, Nombre = "Seleccione un distrito", IdMunicipio = 0 });
 
-            var zonas = _context.Zonas.Where(z => z.IdDistrito == horario.IdZonaNavigation.IdDistrito).ToList();
-            zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
+                var zonas = _context.Zonas.Where(z => z.IdDistrito == horario.IdZonaNavigation.IdDistrito).ToList();
+                zonas.Add(new Zona { Id = 0, Nombre = "Seleccione una zona" });
 
-            var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
-            operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
+                var operadores = _context.Operadores.Where(s => s.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value)).ToList();
+                operadores.Add(new Operador { Id = 0, Nombre = "Seleccione un operador" });
 
-            ViewBag.DiasSeleccionados = DiasSeleccionados;
-            ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", horario.IdZonaNavigation.IdDistrito);
-            ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
-            ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
+                ViewBag.DiasSeleccionados = DiasSeleccionados;
+                ViewData["Distritos"] = new SelectList(distritos, "Id", "Nombre", horario.IdZonaNavigation.IdDistrito);
+                ViewData["Zonas"] = new SelectList(zonas, "Id", "Nombre", horario.IdZona);
+                ViewData["Operadores"] = new SelectList(operadores, "Id", "Nombre", horario.IdOperador);
 
-            return View(horario);
+                return View(horario);
+            }
+
+
+           
         }
 
 

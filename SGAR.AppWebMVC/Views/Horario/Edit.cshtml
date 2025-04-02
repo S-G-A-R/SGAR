@@ -30,7 +30,8 @@
 
     <div class="form-group">
         <label for="Turno" class="required">Turno</label>
-        <select class="form-control" id="Turno" name="Turno">
+        <select class="form-control" id="Turno" asp-for="Turno" name="Turno">
+            <option value="">Selecciona un turno</option>
             <option value="1">Matutino</option>
             <option value="2">Vespertino</option>
         </select>

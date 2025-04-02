@@ -24,9 +24,9 @@ public partial class Alcaldia
     [Display(Name = "Municipio")]
     public virtual Municipio? IdMunicipioNavigation { get; set; } = null!;
 
-    public virtual ICollection<Operador> Operadores { get; set; } = new List<Operador>();
+    public virtual ICollection<Operador>? Operadores { get; set; } = new List<Operador>();
 
-    public virtual ICollection<Supervisor> Supervisores { get; set; } = new List<Supervisor>();
+    public virtual ICollection<Supervisor>? Supervisores { get; set; } = new List<Supervisor>();
 
-    public virtual ICollection<Zona> Zonas { get; set; } = new List<Zona>();
+    public virtual ICollection<Zona>? Zonas { get; set; } = new List<Zona>();
 }

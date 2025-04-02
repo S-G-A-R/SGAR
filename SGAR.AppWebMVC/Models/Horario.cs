@@ -27,9 +27,9 @@ public partial class Horario
     [Display(Name = "Zona")]
     public int IdZona { get; set; }
 
-    public virtual Operador IdOperadorNavigation { get; set; } = null!;
+    public virtual Operador? IdOperadorNavigation { get; set; } = null!;
 
-    public virtual Zona IdZonaNavigation { get; set; } = null!;
+    public virtual Zona? IdZonaNavigation { get; set; } = null!;
 
-    public virtual ICollection<Ubicacion> Ubicaciones { get; set; } = new List<Ubicacion>();
+    public virtual ICollection<Ubicacion>? Ubicaciones { get; set; } = new List<Ubicacion>();
 }

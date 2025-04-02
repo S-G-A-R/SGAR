@@ -28,11 +28,11 @@ public partial class Vehiculo
     public string? Descripcion { get; set; }
 
 
-    [Display(Name = "Navegación Marca")]
+    [Display(Name = "Marca")]
     public virtual Marca IdMarcaNavigation { get; set; } = null!;
-    [Display(Name = "Navegación operador")]
+    [Display(Name = "operador")]
     public virtual Operador? IdOperadorNavigation { get; set; }
-    [Display(Name = "Navegación de tipo de vehiculo")]
+    [Display(Name = "Tipo de vehiculo")]
     public virtual TiposVehiculo IdTipoVehiculoNavigation { get; set; } = null!;
 
     public virtual ICollection<Operador> Operadores { get; set; } = new List<Operador>();
