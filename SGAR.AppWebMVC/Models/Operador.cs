@@ -26,6 +26,8 @@ public partial class Operador
     public string CodigoOperador { get; set; } = null!;
     [Required(ErrorMessage = "El Telefono Laboral es obligatorio.")]
     public string TelefonoLaboral { get; set; } = null!;
+
+    [Display(Name = "Correo Laboral")]
     [Required(ErrorMessage = "El Correo Laboral es obligatorio.")]
     [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]
     public string CorreoLaboral { get; set; } = null!;

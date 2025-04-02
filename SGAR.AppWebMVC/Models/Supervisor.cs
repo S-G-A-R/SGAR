@@ -26,6 +26,7 @@ public partial class Supervisor
     [Required(ErrorMessage = "El Código es obligatorio.")]
     public string Codigo { get; set; } = null!;
     [Required(ErrorMessage = "El Correo Laboral es obligatorio.")]
+    [Display(Name = "Correo Laboral")]
     public string CorreoLaboral { get; set; } = null!;
     [Required(ErrorMessage = "El Telefono Laboral es obligatorio.")]
     [StringLength(9, ErrorMessage = "El teléfono puede escribirse con o sin guión, no exceda el límite de caractéres.")]
