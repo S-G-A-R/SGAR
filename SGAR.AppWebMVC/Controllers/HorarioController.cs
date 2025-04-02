@@ -254,23 +254,24 @@ namespace SGAR.AppWebMVC.Controllers
         public IActionResult GetHorarios()
         {
             var horarios = _context.Horarios
-                .Include(h => h.IdOperadorNavigation) // Cargar el operador
-                .Include(h => h.IdZonaNavigation) // Cargar la zona
-                .Select(h => new
-                {
-                    id = h.Id,
-                    title = (h.IdOperadorNavigation != null ? h.IdOperadorNavigation.Nombre : "Sin operador") +
-                            " - " +
-                            (h.IdZonaNavigation != null ? h.IdZonaNavigation.Nombre : "Sin zona"),
-                    start = DateTime.Today.Add(h.HoraEntrada.ToTimeSpan()),
-                    end = DateTime.Today.Add(h.HoraSalida.ToTimeSpan()),
-                    operadorId = h.IdOperador,
-                    zonaId = h.IdZona
-                })
+                .Include(h => h.IdOperadorNavigation) // Incluye el operador
+                .Include(h => h.IdZonaNavigation)    // Incluye la zona
                 .ToList();
 
-            return Json(horarios);
+            // Transformar los horarios para adaptarlos a lo que FullCalendar espera
+            var events = horarios.Select(h => new
+            {
+                id = h.Id,
+                title = $"{h.IdOperadorNavigation.Nombre} - {h.IdZonaNavigation.Nombre}",  // Nombre del operador y la zona
+                start = DateTime.Today.Add(h.HoraEntrada.ToTimeSpan()),  // Fecha y hora de inicio
+                end = DateTime.Today.Add(h.HoraSalida.ToTimeSpan()),    // Fecha y hora de fin
+                description = $"Operador: {h.IdOperadorNavigation.Nombre}, Zona: {h.IdZonaNavigation.Nombre}",
+                dia = h.Dia // Días en los que trabaja el operador
+            }).ToList();
+
+            return Json(events);
         }
+
 
 
         public IActionResult FullCalendar()
