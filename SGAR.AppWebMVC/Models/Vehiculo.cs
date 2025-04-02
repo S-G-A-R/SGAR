@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGAR.AppWebMVC.Models;
 
-public partial class Vehiculo
+public partial class Vehiculo 
 {
     public int Id { get; set; }
     [Display(Name = "Marca")]

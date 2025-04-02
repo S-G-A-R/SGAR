@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 
 namespace SGAR.AppWebMVC.Controllers
@@ -21,10 +23,18 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Vehiculo
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Vehiculo vehiculo, int? pag, int topRegistro = 10)
         {
-            var sgarDbContext = _context.Vehiculos.Include(v => v.IdMarcaNavigation).Include(v => v.IdOperadorNavigation).Include(v => v.IdTipoVehiculoNavigation);
-            return View(await sgarDbContext.ToListAsync());
+            var vehiculos =  _context.Vehiculos.Include(s=>s.IdOperadorNavigation).Include(s=>s.IdMarcaNavigation);
+            var vehiculosQ = vehiculos.Where(x => x.IdOperadorNavigation.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value));
+
+            var query = vehiculosQ.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(vehiculo.Placa))
+                query = query.Where(s => s.Placa.Contains(vehiculo.Placa));
+            query = query.OrderByDescending(s => s.Id);
+
+
+            return View(await PaginatedList<Vehiculo>.CreateAsync(query, pag ?? 1, topRegistro));
         }
 
         // GET: Vehiculo/Details/5
