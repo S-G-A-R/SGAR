@@ -96,13 +96,13 @@
                         string imageUrl = $"data:image/png;base64,{base64Image}";
 
                         <div id="FotoPreviewDiv">
-                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px; border-radius: 10px;">
                         </div>
                     }
                     else
                     {
                         <div id="FotoPreviewDiv" style="display: none;">
-                            <img id="FotoPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                            <img id="FotoPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px; border-radius: 10px;">
                         </div>
                     }
                 </div>

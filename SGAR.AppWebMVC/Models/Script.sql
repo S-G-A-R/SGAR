@@ -234,7 +234,7 @@ ALTER TABLE Quejas
 ADD Estado TINYINT,
 Motivo VARCHAR(255)
 
-ALTER TABLE Mantenimiento
+ALTER TABLE Mantenimientos
 ADD Estado TINYINT,
 Motivo VARCHAR(255)
 

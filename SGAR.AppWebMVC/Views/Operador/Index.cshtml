@@ -4,19 +4,20 @@
     ViewData["Title"] = "Lista de operadores";
 }
 
-<h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
-
+<div style="align-items: center;" class="p-2">
+<h2><i class="bi bi-search"></i> Buscar Operadores</h2>
+</div>
 
 <form asp-action="Index" class="mb-3">
     <div class="row">
         <div class="col-4">
             <div class="form-group">
                 <label class="control-label">Codigo</label>
-                <input type="text" name="dodigoOperador" class="form-control" />
+                <input type="text" name="CodigoOperador" class="form-control" />
             </div>
         </div>
         <div class="col-8">
-            <div class="form-group">
+            <div class="form-group col-6">
                 <label class="control-label">DUI</label>
                 <input type="text" name="Dui" class="form-control" />
             </div>
@@ -45,65 +46,90 @@
             <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle-fill"></i></a>
         </div>
     </div>
-
-
 </form>
+
+<div style="align-items: center;" class="p-2">
+    <h2 class="text-center">Operadores de Vehículos</h2>
+</div>
 
 <div class="row">
     <div class="col-10 mx-auto">
-        <table class="table table-striped mt-4 shadow" id="myTable">
-            <thead class="table-dark">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CodigoOperador)
-            </th>
-            <th></th>
-        </tr>
+        <table class="table table-hover mt-4 shadow" id="myTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (var item in Model) {
+                @foreach (var item in Model)
+                {
 
 
-             <tr>
-                <td>
-                    @if(item.Foto != null && item.Foto.Length > 0){
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="form-group" style="display: flex; align-items: center;">
+                                    @if (item.Foto != null && item.Foto.Length > 0)
+                                    {
 
-                        string base64image = Convert.ToBase64String(item.Foto);
-                        string imageUrl = $"data:image/png;base64,{base64image}";
-                        <div id="preview">
-                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 50px; max-height:50px;"/>
-                        </div>
-                    }
-                    else { 
-                        <div id="preview" style="display: none;">
-                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 50px; max-height:50px;" />
-                        </div>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CodigoOperador)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="bi bi-info-square-fill"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-                </td>
-            </tr>
-}
-    </tbody>
-</table>
+                                        string base64image = Convert.ToBase64String(item.Foto);
+                                        string imageUrl = $"data:image/png;base64,{base64image}";
+                                        <div id="preview">
+                                            <img id="imgPreview" src="@imageUrl" alt="Foto" style="max-width: 50px; max-height:50px; margin-right: 20px; border-radius: 10px;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div id="preview" style="display: none;">
+                                            <img id="imgPreview" src="#" alt="Foto" style="max-width: 50px; max-height:50px; margin-right: 20px; border-radius: 10px;" />
+                                        </div>
+                                    }
+
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="profile-row">
+                                            <div style="font-weight: bold; color: #555; width: 40%;">Nombre:</div>
+                                            <div class="profile-value">@Html.DisplayFor(modelItem => item.Nombre)</div>
+                                        </div>
+
+                                        <div class="profile-row">
+                                            <div style="font-weight: bold; color: #555; width: 40%;">Código Operador:</div>
+                                            <div class="profile-value">@Html.DisplayFor(modelItem => item.CodigoOperador)</div>
+                                        </div>
+                                       
+                                    </div>
+
+                                </div>
+
+                            </div>
+                       
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary"><i class="bi bi-info-square-fill"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
 </div>
 
-</div>
+
+<style>
+    .profile-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .profile-value {
+        color: #333;
+        width: 60%; /*Establece el ancho del valor al 60% del espacio disponible en la fila. Esto, junto con el 40% de la etiqueta, asegura que la fila se llene completamente.*/
+    }
+</style>
 
 @section Scripts {
     <script>
@@ -115,3 +141,5 @@
         });
     </script>
 }
+
+
