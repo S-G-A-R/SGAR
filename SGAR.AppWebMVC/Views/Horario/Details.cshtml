@@ -1,54 +1,39 @@
 ﻿@model SGAR.AppWebMVC.Models.Horario
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Horario";
 }
 
-<h1>Details</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Horario</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HoraEntrada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HoraEntrada)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HoraSalida)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HoraSalida)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dia)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Turno)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Turno)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdOperadorNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdOperadorNavigation.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdZonaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdZonaNavigation.Nombre)
-        </dd>
-    </dl>
+<div class="form-group">
+    <label>Hora de Entrada</label>
+    <input type="time" class="form-control" value="@Model.HoraEntrada" disabled />
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="form-group">
+    <label>Hora de Salida</label>
+    <input type="time" class="form-control" value="@Model.HoraSalida" disabled />
 </div>
+
+<div class="form-group">
+    <label>Días</label>
+    <input type="text" class="form-control" value="@Model.Dia" disabled />
+</div>
+
+<div class="form-group">
+    <label>Turno</label>
+    <input type="text" class="form-control" value="@(Model.Turno == 1 ? "Matutino" : "Vespertino")" disabled />
+</div>
+
+<div class="form-group">
+    <label>Operador</label>
+    <input type="text" class="form-control" value="@Model.IdOperadorNavigation.Nombre" disabled />
+</div>
+
+<div class="form-group">
+    <label>Zona</label>
+    <input type="text" class="form-control" value="@Model.IdZonaNavigation.Nombre" disabled />
+</div>
+
+<a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Volver a la lista</a>

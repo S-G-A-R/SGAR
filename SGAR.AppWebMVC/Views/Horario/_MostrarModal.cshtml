@@ -1,13 +1,55 @@
-﻿<div class="modal fade in" tabindex="-1" role="dialog" data-bs-backdrop="static" id="form-modal">
-    <div class="modal-dialog modal-lg" role="document">
+﻿<!-- Modal -->
+<div class="modal fade" id="horarioModal" tabindex="-1" aria-labelledby="horarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white"></h5>
-                <button type="button" class="btn-close text-white" data-bs-dismiss=" modal" aria-label="Close">
-                </button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="horarioModalLabel">Crear/Editar Horario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <form id="horarioForm">
+                    <div class="form-group">
+                        <label for="Dia">Días</label><br />
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            <input type="checkbox" name="Dia" value="@i" /> @Enum.GetName(typeof(DayOfWeek), i)
+
+                            <br />
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="IdOperador">Operador</label>
+                        <select id="IdOperador" class="form-control">
+                            @foreach (var operador in Model.Operadores)
+                            {
+                                <option value="@operador.Id">@operador.Nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="IdZona">Zona</label>
+                        <select id="IdZona" class="form-control">
+                            @foreach (var zona in Model.Zonas)
+                            {
+                                <option value="@zona.Id">@zona.Nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Turno">Turno</label>
+                        <select id="Turno" class="form-control">
+                            <option value="1">Matutino</option>
+                            <option value="2">Vespertino</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+

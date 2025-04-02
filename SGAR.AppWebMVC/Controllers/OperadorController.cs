@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SGAR.AppWebMVC.Models;
+using Microsoft.SqlServer.Server;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SGAR.AppWebMVC.Controllers
 {
@@ -471,5 +473,17 @@ namespace SGAR.AppWebMVC.Controllers
             ViewBag.Tipos = new SelectList(tipos, "Key", "Value", 1);
             return PartialView("_ReferentesOperador", operador.ReferentesOperador);
         }
+
+        [HttpGet]
+        //Metodo para retornan datos en formato JSON, listos para ser usados en los select de la vista index
+        public IActionResult GetOperadores()
+        {
+            var operadores = _context.Operadores
+                .Select(o => new { id = o.Id, nombre = o.Nombre })
+                .ToList();
+
+            return Json(operadores);
+        }
+
     }
 }

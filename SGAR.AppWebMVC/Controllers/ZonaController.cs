@@ -230,5 +230,18 @@ namespace SGAR.AppWebMVC.Controllers
         {
             return _context.Zonas.Any(e => e.Id == id);
         }
+
+        // Obtener la lista de zonas
+        [HttpGet]
+        //Metodo para retornan datos en formato JSON, listos para ser usados en los select de la vista index
+        public IActionResult GetZonas()
+        {
+            var zonas = _context.Zonas
+                .Select(z => new { id = z.Id, nombre = z.Nombre })
+                .ToList();
+
+            return Json(zonas);
+        }
+
     }
 }

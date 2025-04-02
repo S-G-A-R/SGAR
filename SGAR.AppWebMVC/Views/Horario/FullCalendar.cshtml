@@ -1,0 +1,38 @@
+﻿@model SGAR.AppWebMVC.Models.Horario
+@{
+    ViewData["Title"] = "Calendario de Horarios";
+}
+
+<h2>Calendario de Horarios</h2>
+
+<a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">⬅ Volver a la Lista</a>
+
+<div id="calendar"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '/Horarios/GetHorarios',
+            dateClick: function (info) {
+                alert('Fecha seleccionada: ' + info.dateStr);
+            },
+            eventClick: function (info) {
+                alert('Horario: ' + info.event.title);
+            }
+        });
+        calendar.render();
+    });
+</script>
+
+            

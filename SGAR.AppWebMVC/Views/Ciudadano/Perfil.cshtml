@@ -5,51 +5,47 @@
 }
 
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Dui)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Dui)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Correo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Correo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Zona)
-        </dt>
-        <dd class="col-sm-10">
-            @{
-                var zonas = ((SelectList)ViewBag.ZonaId);
-                var zona = zonas.FirstOrDefault(s => s.Value == Model.ZonaId.ToString());
-                @zona.Text;
-            }
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="CerrarSesion" class="btn btn-secondary">Cerrar Sesión</a> |
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Editar</a> |
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        Eliminar
-    </button>
+<div class="container profile-container">
+    <h1 class="text-center"><i class="bi bi-person-circle"></i> Mi Perfil</h1>
+
+    <div class="profile-card">
+        <div class="profile-details">
+            <div class="profile-row">
+                <div class="profile-label">Nombre:</div>
+                <div class="profile-value">@Model.Nombre</div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label">Apellido:</div>
+                <div class="profile-value">@Model.Apellido</div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label">DUI:</div>
+                <div class="profile-value">@Model.Dui</div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label">Correo Electrónico:</div>
+                <div class="profile-value">@Model.Correo</div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label">Zona:</div>
+                <div class="profile-value">
+                    @{
+                        var zonas = ((SelectList)ViewBag.ZonaId);
+                        var zona = zonas.FirstOrDefault(s => s.Value == Model.ZonaId.ToString());
+                        @zona.Text
+                        ;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="text-center">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Editar</a>
+        <a asp-action="CerrarSesion" class="btn btn-secondary">Cerrar Sesión</a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Eliminar Cuenta</button>
+    </div>
 </div>
 
 
@@ -62,7 +58,12 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Eliminar Cuenta</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="text-center">
+                <img src="~/css/eliminarsgar.png" style="max-width: 150px;" />
+            </div>
             <div class="modal-body">
+
+
                 Tu cuenta será eliminada, este es un cambio <strong>irreversible!.</strong>
                 Se perderán todos tus datos, luego serás redirigido a la página principal.
 
@@ -75,3 +76,42 @@
         </div>
     </div>
 </div>
+
+
+<style>
+    .profile-container {
+        max-width: 600px;
+        margin: 50px auto;
+    }
+
+    .profile-card {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        display: flex; /*Convierte la tarjeta en un contenedor flexible, lo que facilita la disposición de sus elementos internos.*/
+        flex-direction: row; /*Establece la dirección principal de los elementos flexibles en una fila (horizontal).*/
+        align-items: center;
+    }
+
+    .profile-details {
+        flex-grow: 1; /*Permite que este elemento flexible se expanda para ocupar todo el espacio disponible en la fila, después de que los otros elementos flexibles hayan tomado su espacio.*/
+    }
+
+    .profile-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .profile-label {
+        font-weight: bold;
+        color: #555;
+        width: 40%; /*Establece el ancho de la etiqueta al 40% del espacio disponible en la fila.*/
+    }
+
+    .profile-value {
+        color: #333;
+        width: 60%; /*Establece el ancho del valor al 60% del espacio disponible en la fila. Esto, junto con el 40% de la etiqueta, asegura que la fila se llene completamente.*/
+    }
+</style>
