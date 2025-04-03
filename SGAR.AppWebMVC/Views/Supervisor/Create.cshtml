@@ -4,94 +4,127 @@
     ViewData["Title"] = "Crear Supervisor";
 }
 
-<h1><i class="bi bi-ticket-perforated me-3"></i> @ViewData["Title"]</h1>
 <hr />
-<div class="row">
+<div class="floating-box" style="background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; margin: 20px auto; max-width: 800px;">
     <div class="col-md-12">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="form-group col-4">
-                    <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
+            <div style="background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; margin: 20px auto; max-width: 800px;">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-person-fill me-2"></i>
+                    <h4 class="mb-0">Datos Personales</h4>
                 </div>
-                <div class="form-group col-4">
-                    <label asp-for="Apellido" class="control-label"></label>
-                    <input asp-for="Apellido" class="form-control" />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="Telefono" class="control-label"></label>
-                    <input asp-for="Telefono" class="form-control" />
-                    <span asp-validation-for="Telefono" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label asp-for="CorreoPersonal" class="control-label"></label>
-                    <input asp-for="CorreoPersonal" class="form-control" />
-                    <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label asp-for="Dui" class="control-label"></label>
-                    <input asp-for="Dui" class="form-control" />
-                    <span asp-validation-for="Dui" class="text-danger"></span>
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label asp-for="Nombre" class="control-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="Apellido" class="control-label"></label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="Telefono" class="control-label"></label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label asp-for="CorreoPersonal" class="control-label"></label>
+                            <input asp-for="CorreoPersonal" class="form-control" />
+                            <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6">
+                            <label asp-for="Dui" class="control-label"></label>
+                            <input asp-for="Dui" class="form-control" />
+                            <span asp-validation-for="Dui" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="row m-2" id="divReferentesSu">
                 <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
             </div>
-
-            <div class="row">
-                <div class="form-group col-4">
-                    <label asp-for="Codigo" class="control-label"></label>
-                    <input asp-for="Codigo" class="form-control" />
-                    <span asp-validation-for="Codigo" class="text-danger"></span>
+            <div style="background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; margin: 20px auto; max-width: 800px;">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-telephone-fill me-2"></i>
+                    <h4 class="mb-0">Datos de Contacto</h4>
                 </div>
-                <div class="form-group col-4">
-                    <label asp-for="TelefonoLaboral" class="control-label"></label>
-                    <input asp-for="TelefonoLaboral" class="form-control" />
-                    <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="CorreoLaboral" class="control-label"></label>
-                    <input asp-for="CorreoLaboral" class="form-control" />
-                    <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-
-                <div class="form-group col-4">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-5">
-                    <label asp-for="FotoFile" class="control-label">Foto</label>
-                    <input asp-for="FotoFile" type="file" class="form-control" />
-                    <span asp-validation-for="FotoFile" class="text-danger"></span>
-                </div>
-                <div class="col-5">
-                    <div id="fotoPreview" style="display: none;">
-                        <img id="fotoImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label asp-for="Codigo" class="control-label"></label>
+                        <input asp-for="Codigo" class="form-control" />
+                        <span asp-validation-for="Codigo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="TelefonoLaboral" class="control-label"></label>
+                        <input asp-for="TelefonoLaboral" class="form-control" />
+                        <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="CorreoLaboral" class="control-label"></label>
+                        <input asp-for="CorreoLaboral" class="form-control" />
+                        <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-5">
+                            <label asp-for="FotoFile" class="control-label">Foto</label>
+                            <input asp-for="FotoFile" type="file" class="form-control" />
+                            <span asp-validation-for="FotoFile" class="text-danger"></span>
+                        </div>
+                        <div class="col-5">
+                            <div id="fotoPreview" style="display: none;">
+                                <img id="fotoImagePreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <style>
+                .form-control:focus {
+                    border-color: lightgreen;
+                    box-shadow: 0 0 0 0.2rem rgba(144, 238, 144, 0.25);
+                }
 
-            <div class="row mt-2">
+                .floating-box {
+                    background-color: rgba(255, 255, 255, 0.8);
+                    padding: 20px;
+                    border: 15px;
+                    border: 3px solid lightgreen; /* Agrega un borde rojo a la tarjeta */
+
+                    border-radius: 10px;
+                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+                    width: 150%; /* Aumentar el ancho */
+                    max-width: 900px; /* Ancho máximo */
+                    height: auto; /* Ajustar la altura automáticamente */
+                    max-height: 80vh; /* Altura máxima para evitar que sea demasiado alto */
+                    margin: 0 auto; /* Centrar horizontalmente */
+                    position: fixed; /* Posición fija */
+                    top: 10%; /* Ajustar la posición vertical */
+                    left: 50%; /* Centrar horizontalmente */
+                    transform: translateX(-50%); /* Centrar horizontalmente */
+                    z-index: 1000;
+                    overflow-y: auto;
+                }
+            </style>
+
+            <div class="row mt-2 justify-content-center">
                 <div class="form-group col-1">
                     <input type="submit" value="Crear" class="btn btn-success" />
                 </div>
-                <div class="col-1">
-                    <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+               <div class="col-1">
+                    <a asp-action="Index" class="btn btn-danger "><i></i> Cancelar</a>
                 </div>
             </div>
         </form>
