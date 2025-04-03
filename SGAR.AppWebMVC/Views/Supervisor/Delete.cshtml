@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Delete";
 }
-<div class="floating-box">
-    <h1><i class="bi bi-trash-fill me-3"></i>@ViewData["Title"]</h1>
-
-    <h3 style="color: red;">¿Estás seguro de que quieres eliminar este supervisor?</h3>
+<div class="floating-box" style="background-color:firebrick; padding: 10px; border-radius: 5px;">
+        <h1><i class="bi bi-trash-fill me-3 icono-rojo"></i></h1>
+        <h3 style="color:white;">¿Estás seguro de que quieres eliminar este supervisor?</h3>
+  
     <div>
-        <h4>Supervisor</h4>
-        <hr />
-        <dl class="row">
+        
+        <dl class="row " style="background-color: white;">
+              
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Nombre)
             </dt>
@@ -84,13 +84,14 @@
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.IdAlcaldiaNavigation.Correo)
             </dd>
+            <div style="background-color: white; padding: 10px; text-align: center;">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Eliminar" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-danger "><i></i> cancelar</a>
+                </form>
+            </div>      
         </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <input type="submit" value="Eliminar" class="btn btn-danger" />
-            <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left me-1"></i> Volver</a>
-        </form>
     </div>
 </div>
 
@@ -98,9 +99,12 @@
     .floating-box {
         background-color: rgba(255, 255, 255, 0.8);
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        width: 90%; /* Aumentar el ancho */
+        border: 15px;
+        border: 3px solid firebrick; /* Agrega un borde rojo a la tarjeta */
+
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        width: 150%; /* Aumentar el ancho */
         max-width: 900px; /* Ancho máximo */
         height: auto; /* Ajustar la altura automáticamente */
         max-height: 80vh; /* Altura máxima para evitar que sea demasiado alto */
@@ -111,6 +115,17 @@
         transform: translateX(-50%); /* Centrar horizontalmente */
         z-index: 1000;
         overflow-y: auto; /* Agregar scroll si el contenido excede la altura */
+    }
+
+    .i{
+        background-color: red; /* Cambia "red" al color que prefieras */
+        padding: 10px;
+      
+       
+    }
+
+    .icono-rojo {
+        color: white; /* Cambia el color del icono a blanco */
     }
     
         .floating-box h1,
