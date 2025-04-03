@@ -41,23 +41,23 @@
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.Dui)
             </dd>
-
-            <div class="row m-2" id="divReferentesOp">
+            <div class="row m-2" id="divReferentesSu">
                 <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
             </div>
+            
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Foto)
             </dt>
-            <dd class="col-sm-12">
+            <dd class="col-sm-12" style="display: flex; justify-content: center; align-items: center;">
                 @if (Model.Foto != null && Model.Foto.Length > 0)
                 {
                     string base64Image = Convert.ToBase64String(Model.Foto);
                     string imageUrl = $"data:image/png;base64,{base64Image}";
-                    <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 200px; max-height: 200px;" />
+                    <img src="@imageUrl" alt="Foto del supervisor" style="max-width: 100%; height: auto; max-height: 200px;" />
                 }
                 else
                 {
-                    <span>No hay foto disponible.</span>
+                    <span style="text-align: center; width: 100%;">No hay foto disponible.</span>
                 }
             </dd>
             <dt class="col-sm-2">
@@ -96,26 +96,45 @@
 </div>
 
 <style>
-    .floating-box {
+    .f.floating-box {
         background-color: rgba(255, 255, 255, 0.8);
         padding: 20px;
-        border: 15px;
-        border: 3px solid firebrick; /* Agrega un borde rojo a la tarjeta */
-
+        border: 3px solid firebrick;
         border-radius: 10px;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        width: 150%; /* Aumentar el ancho */
-        max-width: 900px; /* Ancho máximo */
-        height: auto; /* Ajustar la altura automáticamente */
-        max-height: 80vh; /* Altura máxima para evitar que sea demasiado alto */
-        margin: 0 auto; /* Centrar horizontalmente */
-        position: fixed; /* Posición fija */
-        top: 10%; /* Ajustar la posición vertical */
-        left: 50%; /* Centrar horizontalmente */
-        transform: translateX(-50%); /* Centrar horizontalmente */
+        width: 100%;
+        max-width: 900px;
+        height: auto;
+        max-height: 80vh;
+        margin: 0 auto;
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 1000;
-       
+        overflow-y: auto;
     }
+
+    .floating-box img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .floating-box table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .floating-box td, .floating-box th {
+        width: 25%;
+        overflow-wrap: break-word;
+    }
+
+    .floating-box p, .floating-box div {
+        overflow-wrap: break-word;
+    }
+
+        
 
     .i{
         background-color: red; /* Cambia "red" al color que prefieras */

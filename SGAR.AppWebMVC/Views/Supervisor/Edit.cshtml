@@ -4,117 +4,142 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Supervisor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>Editar Supervisor</h4>
+        <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
+    </div>
+    <div class="card-body">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="form-group col-4">
-                    <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="Apellido" class="control-label"></label>
-                    <input asp-for="Apellido" class="form-control" />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="Telefono" class="control-label"></label>
-                    <input asp-for="Telefono" class="form-control" />
-                    <span asp-validation-for="Telefono" class="text-danger"></span>
+           
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-person-fill me-2"></i>
+                        <h4 class="mb-0">Datos Personales</h4>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label asp-for="Nombre" class="control-label"></label>
+                            <input asp-for="Nombre" class="form-control" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="Apellido" class="control-label"></label>
+                            <input asp-for="Apellido" class="form-control" />
+                            <span asp-validation-for="Apellido" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="Telefono" class="control-label"></label>
+                            <input asp-for="Telefono" class="form-control" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="CorreoPersonal" class="control-label"></label>
+                                <input asp-for="CorreoPersonal" class="form-control" />
+                                <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Dui" class="control-label"></label>
+                                <input asp-for="Dui" class="form-control" />
+                                <span asp-validation-for="Dui" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label asp-for="CorreoPersonal" class="control-label"></label>
-                    <input asp-for="CorreoPersonal" class="form-control" />
-                    <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label asp-for="Dui" class="control-label"></label>
-                    <input asp-for="Dui" class="form-control" />
-                    <span asp-validation-for="Dui" class="text-danger"></span>
-                </div>
-            </div>
-
+           
             <div class="row m-2" id="divReferentesSu">
                 <partial name="_ReferentesSupervisor" model="Model.ReferentesSupervisores" />
             </div>
 
             <div class="row">
-                <div class="form-group col-4">
-                    <label asp-for="Codigo" class="control-label"></label>
-                    <input asp-for="Codigo" class="form-control" />
-                    <span asp-validation-for="Codigo" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="TelefonoLaboral" class="control-label"></label>
-                    <input asp-for="TelefonoLaboral" class="form-control" />
-                    <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
-                </div>
-                <div class="form-group col-4">
-                    <label asp-for="CorreoLaboral" class="control-label"></label>
-                    <input asp-for="CorreoLaboral" class="form-control" />
-                    <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-
-                <div class="form-group col-4">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label for="FotoFile" class="control-label">Foto</label>
-                    <div class="input-group">
-                        <input type="file" id="FotoFile" name="FotoFile" class="form-control" />
-                        <div class="input-group-append">
-                            <button class="btn btn-danger" type="button" onclick="resetInputFieldAndPreview('FotoFile','FotoPreview')">Quitar</button>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            <h4 class="mb-0">Datos de Contacto</h4>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="Codigo" class="control-label"></label>
+                            <input asp-for="Codigo" class="form-control" />
+                            <span asp-validation-for="Codigo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="TelefonoLaboral" class="control-label"></label>
+                            <input asp-for="TelefonoLaboral" class="form-control" />
+                            <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="CorreoLaboral" class="control-label"></label>
+                            <input asp-for="CorreoLaboral" class="form-control" />
+                            <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="Password" class="control-label"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="form-group col-md-6">
+                                    <label for="FotoFile" class="form-label fw-semibold">Foto</label>
+                                    <div class="input-group">
+                                        <input type="file" id="FotoFile" name="FotoFile" class="form-control" />
+                                        <button class="btn btn-outline-danger" type="button" onclick="resetInputFieldAndPreview('FotoFile','FotoPreview')">Quitar</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    @if (Model.Foto != null && Model.Foto.Length > 0)
+                                    {
+                                        string base64Image = Convert.ToBase64String(Model.Foto);
+                                        string imageUrl = $"data:image/png;base64,{base64Image}";
+                                        <div id="FotoPreviewDiv" class="mt-3 mt-md-0">
+                                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div id="FotoPreviewDiv" style="display: none;" class="mt-3 mt-md-0">
+                                            <img id="FotoPreview" src="#" alt="Vista previa de la imagen" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;">
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    @if (Model.Foto != null && Model.Foto.Length > 0)
-                    {
-                        string base64Image = Convert.ToBase64String(Model.Foto);
-                        string imageUrl = $"data:image/png;base64,{base64Image}";
-
-                        <div id="FotoPreviewDiv">
-                            <img id="FotoPreview" src="@imageUrl" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="FotoPreviewDiv" style="display: none;">
-                            <img id="FotoPreview" src="#" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
-                        </div>
-                    }
                 </div>
-            </div>
 
-
-            <div class="row mt-2">
-                <div class="form-group col-1">
+               
+            <div style="background-color: white; padding: 10px; text-align: center;">
+                <form asp-action="Guardar">
+                    <input type="hidden" asp-for="Id" />
                     <input type="submit" value="Guardar" class="btn btn-success" />
-                </div>
-                <div class="col-1">
-                    <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left me-1"></i> Volver</a>
-                </div>
+                    <a asp-action="Index" class="btn btn-danger "><i></i> cancelar</a>
+                </form>
             </div>
         </form>
     </div>
 </div>
+<style>
+   
+    .form-control:focus {
+        border-color: lightgreen;
+        box-shadow: 0 0 0 0.2rem rgba(144, 238, 144, 0.25);
+    }
+    .card {
+        margin: 20px auto;
+        max-width: 900px;
+    }
+
+   
+</style>
 
 
 
