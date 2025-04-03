@@ -203,8 +203,8 @@ public partial class SgarDbContext : DbContext
         {
             entity.HasNoKey();
 
-            entity.Property(e => e.Latitud).HasColumnType("decimal(9, 6)");
-            entity.Property(e => e.Longitud).HasColumnType("decimal(9, 6)");
+            entity.Property(e => e.Latitud).HasColumnType("decimal(18, 15)");
+            entity.Property(e => e.Longitud).HasColumnType("decimal(18, 15)");
             entity.Property(e => e.Titulo)
                 .HasMaxLength(60)
                 .IsUnicode(false);
@@ -397,14 +397,14 @@ public partial class SgarDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Ubicacio__3214EC0718E1B337");
 
-            entity.Property(e => e.FechaActualizacion).HasColumnType("datetime");
-            entity.Property(e => e.Latitud).HasColumnType("decimal(9, 6)");
-            entity.Property(e => e.Longitud).HasColumnType("decimal(9, 6)");
+            entity.Property(e => e.FechaActualizacion).HasMaxLength(30).IsUnicode(false);
+            entity.Property(e => e.Latitud).HasColumnType("decimal(18, 15)");
+            entity.Property(e => e.Longitud).HasColumnType("decimal(18, 15)");
 
-            entity.HasOne(d => d.IdHorarioNavigation).WithMany(p => p.Ubicaciones)
-                .HasForeignKey(d => d.IdHorario)
+            entity.HasOne(d => d.IdOperadorNavigation).WithMany(p => p.Ubicaciones)
+                .HasForeignKey(d => d.IdOperador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Ubicacion__IdHor__6754599E");
+                .HasConstraintName("FK__Ubicacion__IdOpe__4D5F7D71");
         });
 
         modelBuilder.Entity<Vehiculo>(entity =>

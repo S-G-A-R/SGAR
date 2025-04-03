@@ -7,13 +7,13 @@ public partial class Ubicacion
 {
     public int Id { get; set; }
 
-    public int IdHorario { get; set; }
+    public int IdOperador { get; set; }
 
     public decimal Latitud { get; set; }
 
     public decimal Longitud { get; set; }
 
-    public DateTime FechaActualizacion { get; set; }
+    public string? FechaActualizacion { get; set; }
 
-    public virtual Horario IdHorarioNavigation { get; set; } = null!;
+    public virtual Operador IdOperadorNavigation { get; set; } = null!;
 }

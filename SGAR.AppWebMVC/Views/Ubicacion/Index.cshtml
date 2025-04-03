@@ -1,0 +1,218 @@
+﻿@model SGAR.AppWebMVC.Models.Ubicacion
+
+
+    <input hidden id="idOp" asp-for="IdOperador" value="@Convert.ToInt32(User.FindFirst("Id").Value)" />
+
+<div>
+    <button class="btn btn-info" onclick="getLocation()" id="startBtn">Iniciar</button>
+    <button class="btn btn-danger mb-3" onclick="stopTracking()" id="stopBtn" hidden>Detener</button>
+</div>
+
+
+<div id="dummy">
+
+</div>
+
+
+<script>
+    let marker, circle, zoomed, id, currLat, currLng ;
+    var ubicationModel = undefined;
+
+    function getLocation() {
+        createMap();
+        document.getElementById("startBtn").hidden = true
+        document.getElementById("stopBtn").hidden = false
+
+        //Inicializa el mapa de la librería leaflet
+        const map = L.map('map');
+
+
+        //Obtiene la posición inicial para mostrar el mapa
+        navigator.geolocation.getCurrentPosition(ok);
+
+        function ok(pos) {
+            const crd = pos.coords;
+            map.setView([crd.latitude, crd.longitude], 19);
+        }
+
+        //Inicia la localización en tiempo real
+        id = navigator.geolocation.watchPosition(success, error);
+
+        //Configura el servicio de mapas a usar y lo asocia a la librería
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        function success(pos) {
+
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            const accuracy = pos.coords.accuracy;
+
+
+
+            // Borra cualquier marcador existente
+            if (marker) {
+                map.removeLayer(marker);
+                map.removeLayer(circle);
+            }
+
+            // Añade un marcador al mapa
+            currLat = lat;
+            currLng = lng;
+
+            marker = L.marker([lat, lng]).addTo(map);
+            circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
+
+
+            if (!zoomed) {
+                zoomed = map.fitBounds(circle.getBounds());
+            }
+
+            // Actualiza el mapa para hacer focus en la nueva posición
+            console.log(`Latitude:${lat}, Longitude:${lng}`)
+            console.log(id)
+            map.setView([lat, lng], 19);
+            getDbLocation();
+
+        }
+
+        function error(err) {
+
+            if (err.code === 1) {
+                alert("Por favor, autorice el acceso a su ubicación");
+            } else {
+                alert("No se pudo obtener la ubicación");
+            }
+
+        }
+    }
+
+    function stopTracking() {
+        //Deja de realizar la geolocalización
+        navigator.geolocation.clearWatch(id);
+
+        document.getElementById("startBtn").hidden = false
+        document.getElementById("stopBtn").hidden = true
+
+        //Elimina el div "map"
+        const mapElement = document.getElementById("map");
+        mapElement.remove();
+
+    }
+
+    function createMap() {
+        //Crea el div con el id "map"
+        mapDiv = document.createElement("div");
+        mapDiv.setAttribute("id", "map");
+
+        //Obtiene el nodo padre del div "dummy" e inserta el div creado
+        parent = document.getElementById("dummy").parentNode
+        const dummy = document.getElementById("dummy");
+        parent.insertBefore(mapDiv, dummy);
+
+    }
+
+
+
+
+    function sendToDb(model) {
+
+        console.log("Ojo: " + model)
+
+        if (model != undefined ) {
+
+            console.log(model)
+
+            var modelo = {
+                Id: model.id,
+                IdOperador: $('#idOp').val(),
+                IdOperadorNavigation: null,
+                Latitud: currLat,
+                Longitud: currLng,
+                FechaActualizacion: getDate(),
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("Edit", "Ubicacion")',
+                type: 'POST',
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(modelo),
+                success: function (res) {
+                    console.log(res)
+                }
+            })
+        }
+        else {
+
+            var modelo = {
+                Id: 0,
+                IdOperador: $('#idOp').val(),
+                IdOperadorNavigation: null,
+                Latitud: currLat,
+                Longitud: currLng,
+                FechaActualizacion: getDate(),
+            }
+
+            $.ajax({
+                url: '@Url.Action("Create", "Ubicacion")',
+                type: 'POST',
+                data: JSON.stringify(modelo),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (res) {
+                    console.log("Se creó su ubicación!")
+                },
+                error: function (request, status, error) {
+                    console.log("Hubo un error");
+                }
+            })
+
+        }
+
+
+    }
+
+    function  getDbLocation() {
+
+        $.ajax({
+            url: '@Url.Action("GetUbicationFromOpId", "Ubicacion")',
+            type: 'GET',
+            data: {
+                id: $('#idOp').val(),
+            },
+            success: function (res) {
+                sendToDb(res);
+            },
+            error: function (request, status, error) {
+                console.log("error");
+            }
+        })
+
+    }
+
+
+
+    function getDate() {
+        var date = new Date();
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = (date.getHours() < 10 ? '0' : '') + date.getHours();     // yields hours
+        var minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(); // yields minutes
+        var second = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds(); // yields seconds
+        var millisecond = (date.getMilliseconds() < 100 ? '0' : '') + date.getMilliseconds()
+
+
+        // After this construct a string with the above results as below
+        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second + '.' + millisecond;
+
+        return time;
+    }
+
+
+
+</script>

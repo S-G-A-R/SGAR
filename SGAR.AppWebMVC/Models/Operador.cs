@@ -81,4 +81,5 @@ public partial class Operador
     [NotMapped]
     [Display(Name = "Referentes")]
     public virtual ICollection<ReferentesOperador> ReferentesOperador { get; set; } = new List<ReferentesOperador>();
+    public virtual ICollection<Ubicacion>? Ubicaciones { get; set; } = new List<Ubicacion>();
 }

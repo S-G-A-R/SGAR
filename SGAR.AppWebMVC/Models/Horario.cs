@@ -31,5 +31,5 @@ public partial class Horario
 
     public virtual Zona? IdZonaNavigation { get; set; } = null!;
 
-    public virtual ICollection<Ubicacion>? Ubicaciones { get; set; } = new List<Ubicacion>();
+    
 }
