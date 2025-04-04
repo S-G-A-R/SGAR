@@ -3,19 +3,27 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div style="align-items: center;" class="p-2">
+    <h2><i class="bi bi-search"></i> Buscar Supervisor</h2>
+</div>
 
-<h1><i class="bi bi-card-list me-3"></i></h1>
-
-<form asp-action="Index" class="mb-3 custom-form">
-    <div class="form-group">
-        <label for="codigo">Codigo</label>
-        <input type="text" name="codigo" class="form-control" id="codigo" placeholder="" />
+<form asp-action="Index" class="mb-3 ">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Codigo</label>
+                <input type="text" name="codigo" class="form-control" id="codigo" placeholder="" />
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group col-6">
+                <label class="control-label">DUI</label>
+                <input type="text" name="dui" class="form-control dui-input" id="dui" placeholder="" />
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="dui">DUI</label>
-        <input type="text" name="dui" class="form-control dui-input" id="dui" placeholder="" />
-    </div>
-    <div class="form-group" style="width: 100px;">
+   
+    <div class="form-group" style="width: 420px;">
         <label for="topRegistro">Cant. Registro</label>
         <select name="topRegistro" class="form-control" id="topRegistro">
             <option selected value="10">10</option>
@@ -27,9 +35,14 @@
             <option value="0">Todos</option>
         </select>
     </div>
+    <br />
     <input type="submit" value="Buscar" class="btn btn-primary" />
     <a class="btn btn-success" asp-action="Create">Crear Perfil</a>
 </form>
+
+<div style="align-items: center;" class="p-2">
+    <h2 class="text-center">Lista de Supervisores</h2>
+</div>
 
 <div class="row">
     <div class="col-10 mx-auto">
