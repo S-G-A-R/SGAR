@@ -324,8 +324,11 @@ namespace SGAR.AppWebMVC.Controllers
             // Bloque try para manejar excepciones.
             try
             {
+                var alcaldiaUpdate = _context.Alcaldias.FirstOrDefault(s => s.Id == id);
+                alcaldiaUpdate.IdMunicipio = alcaldia.IdMunicipio;
+                alcaldiaUpdate.Correo = alcaldia.Correo;
                 // Actualiza la alcaldía en el contexto de la base de datos.
-                _context.Update(alcaldia);
+                _context.Update(alcaldiaUpdate);
                 // Guarda los cambios en la base de datos de forma asíncrona.
                 await _context.SaveChangesAsync();
                 // Redirige al usuario a la acción Index después de actualizar la alcaldía.

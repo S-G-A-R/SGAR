@@ -24,7 +24,7 @@ public partial class Vehiculo
     public int? IdOperador { get; set; }
     [Required(ErrorMessage = "El estado es obligatorio.")]
     public byte Estado { get; set; }
-    [Required(ErrorMessage = "Debe introducir una descripción.")]
+
     public string? Descripcion { get; set; }
 
 
