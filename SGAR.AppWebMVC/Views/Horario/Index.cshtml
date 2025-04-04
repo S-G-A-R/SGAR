@@ -10,23 +10,17 @@
 
 <form asp-action="Index" class="mb-3">
     <div class="row">
-        <div class="col-4">
-            <div class="form-group">
+            <div class="form-group col-3">
                 <label class="control-label">Operador</label>
                 <input type="text" name="operador" class="form-control" />
             </div>
-        </div>
-        <div class="col-8">
-            <div class="form-group col-6">
+ 
+            <div class="form-group col-3">
                 <label class="control-label">Zona</label>
                 <input type="text" name="zona" class="form-control" />
             </div>
-        </div>
 
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
+            <div class="form-group col-3">
                 <label class="control-label">Cant. Registros</label>
                 <select name="topRegistro" class="form-control">
                     <option selected value="10">10</option>
@@ -39,11 +33,11 @@
                 </select>
             </div>
         </div>
-    </div>
+ 
     <div class="row mt-3">
         <div class="col-12">
             <input type="submit" value="Buscar" class="btn btn-primary" />
-            <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle"></i></a>
+            <a class="btn btn-info" asp-action="Create"><i class="bi bi-plus-circle"></i>  Crear Horario</a>
         </div>
     </div>
 </form>
@@ -79,9 +73,9 @@
               
                 <td>@(horario.Turno == 1 ? "Matutino" : "Vespertino")</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-secondary"> Editar</a>
-                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-primary">Ver</a>
-                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> Eliminar</a>
+                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-secondary"> <i class="bi bi-pencil-square"></i></a>
+                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-primary"><i class="bi bi-info-square-fill"></i></a>
+                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> <i class="bi bi-trash-fill"></i></a>
                 </td>
             </tr>
         }
