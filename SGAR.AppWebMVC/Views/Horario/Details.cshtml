@@ -4,16 +4,19 @@
     ViewData["Title"] = "Detalles del Horario";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
 
-<div class="form-group">
+<div class="row p-2">
+<div class="form-group col-6">
     <label>Hora de Entrada</label>
     <input type="time" class="form-control" value="@Model.HoraEntrada" disabled />
 </div>
 
-<div class="form-group">
+<div class="form-group col-6">
     <label>Hora de Salida</label>
     <input type="time" class="form-control" value="@Model.HoraSalida" disabled />
+</div>
 </div>
 
 <p><strong>Días:</strong></p>
@@ -26,19 +29,24 @@
         </label>
     }
 </div>
-<div class="form-group">
+
+<div class="row p-2">
+<div class="form-group col-4">
     <label>Turno</label>
     <input type="text" class="form-control" value="@(Model.Turno == 1 ? "Matutino" : "Vespertino")" disabled />
 </div>
 
-<div class="form-group">
+<div class="form-group col-4">
     <label>Operador</label>
     <input type="text" class="form-control" value="@Model.IdOperadorNavigation.Nombre" disabled />
 </div>
 
-<div class="form-group">
+<div class="form-group col-4">
     <label>Zona</label>
     <input type="text" class="form-control" value="@Model.IdZonaNavigation.Nombre" disabled />
 </div>
+</div>
 
-<a href="@Url.Action("Index", "Horario")" class="btn btn-primary">Volver a la lista</a>
+<br />
+<a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pen me-3"></i> Editar</a>
+<a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
