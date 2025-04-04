@@ -53,12 +53,11 @@
 </div>
 
 <div class="d-flex justify-content-between mb-3">
-    <a href="@Url.Action("FullCalendar", "Horario")" class="btn btn-info">📅 Ver Calendario</a>
-    <a href="@Url.Action("Create", "Horario")" class="btn btn-success">➕ Crear Horario</a>
+    <a href="@Url.Action("FullCalendar", "Horario")" class="btn btn-secondary">📅 Ver Calendario</a>
 </div>
 
 <table class="table table-striped" id="myTable">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>Operador</th>
             <th>Zona</th>
@@ -80,8 +79,8 @@
               
                 <td>@(horario.Turno == 1 ? "Matutino" : "Vespertino")</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-success"> Editar</a>
-                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-secondary">Ver</a>
+                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-secondary"> Editar</a>
+                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-primary">Ver</a>
                     <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> Eliminar</a>
                 </td>
             </tr>
