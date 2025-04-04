@@ -23,7 +23,7 @@ namespace SGAR.AppWebMVC.Controllers
         {
             var query = _context.TiposVehiculos.AsQueryable();
             if (!string.IsNullOrWhiteSpace(tiposVehiculo.Descripcion))
-                query = query.Where(s => s.Descripcion.Contains(tiposVehiculo.Descripcion));
+                query = query.Where(s => s.Descripcion.ToLower().Contains(tiposVehiculo.Descripcion.ToLower()));
             if (topRegistro > 0)
                 query = query.Take(topRegistro);
             query = query.OrderByDescending(s => s.Id);

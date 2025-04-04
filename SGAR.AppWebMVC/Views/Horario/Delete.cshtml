@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Eliminar Horario";
+    string[] diasSemana = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
+}
 }
 
 
@@ -23,7 +25,8 @@
         {
             <label>
                 <input type="checkbox" disabled @(ViewBag.DiasSeleccionados.Contains(i) ? "checked" : "") />
-                @Enum.GetName(typeof(DayOfWeek), i)
+                @diasSemana[i]
+                
             </label>
         }
     </div>
