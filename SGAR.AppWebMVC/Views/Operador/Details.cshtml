@@ -4,142 +4,165 @@
     ViewData["Title"] = "Detalles del operador";
 }
 
-<h1><i class="bi bi-bar-chart-steps me-3"></i>@ViewData["Title"]</h1>
-
 <div>
-    <h4>Operador</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoPersonal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoPersonal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CorreoPersonal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CorreoPersonal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Dui)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Dui)
-        </dd>
+   
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="Create" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="card">
+                            <div class="card-header">
+                                Datos Personales
+                            </div>
+                            <div class="card-body">
+                                <div class="row p-2">
+                                    <div class="form-group col-4">
+                                        <label asp-for="Nombre" class="control-label"></label>
+                                <input asp-for="Nombre" class="form-control" disabled />
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="Apellido" class="control-label"></label>
+                                <input asp-for="Apellido" class="form-control" disabled />
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="TelefonoPersonal" class="control-label"></label>
+                                <input asp-for="TelefonoPersonal" class="form-control" disabled />
+                                    </div>
+                                </div>
 
-        <div class="row m-2" id="divReferentesOp">
-            <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+                                <div class="row p-2">
+                                    <div class="form-group col-6">
+                                        <label asp-for="CorreoPersonal" class="control-label"></label>
+                                <input asp-for="CorreoPersonal" class="form-control" disabled />
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label asp-for="Dui" class="control-label"></label>
+                                <input asp-for="Dui" class="form-control" disabled />
+                                    </div>
+                                </div>
+
+                                <div class="row m-2" id="divReferentesOp">
+                                    <partial name="_ReferentesOperador" model="Model.ReferentesOperador" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+                        <div class="card">
+                            <div class="card-header">
+                                Datos Laborales
+                            </div>
+                            <div class="card-body">
+                                <div class="row p-2">
+                                    <div class="form-group col-4">
+                                        <label asp-for="CodigoOperador" class="control-label"></label>
+                                <input asp-for="CodigoOperador" class="form-control" disabled />
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="TelefonoLaboral" class="control-label"></label>
+                                <input asp-for="TelefonoLaboral" class="form-control" disabled />
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label asp-for="CorreoLaboral" class="control-label"></label>
+                                <input asp-for="CorreoLaboral" class="form-control" disabled />
+                                    </div>
+                                </div>
+
+                                <div class="row p-2">
+                                    <div class="form-group col-4">
+                                        <label asp-for="Ayudantes" class="control-label"></label>
+                                <input asp-for="Ayudantes" class="form-control" disabled />
+                                    </div>
+                                </div>
+
+
+                        <dl class="row p-2">
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Foto)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @if (Model.Foto != null && Model.Foto.Length > 0)
+                                {
+                                    string base64Image = Convert.ToBase64String(Model.Foto);
+                                    string imageUrl = $"data:image/png;base64,{base64Image}";
+                                    <img src="@imageUrl" alt="Foto del operador" style="max-width: 200px; max-height: 200px; border-radius: 10px;" />
+                                }
+                                else
+                                {
+                                    <span>No hay foto disponible.</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.LicenciaDoc)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @if (Model.LicenciaDoc != null && Model.LicenciaDoc.Length > 0)
+                                {
+                                    <span>Documento de Licencia cargado.</span>
+                                }
+                                else
+                                {
+                                    <span>No se ha cargado el documento de licencia.</span>
+                                }
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.AntecedentesDoc)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @if (Model.AntecedentesDoc != null && Model.AntecedentesDoc.Length > 0)
+                                {
+                                    <span>Documento de Antecedentes cargado.</span>
+                                }
+                                else
+                                {
+                                    <span>No se ha cargado el documento de antecedentes.</span>
+                                }
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.SolvenciaDoc)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @if (Model.SolvenciaDoc != null && Model.SolvenciaDoc.Length > 0)
+                                {
+                                    <span>Documento de Solvencia cargado.</span>
+                                }
+                                else
+                                {
+                                    <span>No se ha cargado el documento de solvencia.</span>
+                                }
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.IdAlcaldiaNavigation.IdMunicipio)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Vehiculo)
+                            </dt>
+                            <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.Vehiculo.Id)
+                            </dd>
+                        </dl>
+                                
+                            </div>
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+
+
+           
         </div>
+   
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.Foto != null && Model.Foto.Length > 0)
-            {
-                string base64Image = Convert.ToBase64String(Model.Foto);
-                string imageUrl = $"data:image/png;base64,{base64Image}";
-                <img src="@imageUrl" alt="Foto del operador" style="max-width: 200px; max-height: 200px; border-radius: 10px;" />
-            }
-            else
-            {
-                <span>No hay foto disponible.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Ayudantes)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Ayudantes)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CodigoOperador)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CodigoOperador)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoLaboral)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CorreoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CorreoLaboral)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.LicenciaDoc)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.LicenciaDoc != null && Model.LicenciaDoc.Length > 0)
-            {
-                <span>Documento de Licencia cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de licencia.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AntecedentesDoc)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.AntecedentesDoc != null && Model.AntecedentesDoc.Length > 0)
-            {
-                <span>Documento de Antecedentes cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de antecedentes.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SolvenciaDoc)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.SolvenciaDoc != null && Model.SolvenciaDoc.Length > 0)
-            {
-                <span>Documento de Solvencia cargado.</span>
-            }
-            else
-            {
-                <span>No se ha cargado el documento de solvencia.</span>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdAlcaldiaNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdAlcaldiaNavigation.IdMunicipio)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehiculo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehiculo.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning"><i class="bi bi-pen me-3"></i> Ir a editar</a>
-    <a asp-action="Index" class="btn btn-info"><i class="bi bi-arrow-90deg-left"></i> Volver</a>
+<div class="text-center p-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary"><i class="bi bi-pen me-3"></i> Editar</a>
+    <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
 </div>
 
 @section Scripts {
