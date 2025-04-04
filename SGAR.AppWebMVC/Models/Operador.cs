@@ -15,8 +15,10 @@ public partial class Operador
     public string Nombre { get; set; } = null!;
     public string? Apellido { get; set; }
 
+    [Display(Name = "Teléfono Personal")]
     public string? TelefonoPersonal { get; set; }
     [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]
+    [Display(Name = "Correo Personal")]
     public string? CorreoPersonal { get; set; }
     [Required(ErrorMessage = "El Dui es obligatorio.")]
     [StringLength(10, MinimumLength = 9, ErrorMessage = "El Dui puede escribirse con o sin guión, no exceda el límite de caractéres.")]
@@ -26,8 +28,11 @@ public partial class Operador
 
     public string? Ayudantes { get; set; }
     [Required(ErrorMessage = "El Código es obligatorio.")]
+
+    [Display(Name = "Código Operador")]
     public string CodigoOperador { get; set; } = null!;
     [Required(ErrorMessage = "El Telefono Laboral es obligatorio.")]
+    [Display(Name = "Teléfono Laboral")]
     public string TelefonoLaboral { get; set; } = null!;
 
     [Display(Name = "Correo Laboral")]
