@@ -1,6 +1,8 @@
 ﻿@model SGAR.AppWebMVC.Models.Horario
 
 @{
+    ViewData["Title"] = "Editar Horario";
+    string[] diasSemana = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
     ViewData["Title"] = "Editando Horario";
 }
 
@@ -26,7 +28,7 @@
         {
             bool isChecked = ViewBag.DiasSeleccionados != null && ViewBag.DiasSeleccionados.Contains(i);
             <input type="checkbox" name="DiasSeleccionados" value="@i" @(isChecked ? "checked" : "") />
-            @Enum.GetName(typeof(DayOfWeek), i)
+            @diasSemana[i]
           
         }
     </div>
