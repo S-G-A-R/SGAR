@@ -13,124 +13,377 @@
 
 <script>
 
-    function createMap() {
-        //Crea el div con el id "map"
-        mapDiv = document.createElement("div");
-        mapDiv.setAttribute("id", "map");
+   // 1. function createMap() { ... }
+//    Declara una función llamada 'createMap'. Esta función se encarga de crear dinámicamente un
+//    elemento div que servirá como contenedor para el mapa.
+function createMap() {
+    // 2. mapDiv = document.createElement("div");
+    //    Crea un nuevo elemento div utilizando el método 'createElement' del objeto 'document'
+    //    y lo asigna a la variable global 'mapDiv'.
+    mapDiv = document.createElement("div");
+    // 3. mapDiv.setAttribute("id", "map");
+    //    Establece el atributo 'id' del elemento 'mapDiv' a la cadena "map". Este ID se utilizará
+    //    posteriormente para referenciar este div cuando se inicialice el mapa de Leaflet.
+    mapDiv.setAttribute("id", "map");
 
-        //Obtiene el nodo padre del div "dummy" e inserta el div creado
-        parent = document.getElementById("dummy").parentNode
-        const dummy = document.getElementById("dummy");
-        parent.insertBefore(mapDiv, dummy);
+    // 4. parent = document.getElementById("dummy").parentNode;
+    //    Selecciona el elemento del DOM con el ID "dummy" y luego obtiene su elemento padre
+    //    utilizando la propiedad 'parentNode'. La referencia al elemento padre se guarda en la
+    //    variable 'parent'. Se asume que existe un elemento con el ID "dummy" en el HTML.
+    parent = document.getElementById("dummy").parentNode;
+    // 5. const dummy = document.getElementById("dummy");
+    //    Selecciona nuevamente el elemento del DOM con el ID "dummy" y lo asigna a la constante
+    //    'dummy'. Esto se hace para tener una referencia al elemento antes del cual se insertará
+    //    el nuevo div del mapa.
+    const dummy = document.getElementById("dummy");
+    // 6. parent.insertBefore(mapDiv, dummy);
+    //    Utiliza el método 'insertBefore' del elemento padre ('parent') para insertar el nuevo
+    //    elemento del mapa ('mapDiv') antes del elemento 'dummy'. Esto permite controlar la
+    //    posición donde se agrega el mapa en la estructura del DOM.
+    parent.insertBefore(mapDiv, dummy);
+}
 
-    }
+// 7. var marker, opMarker, lat, lng, opLat, opLng, id;
+//    Declara varias variables a nivel global (o al menos en el scope donde se define este código):
+//    - marker: Se espera que almacene una instancia del marcador del usuario en el mapa.
+//    - opMarker: Podría almacenar una instancia de otro marcador (quizás para un operador o un objetivo).
+//    - lat: Se espera que almacene la latitud de la ubicación del usuario.
+//    - lng: Se espera que almacene la longitud de la ubicación del usuario.
+//    - opLat: Podría almacenar la latitud de la ubicación del operador/objetivo.
+//    - opLng: Podría almacenar la longitud de la ubicación del operador/objetivo.
+//    - id: Podría almacenar un identificador (quizás del usuario o de la ubicación).
+//    Inicialmente, todas estas variables no tienen ningún valor asignado (son 'undefined').
+var marker, opMarker, lat, lng, opLat, opLng, id;
+// 8. var follow = false;
+//    Declara una variable booleana llamada 'follow' y la inicializa en 'false'. Esta variable
+//    probablemente se utiliza para indicar si el mapa debe seguir automáticamente la ubicación
+//    del usuario o de otro marcador.
+var follow = false;
+// 9. var map;
+//    Declara una variable llamada 'map'. Se espera que esta variable almacene la instancia del
+//    objeto de mapa de Leaflet una vez que se haya creado. Inicialmente, no tiene ningún valor
+//    asignado ('undefined').
+var map;
 
-    var marker, opMarker, lat, lng, opLat, opLng, id;
-    var follow = false;
-    var map;
+// 10. var customIcon = L.icon({ ... });
+//     Crea un objeto de icono personalizado para los marcadores de Leaflet utilizando la función
+//     'L.icon()'. Esto permite usar una imagen diferente al marcador predeterminado.
+var customIcon = L.icon({
+    // 11. iconUrl: '/css/custom-marker.svg',
+    //     Especifica la ruta a la imagen SVG que se utilizará como icono del marcador.
+    iconUrl: '/css/custom-marker.svg',
+    // 12. shadowUrl: '/css/marker-shadow.svg',
+    //     Especifica la ruta a la imagen SVG que se utilizará como sombra debajo del marcador.
+    shadowUrl: '/css/marker-shadow.svg',
+    // 13. iconSize: [25, 41],
+    //     Define el tamaño (ancho y alto) del icono del marcador en píxeles.
+    iconSize: [25, 41],
+    // 14. iconAnchor: [12, 41],
+    //     Define el punto del icono que corresponderá exactamente a la coordenada del marcador.
+    //     En este caso, el punto es [12, 41], lo que sugiere que la parte inferior central del
+    //     icono se utilizará como ancla.
+    iconAnchor: [12, 41],
+    // 15. popupAnchor: [1, -34],
+    //     Define la posición relativa del punto donde se abrirá la ventana emergente (popup)
+    //     cuando se haga clic en el marcador. [1, -34] significa que la ventana emergente se
+    //     abrirá 1 píxel a la derecha y 34 píxeles hacia arriba desde el ancla del icono.
+    popupAnchor: [1, -34],
+    // 16. tooltipAnchor: [16, -28],
+    //     Define la posición relativa del punto donde se mostrará la información sobre herramientas
+    //     (tooltip) al pasar el ratón sobre el marcador. [16, -28] significa que la información
+    //     sobre herramientas se mostrará 16 píxeles a la derecha y 28 píxeles hacia arriba desde
+    //     el ancla del icono.
+    tooltipAnchor: [16, -28],
+    // 17. shadowSize: [41, 41]
+    //     Define el tamaño (ancho y alto) de la imagen de la sombra en píxeles.
+    shadowSize: [41, 41]
+});
 
-    var customIcon = L.icon({
-        iconUrl: '/css/custom-marker.svg',
-        shadowUrl: '/css/marker-shadow.svg',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        tooltipAnchor: [16, -28],
-        shadowSize: [41, 41]
-    });
+// 18. function getLocation() { ... }
+//     Declara una función llamada 'getLocation'. Esta función se encarga de crear el mapa,
+//     ocultar/mostrar botones de control y obtener la ubicación del usuario (o de un punto
+//     específico desde el servidor).
+function getLocation() {
+    // 19. createMap()
+    //     Llama a la función 'createMap' para crear dinámicamente el div con el ID "map" en el DOM.
+    createMap()
 
-    function getLocation() {
-        createMap()
+    // 20. document.getElementById("startBtn").hidden = true
+    //     Selecciona el elemento del DOM con el ID "startBtn" (se espera que sea un botón para
+    //     iniciar la obtención de la ubicación) y establece su propiedad 'hidden' a 'true',
+    //     ocultándolo de la vista.
+    document.getElementById("startBtn").hidden = true
+    // 21. document.getElementById("stopBtn").hidden = false
+    //     Selecciona el elemento del DOM con el ID "stopBtn" (se espera que sea un botón para
+    //     detener el seguimiento de la ubicación) y establece su propiedad 'hidden' a 'false',
+    //     haciéndolo visible.
+    document.getElementById("stopBtn").hidden = false
+    // 22. document.getElementById("trackBtn").hidden = false
+    //     Selecciona el elemento del DOM con el ID "trackBtn" (se espera que sea un botón para
+    //     activar/desactivar el seguimiento automático) y establece su propiedad 'hidden' a
+    //     'false', haciéndolo visible.
+    document.getElementById("trackBtn").hidden = false
 
-        document.getElementById("startBtn").hidden = true
-        document.getElementById("stopBtn").hidden = false
-        document.getElementById("trackBtn").hidden = false
+    // 23. map = L.map('map');
+    //     Crea una nueva instancia de un objeto de mapa de Leaflet y lo asocia al elemento del DOM
+    //     que tiene el ID 'map' (creado previamente por 'createMap'). La variable 'map' ahora
+    //     referencia el mapa.
+    map = L.map('map');
 
-        map = L.map('map');
+    // 24. $.ajax({ ... });
+    //     Utiliza la función 'ajax' de la librería jQuery (indicado por '$') para realizar una
+    //     petición HTTP asíncrona.
+    $.ajax({
+        // 25. url: '@Url.Action("GetUbicationFromCdId", "NotificacionesUbicacion")',
+        //     Especifica la URL a la que se enviará la petición AJAX. Se utiliza la sintaxis de
+        //     ASP.NET MVC ('Url.Action') para generar la URL de la acción del controlador llamada
+        //     "GetUbicationFromCdId" dentro del controlador llamado "NotificacionesUbicacion".
+        //     Esto sugiere que se está obteniendo una ubicación específica desde el servidor,
+        //     posiblemente basada en un ID de "Ciudadano" (CdId).
+        url: '@Url.Action("GetUbicationFromCdId", "NotificacionesUbicacion")',
+        // 26. type: 'GET',
+        //     Especifica el tipo de petición HTTP que se realizará, en este caso, una petición GET.
+        //     Las peticiones GET se utilizan comúnmente para solicitar datos al servidor.
+        type: 'GET',
+        // 27. success: function (res) { ... },
+        //     Define una función que se ejecutará si la petición AJAX al servidor se completa
+        //     con éxito (es decir, el servidor devuelve una respuesta con un código de estado HTTP
+        //     que indica éxito, como 200 OK). El parámetro 'res' contendrá la respuesta del servidor,
+        //     que se espera que contenga la información de la ubicación (latitud y longitud).
+        success: function (res) {
+            // 28. ok(res);
+            //     Llama a la función 'ok' (definida más adelante) y le pasa la respuesta del servidor
+            //     ('res') como argumento. Se espera que la función 'ok' procese los datos de la
+            //     ubicación y actualice el mapa.
+            ok(res);
+        },
+        // 29. error: function (request, status, error) { ... }
+        //     Define una función que se ejecutará si la petición AJAX al servidor falla (por ejemplo,
+        //     si hay un error de red o si el servidor devuelve un código de estado HTTP que indica un
+        //     error). Los parámetros 'request', 'status' y 'error' contienen información sobre el
+        //     error.
+        error: function (request, status, error) {
+            // 30. console.log("error");
+            //     Imprime la cadena "error" en la consola del navegador para indicar que ha ocurrido
+            //     un error durante la petición AJAX. Sería recomendable incluir más detalles sobre
+            //     el error para facilitar la depuración.
+            console.log("error");
+        }
+    })
 
-        $.ajax({
-            url: '@Url.Action("GetUbicationFromCdId", "NotificacionesUbicacion")',
-            type: 'GET',
-            success: function (res) {
-                ok(res);
-            },
-            error: function (request, status, error) {
-                console.log("error");
-            }
-        })
+    // 31. function ok(pos) { ... }
+    //     Declara una función llamada 'ok'. Esta función se espera que sea llamada cuando se obtiene
+    //     exitosamente la información de la ubicación (ya sea desde la geolocalización del navegador
+    //     o desde el servidor a través de la llamada AJAX). Recibe un objeto 'pos' como argumento,
+    //     que contiene la información de la ubicación.
+    function ok(pos) {
+        // 32. lat = pos.latitud;
+        //     Asigna el valor de la propiedad 'latitud' del objeto 'pos' a la variable global 'lat'.
+        lat = pos.latitud;
+        // 33. lng = pos.longitud;
+        //     Asigna el valor de la propiedad 'longitud' del objeto 'pos' a la variable global 'lng'.
+        lng = pos.longitud;
+        // 34. map.setView([lat, lng], 16);
+        //     Establece el centro del mapa de Leaflet a las coordenadas de latitud y longitud
+        //     obtenidas ('lat', 'lng') y establece el nivel de zoom inicial a 16.
+        map.setView([lat, lng], 16);
 
-
-
-        function ok(pos) {
-            lat = pos.latitud;
-            lng = pos.longitud;
-            map.setView([lat, lng], 16);
-
-            if (marker) {
-                map.removeLayer(marker);
-            }
-
-            marker = L.marker([lat, lng]).addTo(map);
-
-            getTruck();
+        // 35. if (marker) { map.removeLayer(marker); }
+        //     Verifica si la variable 'marker' ya tiene asignada una instancia de un marcador.
+        //     Si es así, remueve ese marcador existente del mapa utilizando el método 'removeLayer'
+        //     del objeto 'map'. Esto asegura que no se acumulen múltiples marcadores si la función
+        //     'ok' se llama varias veces.
+        if (marker) {
+            map.removeLayer(marker);
         }
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+        // 36. marker = L.marker([lat, lng]).addTo(map);
+        //     Crea un nuevo marcador de Leaflet en las coordenadas de latitud y longitud obtenidas
+        //     (almacenadas en las variables 'lat' y 'lng') y lo agrega a la capa del mapa,
+        //     haciéndolo visible. Se utiliza el icono predeterminado de Leaflet en este caso.
+        marker = L.marker([lat, lng]).addTo(map);
 
+        // 37. getTruck();
+        //     Llama a la función 'getTruck' (que no se define en este fragmento de código). Se
+        //     asume que esta función se encarga de obtener y mostrar la ubicación de un "camión"
+        //     u otro objeto en el mapa.
+        getTruck();
     }
 
-    function getTruck() {
-        $.ajax({
-            url: '@Url.Action("GetOpUbication", "NotificacionesUbicacion")',
-            type: 'GET',
-            success: function (res) {
-                next(res);
-            },
-            error: function (request, status, error) {
-                console.log("error");
-            }
-        })
+    // 38. L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { ... }).addTo(map);
+    //     Crea una nueva capa de tiles (imágenes del mapa) utilizando la URL del proveedor de
+    //     tiles de OpenStreetMap.
+    //     - 'https://tile.openstreetmap.org/{z}/{x}/{y}.png': Esta es la plantilla de la URL
+    //       para obtener los tiles. '{z}' representa el nivel de zoom, '{x}' la coordenada x del
+    //       tile y '{y}' la coordenada y del tile. Leaflet reemplaza automáticamente estos
+    //       marcadores con los valores apropiados a medida que el usuario interactúa con el mapa
+    //       (zoom y pan).
+    //     - { maxZoom: 19, attribution: '© OpenStreetMap' }: Un objeto literal que define las
+    //       opciones para la capa de tiles:
+    //       - maxZoom: Establece el nivel máximo de zoom permitido en el mapa a 19.
+    //       - attribution: Define el texto de atribución que debe mostrarse en el mapa para cumplir
+    //         con los términos de licencia de OpenStreetMap.
+    //     - .addTo(map): Agrega la capa de tiles creada al mapa, haciéndola visible como el fondo
+    //       del mapa.
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+}
 
-        function next(loc) {
-            opLat = loc.latitud;
-            opLng = loc.longitud;
-            if (opMarker) {
-                map.removeLayer(opMarker)
-            }
-
-            opMarker = L.marker([opLat, opLng], { icon: customIcon }).addTo(map);
-            map.flyTo(opMarker._latlng, 16);
+    // 1. function getTruck() { ... }
+//    Declara una función llamada 'getTruck'. Esta función se encarga de realizar una llamada
+//    AJAX al servidor para obtener la ubicación de un "camión" u otro objeto (denominado "Op").
+function getTruck() {
+    // 2. $.ajax({ ... });
+    //    Utiliza la función 'ajax' de la librería jQuery (indicado por '$') para realizar una
+    //    petición HTTP asíncrona.
+    $.ajax({
+        // 3. url: 'Url.Action("GetOpUbication", "NotificacionesUbicacion")',
+        //    Especifica la URL a la que se enviará la petición AJAX. Se utiliza la sintaxis de
+        //    ASP.NET MVC ('Url.Action') para generar la URL de la acción del controlador llamada
+        //    "GetOpUbication" dentro del controlador llamado "NotificacionesUbicacion". Esto sugiere
+        //    que se está solicitando la ubicación de un operador ("Op").
+        url: '@Url.Action("GetOpUbication", "NotificacionesUbicacion")',
+        // 4. type: 'GET',
+        //     Especifica el tipo de petición HTTP que se realizará, en este caso, una petición GET.
+        //     Las peticiones GET se utilizan comúnmente para solicitar datos al servidor.
+        type: 'GET',
+        // 5. success: function (res) { ... },
+        //     Define una función que se ejecutará si la petición AJAX al servidor se completa
+        //     con éxito (es decir, el servidor devuelve una respuesta con un código de estado HTTP
+        //     que indica éxito, como 200 OK). El parámetro 'res' contendrá la respuesta del servidor,
+        //     que se espera que contenga la información de la ubicación del operador (latitud y longitud).
+        success: function (res) {
+            // 6. next(res);
+            //     Llama a la función 'next' (definida dentro de 'getTruck') y le pasa la respuesta
+            //     del servidor ('res') como argumento. Se espera que la función 'next' procese los
+            //     datos de la ubicación del operador y actualice el marcador en el mapa.
+            next(res);
+        },
+        // 7. error: function (request, status, error) { ... }
+        //     Define una función que se ejecutará si la petición AJAX al servidor falla (por ejemplo,
+        //     si hay un error de red o si el servidor devuelve un código de estado HTTP que indica un
+        //     error). Los parámetros 'request', 'status' y 'error' contienen información sobre el
+        //     error.
+        error: function (request, status, error) {
+            // 8. console.log("error");
+            //     Imprime la cadena "error" en la consola del navegador para indicar que ha ocurrido
+            //     un error durante la petición AJAX. Sería recomendable incluir más detalles sobre
+            //     el error para facilitar la depuración.
+            console.log("error");
         }
+    })
+
+    // 9. function next(loc) { ... }
+    //    Declara una función interna llamada 'next' dentro de la función 'getTruck'. Esta función
+    //    recibe un objeto 'loc' como argumento, que se espera que contenga la latitud y longitud
+    //    de la ubicación del operador.
+    function next(loc) {
+        // 10. opLat = loc.latitud;
+        //     Asigna el valor de la propiedad 'latitud' del objeto 'loc' a la variable global 'opLat',
+        //     almacenando la latitud del operador.
+        opLat = loc.latitud;
+        // 11. opLng = loc.longitud;
+        //     Asigna el valor de la propiedad 'longitud' del objeto 'loc' a la variable global 'opLng',
+        //     almacenando la longitud del operador.
+        opLng = loc.longitud;
+        // 12. if (opMarker) { map.removeLayer(opMarker) }
+        //     Verifica si la variable 'opMarker' ya tiene asignada una instancia de un marcador
+        //     (el marcador del operador). Si es así, remueve ese marcador existente del mapa
+        //     utilizando el método 'removeLayer' del objeto 'map'. Esto asegura que el marcador
+        //     del operador se actualice en lugar de crear múltiples marcadores en cada actualización.
+        if (opMarker) {
+            map.removeLayer(opMarker)
+        }
+
+        // 13. opMarker = L.marker([opLat, opLng], { icon: customIcon }).addTo(map);
+        //     Crea un nuevo marcador de Leaflet en las coordenadas de latitud y longitud del operador
+        //     ('opLat', 'opLng'). Se utiliza el icono personalizado definido previamente ('customIcon')
+        //     para este marcador. Luego, se agrega este nuevo marcador a la capa del mapa, haciéndolo
+        //     visible. La instancia del marcador creado se asigna a la variable global 'opMarker'.
+        opMarker = L.marker([opLat, opLng], { icon: customIcon }).addTo(map);
+        // 14. map.flyTo(opMarker._latlng, 16);
+        //     Utiliza el método 'flyTo' del objeto 'map' para centrar la vista del mapa en la
+        //     ubicación del marcador del operador ('opMarker._latlng') y establece el nivel de zoom
+        //     a 16. 'flyTo' proporciona una animación suave de la transición de la vista.
+        map.flyTo(opMarker._latlng, 16);
     }
+}
 
-    function trackTruck() {
-        document.getElementById("trackBtn").hidden = true
-        document.getElementById("stopTrackBtn").hidden = false
-        document.getElementById("stopBtn").disabled = true
+// 15. function trackTruck() { ... }
+//     Declara una función llamada 'trackTruck'. Esta función se encarga de iniciar el seguimiento
+//     automático de la ubicación del camión (operador) a intervalos regulares.
+function trackTruck() {
+    // 16. document.getElementById("trackBtn").hidden = true
+    //     Oculta el botón con el ID "trackBtn" (el botón para iniciar el seguimiento).
+    document.getElementById("trackBtn").hidden = true
+    // 17. document.getElementById("stopTrackBtn").hidden = false
+    //     Muestra el botón con el ID "stopTrackBtn" (el botón para detener el seguimiento).
+    document.getElementById("stopTrackBtn").hidden = false
+    // 18. document.getElementById("stopBtn").disabled = true
+    //     Deshabilita el botón con el ID "stopBtn" (el botón para detener la obtención única de
+    //     ubicación). Esto podría hacerse para evitar conflictos o acciones simultáneas.
+    document.getElementById("stopBtn").disabled = true
 
-        id = setInterval(getTruck, 3000)
-    }
+    // 19. id = setInterval(getTruck, 3000)
+    //     Utiliza la función 'setInterval' de JavaScript para llamar a la función 'getTruck' cada
+    //     3000 milisegundos (es decir, cada 3 segundos). La función 'getTruck' se encargará de
+    //     obtener la ubicación actualizada del operador. El ID del intervalo creado se guarda en
+    //     la variable global 'id'. Este ID se utilizará posteriormente para detener el intervalo.
+    id = setInterval(getTruck, 3000)
+}
 
-    function stopTracking() {
-        document.getElementById("trackBtn").hidden = false
-        document.getElementById("stopTrackBtn").hidden = true
-        document.getElementById("stopBtn").disabled = false
-        clearInterval(id)
-    }
+// 20. function stopTracking() { ... }
+//     Declara una función llamada 'stopTracking'. Esta función se encarga de detener el seguimiento
+//     automático de la ubicación del camión (operador).
+function stopTracking() {
+    // 21. document.getElementById("trackBtn").hidden = false
+    //     Muestra nuevamente el botón con el ID "trackBtn" (el botón para iniciar el seguimiento).
+    document.getElementById("trackBtn").hidden = false
+    // 22. document.getElementById("stopTrackBtn").hidden = true
+    //     Oculta el botón con el ID "stopTrackBtn" (el botón para detener el seguimiento).
+    document.getElementById("stopTrackBtn").hidden = true
+    // 23. document.getElementById("stopBtn").disabled = false
+    //     Habilita nuevamente el botón con el ID "stopBtn" (el botón para detener la obtención
+    //     única de ubicación).
+    document.getElementById("stopBtn").disabled = false
+    // 24. clearInterval(id)
+    //     Utiliza la función 'clearInterval' de JavaScript para detener el intervalo de tiempo
+    //     que se había iniciado con 'setInterval' en la función 'trackTruck'. Se pasa el ID del
+    //     intervalo (almacenado en la variable 'id') para detener la ejecución repetida de
+    //     'getTruck'.
+    clearInterval(id)
+}
 
-    function endMap() {
+// 25. function endMap() { ... }
+//     Declara una función llamada 'endMap'. Esta función se encarga de limpiar la interfaz de
+//     usuario relacionada con el mapa, mostrando los botones iniciales y removiendo el elemento
+//     del mapa del DOM.
+function endMap() {
+    // 26. document.getElementById("startBtn").hidden = false
+    //     Muestra nuevamente el botón con el ID "startBtn" (el botón para iniciar la funcionalidad
+    //     del mapa y la ubicación).
+    document.getElementById("startBtn").hidden = false
+    // 27. document.getElementById("stopBtn").hidden = true
+    //     Oculta el botón con el ID "stopBtn" (el botón para detener la obtención única de
+    //     ubicación).
+    document.getElementById("stopBtn").hidden = true
+    // 28. document.getElementById("trackBtn").hidden = true
+    //     Oculta el botón con el ID "trackBtn" (el botón para iniciar el seguimiento automático).
+    document.getElementById("trackBtn").hidden = true
+    // 29. document.getElementById("stopTrackBtn").hidden = true
+    //     Oculta el botón con el ID "stopTrackBtn" (el botón para detener el seguimiento automático).
+    document.getElementById("stopTrackBtn").hidden = true
 
-        document.getElementById("startBtn").hidden = false
-        document.getElementById("stopBtn").hidden = true
-        document.getElementById("trackBtn").hidden = true
-        document.getElementById("stopTrackBtn").hidden = true
-
-        const mapElement = document.getElementById("map");
-        mapElement.remove();
-
-    }
+    // 30. const mapElement = document.getElementById("map");
+    //     Selecciona el elemento del DOM con el ID "map" (el contenedor del mapa) y lo asigna a
+    //     la constante 'mapElement'.
+    const mapElement = document.getElementById("map");
+    // 31. mapElement.remove();
+    //     Utiliza el método 'remove' del elemento 'mapElement' para eliminarlo completamente del
+    //     DOM. Esto limpia la interfaz de usuario al remover el mapa visualizado.
+    mapElement.remove();
+}
 
 </script>

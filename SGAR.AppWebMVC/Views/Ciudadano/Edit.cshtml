@@ -71,123 +71,212 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script>
-    // Esta línea agrega un event listener al elemento HTML con el id "departamentoId".
-    // El evento "change" se dispara cuando el valor del elemento cambia (por ejemplo, cuando se selecciona una opción diferente en un dropdown).
-    $("#departamentoId").change(function () {
-        // Cuando el evento "change" se dispara, se llama a la función getMunicipiosFromDepartamentoId().
-        getMunicipiosFromDepartamentoId();
+
+    // 1. $("#departamentoId").change(function () { ... });
+//    Selecciona el elemento del DOM con el ID 'departamentoId' (se espera que sea un elemento
+//    de selección <select>) utilizando jQuery. Luego, se adjunta un "manejador de eventos"
+//    (event handler) para el evento 'change'. Este evento se dispara cuando el valor del
+//    elemento de selección cambia. La función anónima proporcionada como argumento se ejecutará
+//    cuando el usuario seleccione una opción diferente en el desplegable de departamentos.
+$("#departamentoId").change(function () {
+    // 2. getMunicipiosFromDepartamentoId();
+    //    Dentro del manejador del evento 'change' para el departamento, se llama a la función
+    //    'getMunicipiosFromDepartamentoId'. Se espera que esta función realice una llamada AJAX
+    //    al servidor para obtener la lista de municipios correspondientes al departamento
+    //    seleccionado.
+    getMunicipiosFromDepartamentoId();
+})
+
+// 3. $("#municipioId").change(function () { ... });
+//    Similar al paso 1, pero para el elemento con el ID 'municipioId' (otro <select>). Se adjunta
+//    un manejador para el evento 'change'.
+$("#municipioId").change(function () {
+    // 4. getDistritosFromMunicipioId();
+    //    Cuando cambia la selección en el desplegable de municipios, se llama a la función
+    //    'getDistritosFromMunicipioId'. Se espera que esta función realice una llamada AJAX
+    //    al servidor para obtener la lista de distritos correspondientes al municipio
+    //    seleccionado.
+    getDistritosFromMunicipioId();
+})
+
+// 5. $("#distritos").change(function () { ... });
+//    Similar a los pasos 1 y 3, pero para el elemento con el ID 'distritos' (otro <select>).
+//    Se adjunta un manejador para el evento 'change'.
+$("#distritos").change(function () {
+    // 6. getZonasFromDistritoId();
+    //    Cuando cambia la selección en el desplegable de distritos, se llama a la función
+    //    'getZonasFromDistritoId'. Se espera que esta función realice una llamada AJAX
+    //    al servidor para obtener la lista de zonas correspondientes al distrito
+    //    seleccionado.
+    getZonasFromDistritoId();
+})
+
+// 7. var getMunicipiosFromDepartamentoId = function () { ... };
+//    Declara una variable llamada 'getMunicipiosFromDepartamentoId' y le asigna una función.
+//    Esta función se encarga de realizar la llamada AJAX para obtener los municipios.
+var getMunicipiosFromDepartamentoId = function () {
+    // 8. $.ajax({ ... });
+    //    Utiliza la función 'ajax' de la librería jQuery (indicado por '$') para realizar una
+    //    petición HTTP asíncrona.
+    $.ajax({
+        // 9. url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Ciudadano")',
+        //    Especifica la URL a la que se enviará la petición AJAX. Se utiliza la sintaxis de
+        //    ASP.NET MVC ('Url.Action') para generar la URL de la acción del controlador llamada
+        //    "GetMunicipiosFromDepartamentoId" dentro del controlador llamado "Ciudadano". Esto
+        //    asegura que la URL sea correcta incluso si la estructura de las rutas de la aplicación cambia.
+        url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Ciudadano")',
+        // 10. type: 'GET',
+        //     Especifica el tipo de petición HTTP que se realizará, en este caso, una petición GET.
+        //     Las peticiones GET se utilizan comúnmente para solicitar datos al servidor.
+        type: 'GET',
+        // 11. data: { departamentoId: $('#departamentoId').val(), },
+        //     Especifica los datos que se enviarán al servidor con la petición GET. Se envían como
+        //     un objeto JavaScript que jQuery convertirá en parámetros en la URL (query string).
+        //     - departamentoId: $('#departamentoId').val(): Obtiene el valor seleccionado en el
+        //       elemento con el ID 'departamentoId' (el desplegable de departamentos) utilizando
+        //       jQuery y lo envía al servidor bajo el nombre del parámetro 'departamentoId'.
+        data: {
+            departamentoId: $('#departamentoId').val(),
+        },
+        // 12. success: function (data) { ... },
+        //     Define una función que se ejecutará si la petición AJAX al servidor se completa
+        //     con éxito (es decir, el servidor devuelve una respuesta con un código de estado HTTP
+        //     que indica éxito, como 200 OK). El parámetro 'data' contendrá la respuesta del servidor,
+        //     que se espera que sea una lista de municipios.
+        success: function (data) {
+            // 13. $('#municipioId').find('option').remove();
+            //     Selecciona el elemento con el ID 'municipioId' (el desplegable de municipios)
+            //     utilizando jQuery, encuentra todos los elementos <option> dentro de él y los
+            //     elimina. Esto se hace para limpiar la lista de municipios antes de agregar los
+            //     nuevos correspondientes al departamento seleccionado.
+            $('#municipioId').find('option').remove()
+            // 14. $('#municipioId').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega una nueva opción al desplegable de municipios. Esta opción tiene el valor
+            //     "0" y el texto "SELECCIONAR", que generalmente se utiliza como una opción por
+            //     defecto o un marcador de posición para indicar que el usuario debe seleccionar
+            //     un municipio.
+            $('#municipioId').append('<option value="0">SELECCIONAR</option>')
+            // 15. $('#distritos').find('option').remove();
+            //     Similar al paso 13, pero para el desplegable de distritos ('#distritos'). Se
+            //     limpian las opciones existentes ya que la selección de un nuevo departamento
+            //     hace que los distritos previamente mostrados ya no sean relevantes.
+            $('#distritos').find('option').remove()
+            // 16. $('#distritos').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega la opción por defecto "SELECCIONAR" al desplegable de distritos.
+            $('#distritos').append('<option value="0">SELECCIONAR</option>')
+            // 17. $('#zonas').find('option').remove();
+            //     Similar a los pasos 13 y 15, pero para el desplegable de zonas ('#zonas'). Se
+            //     limpian las opciones existentes.
+            $('#zonas').find('option').remove()
+            // 18. $('#zonas').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega la opción por defecto "SELECCIONAR" al desplegable de zonas.
+            $('#zonas').append('<option value="0">SELECCIONAR</option>')
+            // 19. $(data).each(function (i, item) { ... });
+            //     Itera sobre la lista de municipios recibida del servidor en la variable 'data'
+            //     utilizando la función 'each' de jQuery. Para cada elemento de la lista:
+            //     - 'i' es el índice del elemento en la lista.
+            //     - 'item' es el objeto que representa un municipio. Se espera que cada municipio
+            //       tenga propiedades como 'id' y 'nombre'.
+            $(data).each(
+                function (i, item) {
+                    // 20. $('#municipioId').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+                    //     Para cada municipio en la lista 'data', se crea un nuevo elemento <option>
+                    //     para el desplegable de municipios ('#municipioId'). El valor de la opción
+                    //     se establece al 'id' del municipio y el texto visible de la opción se
+                    //     establece al 'nombre' del municipio. Esta nueva opción se agrega al final
+                    //     del desplegable de municipios.
+                    $('#municipioId').append('<option value="' + item.id + '">' + item.nombre + '</option>')
+                }
+            )
+        }
     })
+}
 
-    // Similar a lo anterior, esta línea agrega un event listener al elemento HTML con el id "municipioId".
-    $("#municipioId").change(function () {
-        // Cuando el evento "change" se dispara, se llama a la función getDistritosFromMunicipioId().
-        getDistritosFromMunicipioId();
+// 21. var getDistritosFromMunicipioId = function () { ... };
+//     Declara una variable llamada 'getDistritosFromMunicipioId' y le asigna una función.
+//     Esta función se encarga de realizar la llamada AJAX para obtener los distritos.
+var getDistritosFromMunicipioId = function () {
+    // 22. $.ajax({ ... });
+    //     Realiza una petición HTTP asíncrona utilizando jQuery AJAX.
+    $.ajax({
+        // 23. url: '@Url.Action("GetDistritosFromMunicipioId", "Ciudadano")',
+        //     Especifica la URL para obtener los distritos basada en el municipio seleccionado.
+        url: '@Url.Action("GetDistritosFromMunicipioId", "Ciudadano")',
+        // 24. type: 'GET',
+        //     Utiliza el método GET para solicitar los datos.
+        type: 'GET',
+        // 25. data: { municipioId: $('#municipioId').val(), },
+        //     Envía el ID del municipio seleccionado como parámetro en la petición.
+        data: {
+            municipioId: $('#municipioId').val(),
+        },
+        // 26. success: function (data) { ... },
+        //     Función que se ejecuta si la petición es exitosa. 'data' contiene la lista de distritos.
+        success: function (data) {
+            // 27. $('#distritos').find('option').remove();
+            //     Limpia las opciones existentes en el desplegable de distritos.
+            $('#distritos').find('option').remove()
+            // 28. $('#distritos').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega la opción por defecto "SELECCIONAR" al desplegable de distritos.
+            $('#distritos').append('<option value="0">SELECCIONAR</option>')
+            // 29. $('#zonas').find('option').remove();
+            //     Limpia las opciones existentes en el desplegable de zonas (ya que un nuevo municipio
+            //     puede tener diferentes distritos y, por lo tanto, diferentes zonas).
+            $('#zonas').find('option').remove()
+            // 30. $('#zonas').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega la opción por defecto "SELECCIONAR" al desplegable de zonas.
+            $('#zonas').append('<option value="0">SELECCIONAR</option>')
+            // 31. $(data).each(function (i, item) { ... });
+            //     Itera sobre la lista de distritos recibida del servidor.
+            $(data).each(
+                function (i, item) {
+                    // 32. $('#distritos').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+                    //     Agrega una nueva opción al desplegable de distritos para cada distrito en la lista.
+                    $('#distritos').append('<option value="' + item.id + '">' + item.nombre + '</option>')
+                }
+            )
+        }
     })
+}
 
-    // Similar a lo anterior, esta línea agrega un event listener al elemento HTML con el id "distritos".
-    $("#distritos").change(function () {
-        // Cuando el evento "change" se dispara, se llama a la función getZonasFromDistritoId().
-        getZonasFromDistritoId();
+// 33. var getZonasFromDistritoId = function () { ... };
+//     Declara una variable llamada 'getZonasFromDistritoId' y le asigna una función.
+//     Esta función se encarga de realizar la llamada AJAX para obtener las zonas.
+var getZonasFromDistritoId = function () {
+    // 34. $.ajax({ ... });
+    //     Realiza una petición HTTP asíncrona utilizando jQuery AJAX.
+    $.ajax({
+        // 35. url: '@Url.Action("GetZonasFromDistritoId", "Ciudadano")',
+        //     Especifica la URL para obtener las zonas basada en el distrito seleccionado.
+        url: '@Url.Action("GetZonasFromDistritoId", "Ciudadano")',
+        // 36. type: 'GET',
+        //     Utiliza el método GET para solicitar los datos.
+        type: 'GET',
+        // 37. data: { distritoId: $('#distritos').val(), },
+        //     Envía el ID del distrito seleccionado como parámetro en la petición.
+        data: {
+            distritoId: $('#distritos').val(),
+        },
+        // 38. success: function (data) { ... },
+        //     Función que se ejecuta si la petición es exitosa. 'data' contiene la lista de zonas.
+        success: function (data) {
+            // 39. $('#zonas').find('option').remove();
+            //     Limpia las opciones existentes en el desplegable de zonas.
+            $('#zonas').find('option').remove()
+            // 40. $('#zonas').append('<option value="0">SELECCIONAR</option>');
+            //     Agrega la opción por defecto "SELECCIONAR" al desplegable de zonas.
+            $('#zonas').append('<option value="0">SELECCIONAR</option>')
+            // 41. $(data).each(function (i, item) { ... });
+            //     Itera sobre la lista de zonas recibida del servidor.
+            $(data).each(
+                function (i, item) {
+                    // 42. $('#zonas').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+                    //     Agrega una nueva opción al desplegable de zonas para cada zona en la lista.
+                    $('#zonas').append('<option value="' + item.id + '">' + item.nombre + '</option>')
+                }
+            )
+        }
     })
-
-    // Definición de la función getMunicipiosFromDepartamentoId().
-    var getMunicipiosFromDepartamentoId = function () {
-        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
-        $.ajax({
-            // Especifica la URL a la que se enviará la solicitud. Url.Action() es una función de Razor que genera la URL para la acción GetMunicipiosFromDepartamentoId del controlador Ciudadano.
-            url: '@Url.Action("GetMunicipiosFromDepartamentoId", "Ciudadano")',
-            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
-            type: 'GET',
-            // Envía el valor seleccionado del elemento HTML con el id "departamentoId" como parámetro "departamentoId" en la solicitud.
-            data: {
-                departamentoId: $('#departamentoId').val(),
-            },
-            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
-            success: function (data) {
-                // Elimina todas las opciones existentes del elemento HTML con el id "municipioId".
-                $('#municipioId').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "municipioId".
-                $('#municipioId').append('<option value="0">SELECCIONAR</option>')
-                // Elimina todas las opciones existentes del elemento HTML con el id "distritos".
-                $('#distritos').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "distritos".
-                $('#distritos').append('<option value="0">SELECCIONAR</option>')
-                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
-                $('#zonas').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
-                $('#zonas').append('<option value="0">SELECCIONAR</option>')
-                // Itera a través de los elementos de la respuesta JSON (data).
-                $(data).each(
-                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "municipioId".
-                    function (i, item) {
-                        $('#municipioId').append('<option value="' + item.id + '">' + item.nombre + '</option>')
-                    }
-                )
-            }
-        })
-    }
-
-    // Definición de la función getDistritosFromMunicipioId().
-    var getDistritosFromMunicipioId = function () {
-        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
-        $.ajax({
-            // Especifica la URL a la que se enviará la solicitud. Url.Action() es una función de Razor que genera la URL para la acción GetDistritosFromMunicipioId del controlador Ciudadano.
-            url: '@Url.Action("GetDistritosFromMunicipioId", "Ciudadano")',
-            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
-            type: 'GET',
-            // Envía el valor seleccionado del elemento HTML con el id "municipioId" como parámetro "municipioId" en la solicitud.
-            data: {
-                municipioId: $('#municipioId').val(),
-
-            },
-            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
-            success: function (data) {
-                // Elimina todas las opciones existentes del elemento HTML con el id "distritos".
-                $('#distritos').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "distritos".
-                $('#distritos').append('<option value="0">SELECCIONAR</option>')
-                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
-                $('#zonas').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
-                $('#zonas').append('<option value="0">SELECCIONAR</option>')
-                // Itera a través de los elementos de la respuesta JSON (data).
-                $(data).each(
-                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "distritos".
-                    function (i, item) {
-                        $('#distritos').append('<option value="' + item.id + '">' + item.nombre + '</option>')
-                    }
-                )
-            }
-        })
-    }
-
-    // Definición de la función getZonasFromDistritoId().
-    var getZonasFromDistritoId = function () {
-        // Utiliza la función $.ajax() de jQuery para realizar una solicitud HTTP asíncrona.
-        $.ajax({
-            // Especifica la URL a la que se enviará la solicitud. Url.Action() es una función de Razor que genera la URL para la acción GetZonasFromDistritoId del controlador Ciudadano.
-            url: '@Url.Action("GetZonasFromDistritoId", "Ciudadano")',
-            // Especifica el método HTTP utilizado para la solicitud (GET en este caso).
-            type: 'GET',
-            // Envía el valor seleccionado del elemento HTML con el id "distritos" como parámetro "distritoId" en la solicitud.
-            data: {
-                distritoId: $('#distritos').val(),
-            },
-            // Esta función se ejecuta si la solicitud HTTP se completa con éxito.
-            success: function (data) {
-                // Elimina todas las opciones existentes del elemento HTML con el id "zonas".
-                $('#zonas').find('option').remove()
-                // Agrega una opción predeterminada "SELECCIONAR" al elemento HTML con el id "zonas".
-                $('#zonas').append('<option value="0">SELECCIONAR</option>')
-                // Itera a través de los elementos de la respuesta JSON (data).
-                $(data).each(
-                    // Para cada elemento, agrega una nueva opción al elemento HTML con el id "zonas".
-                    function (i, item) { 
-                        $('#zonas').append('<option value="' + item.id + '">' + item.nombre + '</option>')
-                    }
-                )
-            }
-        })
-    }
+}
 </script>
 }

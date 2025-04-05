@@ -70,67 +70,200 @@
 
 <script>
 
+    // 1. window.addEventListener('DOMContentLoaded', () => { ... });
+    //    Agrega un "escuchador de eventos" (event listener) a la ventana (window) para el evento
+    //    'DOMContentLoaded'. Este evento se dispara cuando el documento HTML ha sido completamente
+    //    cargado y parseado, sin esperar a que se carguen las hojas de estilo, imágenes y subframes.
+    //    La función anónima proporcionada como segundo argumento se ejecutará cuando este evento
+    //    ocurra.
     window.addEventListener('DOMContentLoaded', () => {
+        // 2. document.getElementById('startBtn').addEventListener('onmouseover', setUbicationProps(), { once: true });
+        //    Selecciona el elemento del DOM con el ID 'startBtn' (se espera que sea un botón u otro
+        //    elemento interactivo). Luego, le agrega un "escuchador de eventos" para el evento
+        //    'onmouseover'. Este evento se dispara cuando el puntero del ratón se mueve sobre el
+        //    elemento.
+        //    - setUbicationProps(): **Importante:** Aquí, 'setUbicationProps()' está siendo *llamada*
+        //      inmediatamente y el *resultado* de esa llamada (que probablemente sea 'undefined' ya que
+        //      'setUbicationProps' realiza una llamada AJAX y no retorna nada directamente) se está
+        //      pasando como el manejador del evento. Esto no es lo que probablemente se desea. Se
+        //      debería pasar la *referencia* a la función para que se ejecute cuando el evento
+        //      'onmouseover' ocurra. La sintaxis correcta sería:
+        //      `document.getElementById('startBtn').addEventListener('mouseover', setUbicationProps, { once: true });`
+        //    - { once: true }: Esta opción indica que el "escuchador de eventos" debe ser invocado
+        //      como máximo una vez. Después de que el evento 'onmouseover' ocurra por primera vez, el
+        //      "escuchador" será removido automáticamente, por lo que 'setUbicationProps' se ejecutará
+        //      solo la primera vez que el ratón pase sobre 'startBtn'.
         document.getElementById('startBtn').addEventListener('onmouseover', setUbicationProps(), {
             once: true
         });
     });
 
+    // 3. var marker, lat, lng;
+    //    Declara tres variables a nivel global (o al menos en el scope donde se define este código):
+    //    - marker: Se espera que esta variable almacene una instancia de un marcador de Leaflet
+    //      (la librería de mapas que se está utilizando).
+    //    - lat: Se espera que esta variable almacene la latitud de la ubicación.
+    //    - lng: Se espera que esta variable almacene la longitud de la ubicación.
+    //    Inicialmente, estas variables no tienen ningún valor asignado (son 'undefined').
     var marker, lat, lng;
 
+    // 4. function getLocation() { ... }
+    //    Declara una función llamada 'getLocation'. Se espera que esta función se encargue de obtener
+    //    la ubicación del usuario utilizando la API de geolocalización del navegador y de inicializar
+    //    y manipular un mapa utilizando la librería Leaflet.
     function getLocation() {
-
-
-        //Inicializa el mapa de la librería leaflet
+        // 5. const map = L.map('map');
+        //    Crea una nueva instancia de un objeto de mapa de Leaflet y lo asocia al elemento del DOM
+        //    que tiene el ID 'map' (se espera que sea un <div> donde se mostrará el mapa). La variable
+        //    'map' ahora representa el mapa en sí.
         const map = L.map('map');
 
+        // 6. $('#staticBackdrop').on('shown.bs.modal', function () { map.invalidateSize(); })
+        //    Utiliza jQuery para seleccionar el elemento con el ID 'staticBackdrop' (se espera que
+        //    sea un modal de Bootstrap). Luego, se adjunta un "manejador de eventos" para el evento
+        //    'shown.bs.modal'. Este evento se dispara cuando el modal ha sido hecho visible al usuario
+        //    y sus animaciones de transición se han completado.
+        //    La función anónima que se ejecuta cuando el modal se muestra llama a 'map.invalidateSize()'.
+        //    Este método de Leaflet es útil para redibujar el mapa cuando su contenedor (el modal en
+        //    este caso) se ha hecho visible o ha cambiado de tamaño, asegurando que el mapa se muestre
+        //    correctamente.
         $('#staticBackdrop').on('shown.bs.modal', function () {
             map.invalidateSize();
         })
 
-        //Obtiene la posición inicial para mostrar el mapa
+        // 7. navigator.geolocation.getCurrentPosition(ok);
+        //    Utiliza la API de geolocalización del navegador para intentar obtener la ubicación actual
+        //    del usuario.
+        //    - 'getCurrentPosition' toma al menos un argumento: una función de callback que se ejecutará
+        //      si la obtención de la ubicación es exitosa. Aquí, se pasa la función llamada 'ok'.
+        //    - También puede tomar un segundo argumento (una función de callback para manejar errores)
+        //      y un tercer argumento (un objeto con opciones para la geolocalización, como la precisión
+        //      o el tiempo de espera), aunque no se proporcionan en este caso, por lo que se usarán los
+        //      valores por defecto.
         navigator.geolocation.getCurrentPosition(ok);
 
-
-
+        // 8. function ok(pos) { ... }
+        //    Declara una función llamada 'ok'. Esta función se espera que sea llamada por
+        //    'navigator.geolocation.getCurrentPosition' si la obtención de la ubicación del usuario
+        //    es exitosa. Recibe un objeto 'pos' como argumento, que contiene la información de la
+        //    ubicación.
         function ok(pos) {
+            // 9. const crd = pos.coords;
+            //    Dentro de la función 'ok', se obtiene el objeto 'coords' desde el objeto 'pos'. El
+            //    objeto 'coords' contiene las propiedades relacionadas con las coordenadas de la
+            //    ubicación (latitud, longitud, precisión, etc.).
             const crd = pos.coords;
+            // 10. lat = crd.latitude;
+            //     Asigna el valor de la propiedad 'latitude' del objeto 'crd' a la variable global 'lat'.
             lat = crd.latitude;
+            // 11. lng = crd.longitude;
+            //     Asigna el valor de la propiedad 'longitude' del objeto 'crd' a la variable global 'lng'.
             lng = crd.longitude;
+            // 12. map.setView([crd.latitude, crd.longitude], 19);
+            //     Establece el centro del mapa de Leaflet a las coordenadas de latitud y longitud
+            //     obtenidas ('crd.latitude', 'crd.longitude') y establece el nivel de zoom inicial
+            //     a 19 (un nivel de zoom bastante alto, mostrando una vista muy detallada).
             map.setView([crd.latitude, crd.longitude], 19);
+            // 13. if (marker) { map.removeLayer(marker); }
+            //     Verifica si la variable 'marker' ya tiene asignada una instancia de un marcador
+            //     (por ejemplo, si 'getLocation' ha sido llamada previamente y ya se había creado un
+            //     marcador). Si es así, remueve ese marcador existente del mapa utilizando el método
+            //     'removeLayer' del objeto 'map'. Esto es útil para asegurar que solo haya un marcador
+            //     en la ubicación actual.
             if (marker) {
                 map.removeLayer(marker);
             }
 
+            // 14. marker = L.marker([lat, lng], { draggable: 'true' }).addTo(map);
+            //     Crea un nuevo marcador de Leaflet en las coordenadas de latitud y longitud obtenidas
+            //     (almacenadas en las variables 'lat' y 'lng').
+            //     - { draggable: 'true' }: Establece la opción 'draggable' en 'true', lo que permite
+            //       al usuario arrastrar el marcador en el mapa.
+            //     - .addTo(map): Agrega el marcador recién creado a la capa del mapa, haciéndolo visible.
+            //     La instancia del marcador creado se asigna a la variable global 'marker'.
             marker = L.marker([lat, lng], {
                 draggable: 'true'
             }).addTo(map);
 
+            // 15. $('#Latitude').attr('value', lat);
+            //     Utiliza jQuery para seleccionar el elemento con el ID 'Latitude' (se espera que sea
+            //     un input de texto) y establece su atributo 'value' a la latitud obtenida ('lat').
             $('#Latitude').attr('value', lat);
+            // 16. $('#indLat').attr('value', lat);
+            //     Similar al paso 15, pero para el elemento con el ID 'indLat' (probablemente otro
+            //     input o un elemento para mostrar la latitud).
             $('#indLat').attr('value', lat);
+            // 17. $('#Longitude').attr('value', lng);
+            //     Similar al paso 15, pero para el elemento con el ID 'Longitude', estableciendo su
+            //     valor a la longitud obtenida ('lng').
             $('#Longitude').attr('value', lng);
+            // 18. $('#indLng').attr('value', lng);
+            //     Similar al paso 15, pero para el elemento con el ID 'indLng', estableciendo su
+            //     valor a la longitud obtenida ('lng').
             $('#indLng').attr('value', lng);
 
+            // 19. marker.on('drag', function (e) { ... });
+            //     Agrega un "escuchador de eventos" al objeto 'marker' para el evento 'drag'. Este
+            //     evento se dispara mientras el usuario está arrastrando el marcador. La función anónima
+            //     proporcionada como argumento se ejecutará durante el arrastre.
             marker.on('drag', function (e) {
+                // 20. var nuMarker = e.target;
+                //     Dentro del manejador del evento 'drag', 'e' es el objeto del evento, y 'e.target'
+                //     hace referencia al elemento que disparó el evento, que en este caso es el marcador
+                //     que se está arrastrando. La instancia del marcador arrastrado se asigna a la
+                //     variable 'nuMarker'.
                 var nuMarker = e.target;
+                // 21. var position = nuMarker.getLatLng();
+                //     Obtiene las nuevas coordenadas (latitud y longitud) del marcador que ha sido
+                //     arrastrado utilizando el método 'getLatLng()' del objeto 'nuMarker'. Estas
+                //     coordenadas se almacenan en la variable 'position'.
                 var position = nuMarker.getLatLng();
+                // 22. console.log(position)
+                //     Imprime las coordenadas actuales del marcador en la consola del navegador. Esto
+                //     es útil para depuración y para ver los valores de latitud y longitud mientras se
+                //     arrastra el marcador.
                 console.log(position)
+                // 23. $('#Latitude').val(position.lat);
+                //     Utiliza jQuery para seleccionar el elemento con el ID 'Latitude' y establece su
+                //     valor (a diferencia de 'attr('value', ...)', '.val()' actualiza la propiedad
+                //     del elemento del formulario) a la latitud actual del marcador arrastrado
+                //     ('position.lat'). Esto actualiza el valor del input de latitud en tiempo real
+                //     mientras se arrastra el marcador.
                 $('#Latitude').val(position.lat);
+                // 24. $('#Longitude').val(position.lng);
+                //     Similar al paso 23, pero para el elemento con el ID 'Longitude', actualizando su
+                //     valor a la longitud actual del marcador arrastrado ('position.lng').
                 $('#Longitude').val(position.lng);
+                // 25. $('#indLat').val(position.lat);
+                //     Similar al paso 23, pero para el elemento con el ID 'indLat', actualizando su
+                //     valor a la latitud actual del marcador arrastrado.
                 $('#indLat').val(position.lat);
+                // 26. $('#indLng').val(position.lng);
+                //     Similar al paso 23, pero para el elemento con el ID 'indLng', actualizando su
+                //     valor a la longitud actual del marcador arrastrado.
                 $('#indLng').val(position.lng);
             });
         }
 
-
-
-        //Configura el servicio de mapas a usar y lo asocia a la librería
+        // 27. L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { ... }).addTo(map);
+        //     Crea una nueva capa de tiles (imágenes del mapa) utilizando la URL del proveedor de
+        //     tiles de OpenStreetMap.
+        //     - 'https://tile.openstreetmap.org/{z}/{x}/{y}.png': Esta es la plantilla de la URL
+        //       para obtener los tiles. '{z}' representa el nivel de zoom, '{x}' la coordenada x del
+        //       tile y '{y}' la coordenada y del tile. Leaflet reemplaza automáticamente estos
+        //       marcadores con los valores apropiados a medida que el usuario interactúa con el mapa
+        //       (zoom y pan).
+        //     - { maxZoom: 19, attribution: '© OpenStreetMap' }: Un objeto literal que define las
+        //       opciones para la capa de tiles:
+        //       - maxZoom: Establece el nivel máximo de zoom permitido en el mapa a 19.
+        //       - attribution: Define el texto de atribución que debe mostrarse en el mapa para cumplir
+        //         con los términos de licencia de OpenStreetMap.
+        //     - .addTo(map): Agrega la capa de tiles creada al mapa, haciéndola visible como el fondo
+        //       del mapa.
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
         }).addTo(map);
-
-
     }
 
 

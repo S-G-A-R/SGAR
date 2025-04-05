@@ -69,24 +69,101 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            $('#idDistrito').change(function() {
+        // 1. $(document).ready(function() { ... });
+        //    Esta es una función de jQuery que asegura que el código dentro de ella se ejecute solo
+        //    después de que el documento HTML ha sido completamente cargado y parseado (el DOM está
+        //    listo). Esto es importante para que los elementos del DOM a los que se hace referencia
+        //    ya existan.
+        $(document).ready(function () {
+            // 2. $('#idDistrito').change(function() { ... });
+            //    Selecciona el elemento del DOM con el ID 'idDistrito' (se espera que sea un elemento
+            //    de selección <select>) utilizando jQuery. Luego, se adjunta un "manejador de eventos"
+            //    (event handler) para el evento 'change'. Este evento se dispara cuando el valor del
+            //    elemento de selección cambia (es decir, cuando el usuario selecciona una opción diferente
+            //    en el desplegable de distritos). La función anónima proporcionada como argumento se
+            //    ejecutará cuando ocurra este evento.
+            $('#idDistrito').change(function () {
+                // 3. var distritoId = $(this).val();
+                //    Dentro del manejador del evento 'change', 'this' hace referencia al elemento
+                //    '#idDistrito' que disparó el evento. $(this).val() utiliza jQuery para obtener el
+                //    valor actualmente seleccionado en el desplegable de distritos y lo almacena en la
+                //    variable 'distritoId'.
                 var distritoId = $(this).val();
+                // 4. if (distritoId) { ... } else { ... }
+                //    Verifica si se ha seleccionado un valor válido para 'distritoId'. Generalmente,
+                //    si 'distritoId' no es null, undefined, una cadena vacía o cero (dependiendo de cómo
+                //    se manejen las opciones en el desplegable), se considera que se ha seleccionado un
+                //    distrito.
                 if (distritoId) {
+                    // 5. $.ajax({ ... });
+                    //    Si se ha seleccionado un 'distritoId', se realiza una petición HTTP asíncrona
+                    //    utilizando la función 'ajax' de jQuery.
                     $.ajax({
+                        // 6. url: '/Horario/GetZonas',
+                        //    Especifica la URL a la que se enviará la petición AJAX. Se espera que esta URL
+                        //    corresponda a una acción ('GetZonas') dentro de un controlador ('Horario')
+                        //    en el backend de la aplicación. Esta acción probablemente recibirá el 'distritoId'
+                        //    y devolverá la lista de zonas correspondientes a ese distrito.
                         url: '/Horario/GetZonas',
+                        // 7. data: { idDistrito: distritoId },
+                        //    Especifica los datos que se enviarán al servidor con la petición AJAX. En este
+                        //    caso, se envía un objeto JavaScript con una propiedad 'idDistrito' cuyo valor
+                        //    es el 'distritoId' seleccionado por el usuario. jQuery convertirá este objeto
+                        //    en parámetros en la URL (para una petición GET, que es el valor por defecto si
+                        //    no se especifica el 'type') o en el cuerpo de la petición (para una petición POST).
                         data: { idDistrito: distritoId },
-                        success: function(data) {
+                        // 8. success: function(data) { ... },
+                        //    Define una función que se ejecutará si la petición AJAX al servidor se completa
+                        //    con éxito (es decir, el servidor devuelve una respuesta con un código de estado
+                        //    HTTP que indica éxito, como 200 OK). El parámetro 'data' contendrá la respuesta
+                        //    del servidor, que se espera que sea una lista de zonas (probablemente en formato
+                        //    JSON).
+                        success: function (data) {
+                            // 9. var zonaSelect = $('#zonas');
+                            //    Dentro de la función de éxito, se selecciona el elemento del DOM con el ID
+                            //    'zonas' (se espera que sea otro elemento de selección <select> donde se
+                            //    mostrarán las zonas) utilizando jQuery y se almacena una referencia a él en
+                            //    la variable 'zonaSelect'.
                             var zonaSelect = $('#zonas');
+                            // 10. zonaSelect.empty();
+                            //     Utiliza el método 'empty()' de jQuery para remover todos los elementos
+                            //     hijos (en este caso, las opciones <option>) que actualmente existen dentro
+                            //     del desplegable de zonas. Esto se hace para limpiar la lista antes de agregar
+                            //     las nuevas zonas correspondientes al distrito seleccionado.
                             zonaSelect.empty();
+                            // 11. zonaSelect.append('<option value="">Seleccione una zona</option>');
+                            //     Agrega una nueva opción al principio del desplegable de zonas. Esta opción
+                            //     tiene un valor vacío ("") y el texto "Seleccione una zona", que generalmente
+                            //     se utiliza como una opción por defecto o un marcador de posición para indicar
+                            //     que el usuario debe seleccionar una zona.
                             zonaSelect.append('<option value="">Seleccione una zona</option>');
-                            $.each(data, function(index, zona) {
+                            // 12. $.each(data, function(index, zona) { ... });
+                            //     Utiliza la función 'each' de jQuery para iterar sobre la lista de zonas
+                            //     recibida del servidor en la variable 'data'. Para cada elemento de la lista:
+                            //     - 'index' es el índice del elemento en la lista.
+                            //     - 'zona' es el objeto que representa una zona. Se espera que cada zona
+                            //       tenga propiedades como 'id' y 'nombre'.
+                            $.each(data, function (index, zona) {
+                                // 13. zonaSelect.append('<option value="' + zona.id + '">' + zona.nombre + '</option>');
+                                //     Para cada objeto 'zona' en la lista 'data', se crea un nuevo elemento
+                                //     <option> para el desplegable de zonas ('zonaSelect'). El valor de la
+                                //     opción se establece al 'id' de la zona y el texto visible de la opción
+                                //     se establece al 'nombre' de la zona. Esta nueva opción se agrega al final
+                                //     del desplegable de zonas.
                                 zonaSelect.append('<option value="' + zona.id + '">' + zona.nombre + '</option>');
                             });
                         }
                     });
                 } else {
+                    // 14. $('#zonas').empty();
+                    //     Si no se ha seleccionado un 'distritoId' (por ejemplo, si la opción por defecto
+                    //     "Seleccione un distrito" está seleccionada), se limpia el desplegable de zonas
+                    //     removiendo todas sus opciones.
                     $('#zonas').empty();
+                    // 15. $('#zonas').append('<option value="">Seleccione una zona</option>');
+                    //     Y se agrega nuevamente la opción por defecto "Seleccione una zona" al desplegable
+                    //     de zonas. Esto asegura que si no hay un distrito seleccionado, el desplegable de
+                    //     zonas muestre la opción por defecto.
                     $('#zonas').append('<option value="">Seleccione una zona</option>');
                 }
             });

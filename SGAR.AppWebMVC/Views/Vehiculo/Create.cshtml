@@ -95,27 +95,89 @@
 
 
 <script>
+    // 1. function setupPreview(fileInputId, previewId, imagePreviewId) { ... }
+    //    Declara una función llamada 'setupPreview' que toma tres argumentos:
+    //    - fileInputId: El ID del elemento input de tipo file.
+    //    - previewId: El ID del elemento contenedor (generalmente un div) donde se mostrará la vista previa.
+    //    - imagePreviewId: El ID del elemento img donde se renderizará la imagen de vista previa.
     function setupPreview(fileInputId, previewId, imagePreviewId) {
+        // 2. document.getElementById(fileInputId).addEventListener('change', function (event) { ... });
+        //    Selecciona el elemento del DOM con el ID proporcionado en 'fileInputId' (se espera que sea
+        //    un input de tipo file) y le agrega un "escuchador de eventos" para el evento 'change'.
+        //    Este evento se dispara cuando el valor del input file ha sido cambiado por el usuario
+        //    (es decir, cuando se selecciona un archivo). La función anónima proporcionada como segundo
+        //    argumento se ejecutará cuando ocurra este evento. El objeto 'event' contiene información
+        //    sobre el evento, incluyendo el archivo seleccionado.
         document.getElementById(fileInputId).addEventListener('change', function (event) {
+            // 3. const file = event.target.files[0];
+            //    Obtiene el primer archivo seleccionado por el usuario desde la propiedad 'files' del
+            //    elemento que disparó el evento ('event.target', que en este caso es el input file).
+            //    'event.target.files' es una lista de archivos, incluso si el input no tiene el atributo
+            //    'multiple', siempre será una lista (con un máximo de un elemento en ese caso).
             const file = event.target.files[0];
+            // 4. const preview = document.getElementById(previewId);
+            //    Selecciona el elemento del DOM que actuará como contenedor de la vista previa usando el
+            //    ID proporcionado en 'previewId'.
             const preview = document.getElementById(previewId);
+            // 5. const imagePreview = document.getElementById(imagePreviewId);
+            //    Selecciona el elemento img del DOM donde se mostrará la imagen de vista previa usando el
+            //    ID proporcionado en 'imagePreviewId'.
             const imagePreview = document.getElementById(imagePreviewId);
 
+            // 6. if (file) { ... } else { ... }
+            //    Verifica si se ha seleccionado un archivo (es decir, si 'file' no es null o undefined).
             if (file) {
+                // 7. const fileReader = new FileReader();
+                //    Crea una nueva instancia del objeto FileReader. FileReader permite a las aplicaciones
+                //    web leer el contenido de los archivos (o buffers de datos brutos) almacenados en el
+                //    cliente de forma asíncrona.
                 const fileReader = new FileReader();
 
+                // 8. fileReader.onload = function (e) { ... };
+                //    Define una función que se ejecutará cuando la operación de lectura del FileReader se
+                //    haya completado con éxito. El objeto 'e' (para evento) contiene el resultado de la lectura.
                 fileReader.onload = function (e) {
+                    // 9. imagePreview.src = e.target.result;
+                    //    Asigna el resultado de la lectura del archivo (que es una URL de datos representando
+                    //    la imagen) a la propiedad 'src' del elemento img de vista previa. Esto hace que la
+                    //    imagen se muestre en el elemento img.
                     imagePreview.src = e.target.result;
+                    // 10. preview.style.display = 'block';
+                    //     Establece la propiedad 'display' del estilo del elemento contenedor de la vista
+                    //     previa a 'block', haciéndolo visible si estaba oculto previamente.
                     preview.style.display = 'block';
                 };
 
+                // 11. fileReader.readAsDataURL(file);
+                //     Inicia la lectura del contenido del archivo como una URL de datos (data URL). Una
+                //     data URL es un esquema de URL que proporciona una forma de incluir un recurso pequeño
+                //     en línea en documentos HTML y CSS. Para imágenes, la URL de datos contendrá la
+                //     representación Base64 de la imagen. Cuando la lectura se complete, se disparará el
+                //     evento 'onload' del FileReader.
                 fileReader.readAsDataURL(file);
             } else {
+                // 12. imagePreview.src = '#';
+                //     Si no se ha seleccionado ningún archivo (o se ha removido la selección), se establece
+                //     la propiedad 'src' del elemento img de vista previa a '#', lo que generalmente hace
+                //     que no se muestre ninguna imagen.
                 imagePreview.src = '#';
+                // 13. preview.style.display = 'none';
+                //     Si no se ha seleccionado ningún archivo, se establece la propiedad 'display' del
+                //     estilo del elemento contenedor de la vista previa a 'none', ocultándolo.
                 preview.style.display = 'none';
             }
         });
     }
+
+    // 14. setupPreview('fotofile', 'preview', 'imagePreview');
+    //     Llama a la función 'setupPreview' con los siguientes argumentos:
+    //     - 'fotofile': Se espera que sea el ID del input de tipo file para la foto.
+    //     - 'preview': Se espera que sea el ID del div que contendrá la vista previa de la foto.
+    //     - 'imagePreview': Se espera que sea el ID del elemento img donde se mostrará la vista previa
+    //       de la foto.
+    //     Esta línea de código configura la funcionalidad de vista previa de la imagen para el input
+    //     de archivo con el ID 'fotofile', mostrando la vista previa en el elemento img con el ID
+    //     'imagePreview' dentro del contenedor con el ID 'preview'.
     setupPreview('fotofile', 'preview', 'imagePreview');
 
 

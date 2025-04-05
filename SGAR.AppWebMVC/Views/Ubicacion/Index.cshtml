@@ -15,203 +15,531 @@
 
 
 <script>
-    let marker, circle, zoomed, id, currLat, currLng ;
+    // 1. let marker, circle, zoomed, id, currLat, currLng ;
+    //    Declara varias variables utilizando la palabra clave 'let'. Esto significa que estas
+    //    variables tienen un alcance de bloque y pueden ser reasignadas.
+    //    - marker: Variable para almacenar el marcador de Leaflet que se mostrará en el mapa.
+    //    - circle: Variable para almacenar el círculo de Leaflet que representará la precisión de la ubicación.
+    //    - zoomed: Variable booleana para controlar si el mapa se ha ajustado alguna vez a la ubicación del usuario.
+    //    - id: Variable para almacenar el ID del rastreo de la ubicación proporcionado por navigator.geolocation.watchPosition.
+    //    - currLat: Variable para almacenar la latitud actual del usuario.
+    //    - currLng: Variable para almacenar la longitud actual del usuario.
+    let marker, circle, zoomed, id, currLat, currLng;
+
+    // 2. var ubicationModel = undefined;
+    //    Declara una variable utilizando la palabra clave 'var'. Esta variable tiene un alcance de
+    //    función y puede ser reasignada. Se inicializa como 'undefined', lo que sugiere que se
+    //    utilizará para almacenar algún modelo o dato relacionado con la ubicación, posiblemente
+    //    obtenido de una fuente externa.
     var ubicationModel = undefined;
 
+    // 3. function getLocation() { ... }
+    //    Declara una función llamada 'getLocation'. Esta función se encarga de iniciar el proceso
+    //    de obtener la ubicación del usuario y mostrarla en un mapa.
     function getLocation() {
+        // 4. createMap();
+        //    Llama a una función llamada 'createMap'. Se asume que esta función inicializa o crea
+        //    el contenedor HTML para el mapa (probablemente un elemento div con el ID 'map'). El código
+        //    de esta función no se muestra aquí.
         createMap();
+        // 5. document.getElementById("startBtn").hidden = true
+        //    Selecciona el elemento del DOM con el ID 'startBtn' (se espera que sea un botón para
+        //    iniciar el rastreo de la ubicación) y establece su propiedad 'hidden' en 'true'. Esto
+        //    oculta el botón de inicio después de que se ha hecho clic en él.
         document.getElementById("startBtn").hidden = true
+        // 6. document.getElementById("stopBtn").hidden = false
+        //    Selecciona el elemento del DOM con el ID 'stopBtn' (se espera que sea un botón para
+        //    detener el rastreo de la ubicación) y establece su propiedad 'hidden' en 'false'. Esto
+        //    muestra el botón de detener después de que se ha iniciado el rastreo.
         document.getElementById("stopBtn").hidden = false
 
-        //Inicializa el mapa de la librería leaflet
+        // 7. const map = L.map('map');
+        //    Crea una nueva instancia de un objeto de mapa de Leaflet y lo asocia con el elemento del
+        //    DOM que tiene el ID 'map'. La variable 'map' ahora representa el mapa de Leaflet.
         const map = L.map('map');
 
-
-        //Obtiene la posición inicial para mostrar el mapa
+        // 8. navigator.geolocation.getCurrentPosition(ok);
+        //    Utiliza la API de geolocalización del navegador para obtener la ubicación actual del
+        //    usuario.
+        //    - navigator.geolocation: Accede al objeto de geolocalización.
+        //    - getCurrentPosition(ok): Llama al método para obtener la ubicación actual. Toma al menos
+        //      una función de devolución de llamada ('ok' en este caso) que se ejecutará si la
+        //      ubicación se obtiene con éxito. También puede tomar una función de devolución de llamada
+        //      para errores y un objeto de opciones.
         navigator.geolocation.getCurrentPosition(ok);
 
+        // 9. function ok(pos) { ... }
+        //    Declara una función llamada 'ok'. Esta función se pasa como la función de éxito a
+        //    getCurrentPosition y se ejecutará cuando se obtenga la ubicación inicial del usuario.
+        //    Recibe un objeto 'pos' que contiene la información de la ubicación.
         function ok(pos) {
+            // 10. const crd = pos.coords;
+            //     Accede a la propiedad 'coords' del objeto de posición, que contiene las coordenadas
+            //     de la ubicación (latitud, longitud, precisión, etc.).
             const crd = pos.coords;
+            // 11. map.setView([crd.latitude, crd.longitude], 19);
+            //     Establece el centro del mapa de Leaflet a las coordenadas de latitud y longitud
+            //     obtenidas (crd.latitude, crd.longitude) y establece el nivel de zoom en 19. Un nivel
+            //     de zoom alto muestra una vista más detallada del mapa. Esto se hace para centrar el
+            //     mapa en la ubicación inicial del usuario.
             map.setView([crd.latitude, crd.longitude], 19);
         }
 
-        //Inicia la localización en tiempo real
+        // 12. id = navigator.geolocation.watchPosition(success, error);
+        //     Utiliza la API de geolocalización del navegador para iniciar el rastreo continuo de la
+        //     ubicación del usuario.
+        //     - watchPosition(success, error): Llama al método para iniciar el rastreo. Toma dos
+        //       funciones de devolución de llamada: 'success' que se ejecutará cada vez que se obtenga
+        //       una nueva ubicación, y 'error' que se ejecutará si ocurre un error al obtener la ubicación.
+        //       Devuelve un ID que se puede usar para detener el rastreo con navigator.geolocation.clearWatch(id).
         id = navigator.geolocation.watchPosition(success, error);
 
-        //Configura el servicio de mapas a usar y lo asocia a la librería
+        // 13. L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { ... }).addTo(map);
+        //     Crea una capa de mapa base utilizando las tiles de OpenStreetMap y la agrega al mapa de
+        //     Leaflet.
+        //     - L.tileLayer(...): Crea una nueva capa de tiles a partir de la URL proporcionada.
+        //       La URL contiene marcadores de posición '{z}', '{x}', '{y}' que Leaflet reemplaza con
+        //       el nivel de zoom, la coordenada X y la coordenada Y de cada tile del mapa.
+        //     - { maxZoom: 19, attribution: '© OpenStreetMap' }: Un objeto de opciones para la capa de
+        //       tiles.
+        //       - maxZoom: Establece el nivel máximo de zoom permitido para esta capa.
+        //       - attribution: Define el texto de atribución que debe mostrarse para los datos del mapa.
+        //     - .addTo(map): Agrega la capa de tiles al objeto de mapa 'map', haciéndola visible.
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
+        // 14. function success(pos) { ... }
+        //     Declara una función llamada 'success'. Esta función se pasa como la función de éxito a
+        //     watchPosition y se ejecutará cada vez que el navegador obtenga una nueva ubicación del
+        //     usuario. Recibe un objeto 'pos' que contiene la información de la ubicación.
         function success(pos) {
-
+            // 15. const lat = pos.coords.latitude;
+            //     Obtiene la latitud de las coordenadas de la nueva ubicación.
             const lat = pos.coords.latitude;
+            // 16. const lng = pos.coords.longitude;
+            //     Obtiene la longitud de las coordenadas de la nueva ubicación.
             const lng = pos.coords.longitude;
+            // 17. const accuracy = pos.coords.accuracy;
+            //     Obtiene la precisión de la ubicación en metros.
             const accuracy = pos.coords.accuracy;
 
-
-
-            // Borra cualquier marcador existente
+            // 18. if (marker) { ... }
+            //     Verifica si ya existe un marcador en el mapa (es decir, si ya se ha obtenido una
+            //     ubicación previamente).
             if (marker) {
+                // 19. map.removeLayer(marker);
+                //     Si existe un marcador, lo remueve de la capa del mapa para poder actualizarlo con
+                //     la nueva ubicación.
                 map.removeLayer(marker);
+                // 20. map.removeLayer(circle);
+                //     Si existe un círculo de precisión, también lo remueve para actualizarlo.
                 map.removeLayer(circle);
             }
 
-            // Añade un marcador al mapa
+            // 21. currLat = lat;
+            //     Actualiza la variable global 'currLat' con la latitud actual.
             currLat = lat;
+            // 22. currLng = lng;
+            //     Actualiza la variable global 'currLng' con la longitud actual.
             currLng = lng;
 
+            // 23. marker = L.marker([lat, lng]).addTo(map);
+            //     Crea un nuevo marcador de Leaflet en las coordenadas de latitud y longitud actuales
+            //     y lo agrega a la capa del mapa, haciéndolo visible.
             marker = L.marker([lat, lng]).addTo(map);
+            // 24. circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
+            //     Crea un nuevo círculo de Leaflet centrado en las coordenadas actuales. El radio del
+            //     círculo se establece según la precisión de la ubicación, proporcionando una indicación
+            //     visual de la posible área donde se encuentra el usuario. Se agrega al mapa.
             circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
 
-
+            // 25. if (!zoomed) { ... }
+            //     Verifica si el mapa aún no se ha ajustado para mostrar el círculo de precisión. Esto
+            //     se hace para que el mapa se ajuste automáticamente a la ubicación del usuario la primera
+            //     vez que se recibe una ubicación, pero no necesariamente en cada actualización posterior
+            //     (para evitar que el usuario pierda el zoom o la posición si ha interactuado con el mapa).
             if (!zoomed) {
+                // 26. zoomed = map.fitBounds(circle.getBounds());
+                //     Ajusta la vista del mapa para que contenga completamente los límites del círculo de
+                //     precisión. Esto asegura que la ubicación del usuario y su precisión sean visibles
+                //     en la pantalla. La variable 'zoomed' se establece en el resultado de fitBounds
+                //     (que podría ser el propio mapa o algún valor indicando que el ajuste se realizó),
+                //     para que esta acción no se repita en futuras actualizaciones de la ubicación.
                 zoomed = map.fitBounds(circle.getBounds());
             }
 
-            // Actualiza el mapa para hacer focus en la nueva posición
+            // 27. console.log(`Latitude:${lat}, Longitude:${lng}`)
+            //     Imprime la latitud y longitud actuales en la consola del navegador para propósitos de
+            //     depuración o registro.
             console.log(`Latitude:${lat}, Longitude:${lng}`)
+            // 28. console.log(id)
+            //     Imprime el ID del rastreo de la ubicación en la consola. Este ID podría ser útil para
+            //     detener el rastreo si es necesario.
             console.log(id)
+            // 29. map.setView([lat, lng], 19);
+            //     Vuelve a centrar el mapa en las coordenadas actuales con un nivel de zoom de 19.
+            //     Aunque el mapa se ajustó a los límites la primera vez, esta línea asegura que el centro
+            //     se mantenga en la ubicación actual en cada actualización.
             map.setView([lat, lng], 19);
+            // 30. getDbLocation();
+            //     Llama a una función llamada 'getDbLocation'. Se asume que esta función realiza alguna
+            //     acción relacionada con la ubicación actual, posiblemente enviándola a un servidor o
+            //     comparándola con datos de ubicación almacenados en una base de datos. El código de
+            //     esta función no se muestra aquí.
             getDbLocation();
-
         }
 
+        // 31. function error(err) { ... }
+        //     Declara una función llamada 'error'. Esta función se pasa como la función de error a
+        //     watchPosition y se ejecutará si ocurre un error al intentar obtener la ubicación del
+        //     usuario. Recibe un objeto 'err' que contiene información sobre el error.
         function error(err) {
-
+            // 32. if (err.code === 1) { ... } else { ... }
+            //     Verifica el código del error para determinar la causa. Un código de error 1 suele
+            //     indicar que el usuario ha denegado el permiso para acceder a su ubicación.
             if (err.code === 1) {
+                // 33. alert("Por favor, autorice el acceso a su ubicación");
+                //     Si el código de error es 1, muestra una alerta al usuario pidiéndole que autorice
+                //     el acceso a la ubicación.
                 alert("Por favor, autorice el acceso a su ubicación");
             } else {
+                // 34. alert("No se pudo obtener la ubicación");
+                //     Si el código de error es diferente de 1 (u otro código específico que se quiera
+                //     manejar), muestra una alerta genérica indicando que no se pudo obtener la ubicación.
                 alert("No se pudo obtener la ubicación");
             }
-
         }
     }
 
-    function stopTracking() {
-        //Deja de realizar la geolocalización
-        navigator.geolocation.clearWatch(id);
+    // 1. function stopTracking() { ... }
+//    Declara una función llamada 'stopTracking'. Esta función se encarga de detener el rastreo
+//    continuo de la ubicación del usuario y de limpiar los elementos relacionados con el mapa.
+function stopTracking() {
+    // 2. navigator.geolocation.clearWatch(id);
+    //    Utiliza la API de geolocalización del navegador para detener el rastreo de la ubicación.
+    //    - navigator.geolocation: Accede al objeto de geolocalización.
+    //    - clearWatch(id): Llama al método para detener el rastreo de la ubicación asociado con
+    //      el ID que fue devuelto por navigator.geolocation.watchPosition cuando se inició el
+    //      rastreo. La variable 'id' se espera que contenga este ID.
+    navigator.geolocation.clearWatch(id);
 
-        document.getElementById("startBtn").hidden = false
-        document.getElementById("stopBtn").hidden = true
+    // 3. document.getElementById("startBtn").hidden = false
+    //    Selecciona el elemento del DOM con el ID 'startBtn' (el botón para iniciar el rastreo)
+    //    y establece su propiedad 'hidden' en 'false'. Esto hace que el botón de inicio vuelva a
+    //    ser visible después de detener el rastreo.
+    document.getElementById("startBtn").hidden = false
+    // 4. document.getElementById("stopBtn").hidden = true
+    //    Selecciona el elemento del DOM con el ID 'stopBtn' (el botón para detener el rastreo)
+    //    y establece su propiedad 'hidden' en 'true'. Esto oculta el botón de detener después de
+    //    que se ha detenido el rastreo.
+    document.getElementById("stopBtn").hidden = true
 
-        //Elimina el div "map"
-        const mapElement = document.getElementById("map");
-        mapElement.remove();
+    // 5. const mapElement = document.getElementById("map");
+    //    Selecciona el elemento del DOM con el ID 'map', que se espera que sea el contenedor del
+    //    mapa de Leaflet.
+    const mapElement = document.getElementById("map");
+    // 6. mapElement.remove();
+    //    Remueve el elemento del mapa del DOM. Esto limpia la interfaz de usuario al detener el
+    //    rastreo y elimina el mapa visualizado.
+    mapElement.remove();
+}
 
-    }
+// 7. function createMap() { ... }
+//    Declara una función llamada 'createMap'. Esta función se encarga de crear dinámicamente
+//    el elemento div que se utilizará como contenedor para el mapa de Leaflet.
+function createMap() {
+    // 8. mapDiv = document.createElement("div");
+    //    Crea un nuevo elemento div de forma dinámica utilizando el método document.createElement().
+    //    Este elemento aún no está agregado al DOM.
+    mapDiv = document.createElement("div");
+    // 9. mapDiv.setAttribute("id", "map");
+    //    Establece el atributo 'id' del elemento div recién creado a "map". Este ID se utilizará
+    //    para referenciar el contenedor del mapa en otras partes del código (por ejemplo, al
+    //    inicializar el mapa de Leaflet).
+    mapDiv.setAttribute("id", "map");
 
-    function createMap() {
-        //Crea el div con el id "map"
-        mapDiv = document.createElement("div");
-        mapDiv.setAttribute("id", "map");
+    // 10. parent = document.getElementById("dummy").parentNode
+    //     Selecciona el elemento del DOM con el ID 'dummy' y luego obtiene su elemento padre en
+    //     la jerarquía del DOM. Se asume que existe un elemento con el ID 'dummy' en el HTML.
+    parent = document.getElementById("dummy").parentNode
+    // 11. const dummy = document.getElementById("dummy");
+    //     Vuelve a seleccionar el elemento con el ID 'dummy'. Esto se hace para tener una referencia
+    //     al elemento antes del cual se insertará el nuevo div del mapa.
+    const dummy = document.getElementById("dummy");
+    // 12. parent.insertBefore(mapDiv, dummy);
+    //     Inserta el elemento 'mapDiv' (el nuevo div para el mapa) dentro del elemento 'parent'
+    //     (el padre del elemento 'dummy'), justo antes del elemento 'dummy'. Esto permite controlar
+    //     la posición donde se agrega el mapa en la estructura del HTML.
+    parent.insertBefore(mapDiv, dummy);
+}
 
-        //Obtiene el nodo padre del div "dummy" e inserta el div creado
-        parent = document.getElementById("dummy").parentNode
-        const dummy = document.getElementById("dummy");
-        parent.insertBefore(mapDiv, dummy);
+// 13. function sendToDb(model) { ... }
+//     Declara una función llamada 'sendToDb' que toma un argumento 'model'. Se espera que este
+//     'model' contenga datos relacionados con la ubicación, posiblemente obtenidos de una fuente
+//     externa o de la variable 'ubicationModel'. Esta función se encarga de enviar la ubicación
+//     actual del usuario a una base de datos a través de una llamada AJAX.
+function sendToDb(model) {
+    // 14. console.log("Ojo: " + model)
+    //     Imprime en la consola el valor del argumento 'model'. Esto se utiliza para depuración
+    //     o para verificar el contenido del modelo antes de enviarlo.
+    console.log("Ojo: " + model)
 
-    }
+    // 15. if (model != undefined ) { ... } else { ... }
+    //     Verifica si el argumento 'model' no es 'undefined'. Esto sugiere que la acción a realizar
+    //     (crear o editar un registro en la base de datos) depende de si se ha proporcionado un
+    //     modelo existente.
+    if (model != undefined ) {
+        // 16. console.log(model)
+        //     Si 'model' no es 'undefined', imprime su valor en la consola.
+        console.log(model)
 
-
-
-
-    function sendToDb(model) {
-
-        console.log("Ojo: " + model)
-
-        if (model != undefined ) {
-
-            console.log(model)
-
-            var modelo = {
-                Id: model.id,
-                IdOperador: $('#idOp').val(),
-                IdOperadorNavigation: null,
-                Latitud: currLat,
-                Longitud: currLng,
-                FechaActualizacion: getDate(),
-            }
-
-
-            $.ajax({
-                url: '@Url.Action("Edit", "Ubicacion")',
-                type: 'POST',
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(modelo),
-                success: function (res) {
-                    console.log(res)
-                }
-            })
+        // 17. var modelo = { ... };
+        //     Crea un objeto JavaScript llamado 'modelo' que contiene los datos que se enviarán al
+        //     servidor. Si 'model' existe, se asume que se va a editar un registro existente.
+        var modelo = {
+            // 18. Id: model.id,
+            //     Asigna el valor de la propiedad 'id' del objeto 'model' a la propiedad 'Id' del
+            //     objeto 'modelo'. Esto sugiere que si se proporciona un 'model', se está actualizando
+            //     un registro existente con ese ID.
+            Id: model.id,
+            // 19. IdOperador: $('#idOp').val(),
+            //     Obtiene el valor del elemento del DOM con el ID 'idOp' (se espera que sea un
+            //     campo de formulario) utilizando jQuery y lo asigna a la propiedad 'IdOperador' del
+            //     objeto 'modelo'. Esto podría ser el ID del operador o usuario asociado con la ubicación.
+            IdOperador: $('#idOp').val(),
+            // 20. IdOperadorNavigation: null,
+            //     Asigna el valor 'null' a la propiedad 'IdOperadorNavigation'. Esto sugiere que la
+            //     navegación a la entidad relacionada 'IdOperador' no se está incluyendo en los datos
+            //     enviados al servidor.
+            IdOperadorNavigation: null,
+            // 21. Latitud: currLat,
+            //     Asigna el valor de la variable global 'currLat' (la latitud actual del usuario) a
+            //     la propiedad 'Latitud' del objeto 'modelo'.
+            Latitud: currLat,
+            // 22. Longitud: currLng,
+            //     Asigna el valor de la variable global 'currLng' (la longitud actual del usuario) a
+            //     la propiedad 'Longitud' del objeto 'modelo'.
+            Longitud: currLng,
+            // 23. FechaActualizacion: getDate(),
+            //     Llama a una función llamada 'getDate' (cuyo código no se muestra aquí) para obtener
+            //     la fecha y hora actuales, y asigna el resultado a la propiedad 'FechaActualizacion'
+            //     del objeto 'modelo'.
+            FechaActualizacion: getDate(),
         }
-        else {
 
-            var modelo = {
-                Id: 0,
-                IdOperador: $('#idOp').val(),
-                IdOperadorNavigation: null,
-                Latitud: currLat,
-                Longitud: currLng,
-                FechaActualizacion: getDate(),
-            }
-
-            $.ajax({
-                url: '@Url.Action("Create", "Ubicacion")',
-                type: 'POST',
-                data: JSON.stringify(modelo),
-                dataType: "json",
-                contentType: "application/json",
-                success: function (res) {
-                    console.log("Se creó su ubicación!")
-                },
-                error: function (request, status, error) {
-                    console.log("Hubo un error");
-                }
-            })
-
-        }
-
-
-    }
-
-    function  getDbLocation() {
-
+        // 24. $.ajax({ ... });
+        //     Utiliza la función 'ajax' de la librería jQuery para realizar una petición HTTP asíncrona.
         $.ajax({
-            url: '@Url.Action("GetUbicationFromOpId", "Ubicacion")',
-            type: 'GET',
-            data: {
-                id: $('#idOp').val(),
-            },
+            // 25. url: '@Url.Action("Edit", "Ubicacion")',
+            //     Especifica la URL a la que se enviará la petición AJAX. Se utiliza la sintaxis de
+            //     ASP.NET MVC ('Url.Action') para generar la URL de la acción del controlador llamada
+            //     "Edit" dentro del controlador llamado "Ubicacion". Esto sugiere que si 'model' existe,
+            //     se intentará actualizar un registro existente en la base de datos.
+            url: '@Url.Action("Edit", "Ubicacion")',
+            // 26. type: 'POST',
+            //     Especifica el tipo de petición HTTP que se realizará, en este caso, una petición POST.
+            //     Las peticiones POST se utilizan comúnmente para enviar datos al servidor para crear o
+            //     actualizar recursos.
+            type: 'POST',
+            // 27. dataType: "json",
+            //     Especifica el tipo de datos que se espera que el servidor devuelva en la respuesta.
+            //     En este caso, se espera que la respuesta esté en formato JSON.
+            dataType: "json",
+            // 28. contentType: "application/json",
+            //     Especifica el tipo de contenido que se está enviando al servidor en el cuerpo de la
+            //     petición. En este caso, se indica que los datos se enviarán en formato JSON.
+            contentType: "application/json",
+            // 29. data: JSON.stringify(modelo),
+            //     Especifica los datos que se enviarán al servidor. El objeto 'modelo' se convierte
+            //     a una cadena JSON utilizando la función JSON.stringify() antes de ser enviado.
+            data: JSON.stringify(modelo),
+            // 30. success: function (res) { ... },
+            //     Define una función que se ejecutará si la petición AJAX al servidor se completa
+            //     con éxito (es decir, el servidor devuelve una respuesta con un código de estado HTTP
+            //     que indica éxito). El parámetro 'res' contendrá la respuesta del servidor.
             success: function (res) {
-                sendToDb(res);
-            },
-            error: function (request, status, error) {
-                console.log("error");
+                // 31. console.log(res)
+                //     Imprime la respuesta del servidor en la consola. Esto se utiliza para verificar
+                //     si la actualización en la base de datos fue exitosa y para inspeccionar cualquier
+                //     dato que el servidor haya devuelto.
+                console.log(res)
             }
         })
-
     }
+    // 32. else { ... }
+    //     Si la condición 'model != undefined' es falsa (es decir, si 'model' es 'undefined'), se
+    //     ejecuta este bloque de código. Esto sugiere que no se encontró un registro existente y se
+    //     debe crear uno nuevo.
+    else {
+        // 33. var modelo = { ... };
+        //     Crea un nuevo objeto JavaScript llamado 'modelo' para enviar los datos al servidor
+        //     para crear un nuevo registro de ubicación.
+        var modelo = {
+            // 34. Id: 0,
+            //     Asigna el valor 0 a la propiedad 'Id'. Esto suele indicar al servidor que se debe
+            //     crear un nuevo registro, ya que 0 o un valor nulo para el ID generalmente se interpreta
+            //     como la ausencia de un ID existente.
+            Id: 0,
+            // 35. IdOperador: $('#idOp').val(),
+            //     Obtiene el ID del operador del elemento con ID 'idOp'.
+            IdOperador: $('#idOp').val(),
+            // 36. IdOperadorNavigation: null,
+            //     Establece la navegación del operador a null.
+            IdOperadorNavigation: null,
+            // 37. Latitud: currLat,
+            //     Asigna la latitud actual.
+            Latitud: currLat,
+            // 38. Longitud: currLng,
+            //     Asigna la longitud actual.
+            Longitud: currLng,
+            // 39. FechaActualizacion: getDate(),
+            //     Obtiene y asigna la fecha y hora actuales.
+            FechaActualizacion: getDate(),
+        }
 
-
-
-    function getDate() {
-        var date = new Date();
-        var day = date.getDate();       // yields date
-        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
-        var year = date.getFullYear();  // yields year
-        var hour = (date.getHours() < 10 ? '0' : '') + date.getHours();     // yields hours
-        var minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(); // yields minutes
-        var second = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds(); // yields seconds
-        var millisecond = (date.getMilliseconds() < 100 ? '0' : '') + date.getMilliseconds()
-
-
-        // After this construct a string with the above results as below
-        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second + '.' + millisecond;
-
-        return time;
+        // 40. $.ajax({ ... });
+        //     Realiza una petición AJAX para crear un nuevo registro de ubicación.
+        $.ajax({
+            // 41. url: '@Url.Action("Create", "Ubicacion")',
+            //     La URL apunta a la acción "Create" del controlador "Ubicacion", indicando que se
+            //     enviarán datos para crear un nuevo recurso.
+            url: '@Url.Action("Create", "Ubicacion")',
+            // 42. type: 'POST',
+            //     Se utiliza el método POST para enviar los datos de creación.
+            type: 'POST',
+            // 43. data: JSON.stringify(modelo),
+            //     Los datos a enviar son el objeto 'modelo' convertido a JSON.
+            data: JSON.stringify(modelo),
+            // 44. dataType: "json",
+            //     Se espera que la respuesta del servidor sea en formato JSON.
+            dataType: "json",
+            // 45. contentType: "application/json",
+            //     Se indica que el contenido que se envía es de tipo JSON.
+            contentType: "application/json",
+            // 46. success: function (res) { ... },
+            //     Función que se ejecuta si la creación del registro es exitosa.
+            success: function (res) {
+                // 47. console.log("Se creó su ubicación!")
+                //     Muestra un mensaje en la consola indicando que la ubicación fue creada con éxito.
+                console.log("Se creó su ubicación!")
+            },
+            // 48. error: function (request, status, error) { ... },
+            //     Función que se ejecuta si ocurre un error durante la petición AJAX (por ejemplo,
+            //     si el servidor devuelve un código de error o si hay un problema de red).
+            error: function (request, status, error) {
+                // 49. console.log("Hubo un error");
+                //     Muestra un mensaje de error genérico en la consola. Para una mejor depuración,
+                //     se podrían incluir los detalles del 'request', 'status' y 'error'.
+                console.log("Hubo un error");
+            }
+        })
     }
+}
+
+   // 1. function getDbLocation() { ... }
+//    Declara una función llamada 'getDbLocation'. Esta función se encarga de realizar una
+//    llamada AJAX al servidor para obtener la información de ubicación de un operador
+//    específico desde la base de datos.
+function getDbLocation() {
+    // 2. $.ajax({ ... });
+    //    Utiliza la función 'ajax' de la librería jQuery para realizar una petición HTTP asíncrona.
+    $.ajax({
+        // 3. url: '@Url.Action("GetUbicationFromOpId", "Ubicacion")',
+        //    Especifica la URL a la que se enviará la petición AJAX. Se utiliza la sintaxis de
+        //    ASP.NET MVC ('Url.Action') para generar la URL de la acción del controlador llamada
+        //    "GetUbicationFromOpId" dentro del controlador llamado "Ubicacion". Esto asegura que
+        //    la URL sea correcta incluso si la estructura de las rutas de la aplicación cambia.
+        url: '@Url.Action("GetUbicationFromOpId", "Ubicacion")',
+        // 4. type: 'GET',
+        //     Especifica el tipo de petición HTTP que se realizará, en este caso, una petición GET.
+        //     Las peticiones GET se utilizan comúnmente para solicitar datos al servidor.
+        type: 'GET',
+        // 5. data: { id: $('#idOp').val(), },
+        //     Especifica los datos que se enviarán al servidor con la petición GET. Se envían como
+        //     un objeto JavaScript que jQuery convertirá en parámetros en la URL (query string).
+        //     - id: $('#idOp').val(): Obtiene el valor del elemento del DOM con el ID 'idOp'
+        //       (se espera que sea un campo de formulario que contenga el ID del operador) utilizando
+        //       jQuery y lo envía al servidor bajo el nombre del parámetro 'id'.
+        data: {
+            id: $('#idOp').val(),
+        },
+        // 6. success: function (res) { ... },
+        //     Define una función que se ejecutará si la petición AJAX al servidor se completa
+        //     con éxito (es decir, el servidor devuelve una respuesta con un código de estado HTTP
+        //     que indica éxito, como 200 OK). El parámetro 'res' contendrá la respuesta del servidor,
+        //     que se espera que sea la información de ubicación del operador (si existe).
+        success: function (res) {
+            // 7. sendToDb(res);
+            //     Llama a la función 'sendToDb' y le pasa la respuesta ('res') recibida del servidor.
+            //     Se espera que 'sendToDb' procese esta información (por ejemplo, para determinar si
+            //     se debe crear un nuevo registro de ubicación o actualizar uno existente) y luego
+            //     envíe la ubicación actual del usuario a la base de datos.
+            sendToDb(res);
+        },
+        // 8. error: function (request, status, error) { ... },
+        //     Define una función que se ejecutará si ocurre un error durante la petición AJAX
+        //     (por ejemplo, si el servidor devuelve un código de error o si hay un problema de red).
+        //     Los parámetros 'request', 'status' y 'error' contienen información sobre el error.
+        error: function (request, status, error) {
+            // 9. console.log("error");
+            //     Imprime la cadena "error" en la consola del navegador para indicar que ocurrió un
+            //     problema con la petición AJAX. Para una mejor depuración, se podrían incluir los
+            //     detalles de 'request', 'status' y 'error'.
+            console.log("error");
+        }
+    })
+}
+
+// 10. function getDate() { ... }
+//     Declara una función llamada 'getDate'. Esta función se encarga de obtener la fecha y hora
+//     actuales y formatearlas en una cadena específica.
+function getDate() {
+    // 11. var date = new Date();
+    //     Crea un nuevo objeto Date que representa la fecha y hora actuales en el momento de la
+    //     creación del objeto.
+    var date = new Date();
+    // 12. var day = date.getDate();
+    //     Obtiene el día del mes (un número del 1 al 31) de la fecha actual.
+    var day = date.getDate();
+    // 13. var month = date.getMonth() + 1;
+    //     Obtiene el mes (un número del 0 al 11, donde 0 es enero) de la fecha actual y le suma 1
+    //     para obtener el mes en el formato habitual (1 para enero, 12 para diciembre).
+    var month = date.getMonth() + 1;
+    // 14. var year = date.getFullYear();
+    //     Obtiene el año (con cuatro dígitos) de la fecha actual.
+    var year = date.getFullYear();
+    // 15. var hour = (date.getHours() < 10 ? '0' : '') + date.getHours();
+    //     Obtiene la hora (un número del 0 al 23) de la fecha actual. Utiliza un operador ternario
+    //     para asegurarse de que si la hora es menor que 10, se le añade un '0' delante para el
+    //     formato de dos dígitos (por ejemplo, '09' en lugar de '9').
+    var hour = (date.getHours() < 10 ? '0' : '') + date.getHours();
+    // 16. var minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+    //     Obtiene los minutos (un número del 0 al 59) de la fecha actual y los formatea con un '0'
+    //     delante si es necesario para tener dos dígitos.
+    var minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+    // 17. var second = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds();
+    //     Obtiene los segundos (un número del 0 al 59) de la fecha actual y los formatea con un '0'
+    //     delante si es necesario para tener dos dígitos.
+    var second = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds();
+    // 18. var millisecond = (date.getMilliseconds() < 100 ? '0' : '') + date.getMilliseconds()
+    //     Obtiene los milisegundos (un número del 0 al 999) de la fecha actual. Utiliza un operador
+    //     ternario para asegurarse de que si los milisegundos son menores que 100, se le añade un '0'
+    //     delante (aunque la lógica aquí solo añade un '0' si es menor que 10, debería ser menor que 100
+    //     para asegurar al menos tres dígitos si es necesario, o se podría usar padStart).
+    var millisecond = (date.getMilliseconds() < 100 ? '0' : '') + date.getMilliseconds()
+
+    // 19. var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second + '.' + millisecond;
+    //     Crea una cadena de texto 'time' formateando el día, mes, año, hora, minuto, segundo y
+    //     milisegundo obtenidos, utilizando el formato DD/MM/YYYY HH:MM:SS.mmm.
+    var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second + '.' + millisecond;
+
+    // 20. return time;
+    //     Devuelve la cadena de texto 'time' que representa la fecha y hora actuales en el formato
+    //     especificado.
+    return time;
+}
 
 
 
