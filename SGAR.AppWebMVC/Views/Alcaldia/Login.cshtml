@@ -13,13 +13,13 @@
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger form-control is-invalid" id="floatingInputGroup2"></div>
             <div class="form-group">
-                <label asp-for="Correo" class="control-label"></label>
+                <label asp-for="Correo" class="control-label required"></label>
                 <input asp-for="Correo" class="form-control border-0 border-bottom border-secondary" placeholder="correo@Alcaldia.sv" />
                 <span asp-validation-for="Correo" class="text-danger" id="floatingInputGroup2"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label asp-for="Password" class="control-label required"></label>
                 <input asp-for="Password" class="form-control border-0 border-bottom border-secondary" placeholder="*****" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>

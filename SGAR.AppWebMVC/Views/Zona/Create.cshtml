@@ -13,31 +13,31 @@
             
             <div class="row">
                 <div class="form-group col-12">
-                    <label asp-for="Nombre" class="control-label"></label>
+                    <label asp-for="Nombre" class="control-label required"></label>
                     <input asp-for="Nombre" class="form-control" autocomplete="off" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <label class="control-label">Departamento</label>
-                        <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+                        <label class="control-label required">Departamento</label>
+                        <select id="departamentoId" class="form-control combo" asp-items="ViewBag.DepartamentoId"></select>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <label class="control-label">Municipio</label>
-                        <select id="municipioId" asp-for="IdAlcaldia" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                        <label class="control-label required">Municipio</label>
+                        <select id="municipioId" asp-for="IdAlcaldia" class="form-control combo" asp-items="ViewBag.MunicipioId"></select>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <label class="control-label">Distrito</label>
-                        <select id="distritos" asp-for="IdDistrito" class="form-control" asp-items="ViewBag.DistritoId"></select>
+                        <label class="control-label required">Distrito</label>
+                        <select id="distritos" asp-for="IdDistrito" class="form-control combo" asp-items="ViewBag.DistritoId"></select>
                     </div>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="Descripcion" class="control-label"></label>
-                    <input asp-for="Descripcion" class="form-control" autocomplete="off"/>
+                    <input asp-for="Descripcion" class="form-control combo" autocomplete="off"/>
                     <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
             </div>

@@ -13,17 +13,17 @@
             <input type="hidden" asp-for="Id" />
             <div class="row">
                 <div class="form-group col-6">
-                    <label asp-for="Nombre" class="control-label"></label>
+                    <label asp-for="Nombre" class="control-label required"></label>
                     <input asp-for="Nombre" class="form-control" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
-                    <label asp-for="Modelo" class="control-label"></label>
+                    <label asp-for="Modelo" class="control-label required"></label>
                     <input asp-for="Modelo" class="form-control" />
                     <span asp-validation-for="Modelo" class="text-danger"></span>
                 </div>
                 <div class="form-group col-3">
-                    <label asp-for="YearOfFabrication" class="control-label"></label>
+                    <label asp-for="YearOfFabrication" class="control-label required"></label>
                     <input asp-for="YearOfFabrication" class="form-control" />
                     <span asp-validation-for="YearOfFabrication" class="text-danger"></span>
                 </div>
