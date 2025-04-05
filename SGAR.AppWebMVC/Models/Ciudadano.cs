@@ -10,7 +10,7 @@ public partial class Ciudadano
     public int Id { get; set; }
     [Required(ErrorMessage = "El Nombre es obligatorio.")]
     public string Nombre { get; set; } = null!;
-    [Required(ErrorMessage = "El Apellido es obligatorio.")]
+  
     public string? Apellido { get; set; }
     [Required(ErrorMessage = "El Dui es obligatorio.")]
     [StringLength(10, MinimumLength = 9, ErrorMessage = "El Dui puede escribirse con o sin guión, no exceda el límite de caractéres.")]

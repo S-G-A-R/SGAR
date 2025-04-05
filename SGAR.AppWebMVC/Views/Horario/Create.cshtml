@@ -36,7 +36,7 @@
 
     <div class="row p-2">
     <div class="form-group col-6">
-        <label asp-for="Turno" class="control-label"></label>
+        <label asp-for="Turno" class="control-label required"></label>
         <select asp-for="Turno" class="form-control">
             <option value="1">Matutino</option>
             <option value="2">Vespertino</option>
@@ -51,7 +51,7 @@
 
     <div class="row p-2">
     <div class="form-group col-6">
-        <label for="IdDistrito">Distrito</label>
+            <label for="IdDistrito" class="required">Distrito</label>
         <select id="idDistrito" name="IdDistrito" class="form-control combo" asp-items="ViewBag.Distritos"></select>
     </div>
 

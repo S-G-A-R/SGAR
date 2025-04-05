@@ -23,7 +23,7 @@
     </div>
 
     <div class="form-group">
-        <label for="Dia">Días</label><br />
+        <label for="Dia" class="required">Días</label><br />
         @for (int i = 0; i < 7; i++)
         {
             bool isChecked = ViewBag.DiasSeleccionados != null && ViewBag.DiasSeleccionados.Contains(i);
@@ -45,21 +45,21 @@
 
     <div class="form-group col-6">
         <label asp-for="IdOperador" class="control-label required"></label>
-        <select asp-for="IdOperador" class="form-control" asp-items="ViewBag.Operadores"></select>
+        <select asp-for="IdOperador" class="form-control combo" asp-items="ViewBag.Operadores"></select>
     </div>
     </div>
 
     <div class="row p-2"> 
     <div class="form-group col-6">
-        <label for="Distrito">Distrito</label>
-        <select id="Distrito" name="Distrito" class="form-control" asp-items="ViewBag.Distritos">
+            <label for="Distrito" class="required">Distrito</label>
+        <select id="Distrito" name="Distrito" class="form-control combo" asp-items="ViewBag.Distritos">
             <option value="">Seleccione un distrito</option>
         </select>
     </div>
 
     <div class="form-group col-6">
-        <label for="IdZona">Zona</label>
-        <select id="IdZona" name="IdZona" class="form-control" asp-items="ViewBag.Zonas">
+            <label for="IdZona" class="required">Zona</label>
+        <select id="IdZona" name="IdZona" class="form-control combo" asp-items="ViewBag.Zonas">
             <option value="">Seleccione una zona</option>
         </select>
     </div>
