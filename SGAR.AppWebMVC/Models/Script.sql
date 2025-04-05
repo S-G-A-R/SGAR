@@ -248,6 +248,12 @@ DROP CONSTRAINT FK__Ubicacion__IdHor__6754599E;
 ALTER TABLE Ubicaciones
 DROP COLUMN IdHorario
 
+ALTER TABLE NotificacionesUbicaciones
+ADD Id INT PRIMARY KEY IDENTITY(1,1)
+
+ALTER TABLE NotificacionesUbicaciones
+DROP CONSTRAINT FK__Notificac__IdCiu__5812160E
+
 ALTER TABLE Ubicaciones
 ALTER COLUMN Latitud DECIMAL(18, 15) NOT NULL
 

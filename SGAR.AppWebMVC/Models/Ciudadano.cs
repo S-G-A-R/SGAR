@@ -30,6 +30,8 @@ public partial class Ciudadano
     public virtual ICollection<Queja>? Quejas { get; set; } = new List<Queja>();
     [Display(Name = "Zona")]
     public virtual Zona? Zona { get; set; } = null!;
+    [NotMapped]
+    public virtual NotificacionesUbicacion? Notificacion {  get; set; } = null!;
 
     [NotMapped]
     [StringLength(60, MinimumLength = 5, ErrorMessage = "La contraseña debe tener entre 5 y 60 caracteres.")]

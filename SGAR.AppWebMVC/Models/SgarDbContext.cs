@@ -201,7 +201,7 @@ public partial class SgarDbContext : DbContext
 
         modelBuilder.Entity<NotificacionesUbicacion>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC077BE2FA85");
 
             entity.Property(e => e.Latitud).HasColumnType("decimal(18, 15)");
             entity.Property(e => e.Longitud).HasColumnType("decimal(18, 15)");
@@ -211,8 +211,8 @@ public partial class SgarDbContext : DbContext
 
             entity.HasOne(d => d.IdCiudadanoNavigation).WithMany()
                 .HasForeignKey(d => d.IdCiudadano)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Notificac__IdCiu__5812160E");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_NotificacionesUbicaciones_Ciudadanos");
         });
 
         modelBuilder.Entity<Operador>(entity =>

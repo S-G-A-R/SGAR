@@ -219,7 +219,7 @@ namespace SGAR.AppWebMVC.Controllers
             // Crea un SelectList para las zonas y lo asigna a ViewData.
             ViewData["ZonaId"] = new SelectList(zonas, "Id", "Nombre", 0);
             // Devuelve la vista Create.
-            return View(); 
+            return View(new Ciudadano()); 
         }
 
         // Comentario que indica que esta acción responde a solicitudes HTTP POST y se utiliza para crear un nuevo ciudadano.
@@ -231,7 +231,7 @@ namespace SGAR.AppWebMVC.Controllers
         // Atributo que permite el acceso a esta acción sin requerir autenticación.
         [AllowAnonymous]
         // Definición de la acción Create, que es asíncrona y devuelve un IActionResult.
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dui,Correo,Password,ZonaId")] Ciudadano ciudadano) 
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dui,Correo,Password,ZonaId,Notificacion")] Ciudadano ciudadano) 
         {
             // Bloque try para manejar excepciones.
             try
@@ -239,9 +239,16 @@ namespace SGAR.AppWebMVC.Controllers
                 // Genera un hash SHA-256 de la contraseña proporcionada por el usuario.
                 ciudadano.Password = GenerarHash256(ciudadano.Password);
                 // Agrega el objeto ciudadano al contexto de la base de datos.
-                _context.Add(ciudadano);
+                _context.Ciudadanos.Add(ciudadano);
                 // Guarda los cambios en la base de datos de forma asíncrona.
                 await _context.SaveChangesAsync();
+
+                var ciudadanoId = _context.Ciudadanos.FirstOrDefault(s => s.Dui == ciudadano.Dui).Id;
+
+                ciudadano.Notificacion.IdCiudadano = ciudadanoId;
+                _context.NotificacionesUbicaciones.Add(ciudadano.Notificacion);
+                await _context.SaveChangesAsync();
+
                 // Redirige al usuario a la acción Login después de crear el ciudadano.
                 return RedirectToAction(nameof(Login)); 
             }
@@ -482,6 +489,22 @@ namespace SGAR.AppWebMVC.Controllers
                 // Devuelve la representación hexadecimal del hash como una cadena.
                 return builder.ToString(); 
             }
+        }
+
+        [AllowAnonymous]
+        public IActionResult SaveLocation(Ciudadano ciudadano)
+        {
+
+            if (ciudadano.Notificacion == null)
+                ciudadano.Notificacion = new NotificacionesUbicacion();
+
+            ciudadano.Notificacion.Titulo = "Ubicacion";
+            ciudadano.Notificacion.Estado = 1;
+            ciudadano.Notificacion.DistanciaMetros = 0;
+            ciudadano.Notificacion.Longitud = 0;
+            ciudadano.Notificacion.Latitud = 0;
+
+            return PartialView("_SelectUbication", ciudadano.Notificacion);
         }
     }
 }

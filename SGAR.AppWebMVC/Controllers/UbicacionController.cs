@@ -27,6 +27,7 @@ namespace SGAR.AppWebMVC.Controllers
         }
 
         // GET: Ubicacion
+        [Authorize(Roles = "Operador")]
         public IActionResult Index()
         {
 

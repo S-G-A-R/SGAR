@@ -1,0 +1,146 @@
+﻿@model SGAR.AppWebMVC.Models.NotificacionesUbicacion
+@{
+    Func<string, string> getName = (string prop) =>
+    {
+        return String.Format("notificacion.{0}", prop);
+    };
+}
+<style>
+    .form-control {
+        border-radius: 8px; /* Bordes redondeados para campos de entrada */
+        border: 1px solid #ced4da; /* Borde más claro */
+        padding: 10px 15px; /* Espaciado interno mejorado */
+        padding-top: 10px; /* Asegura que el texto no se superponga con la etiqueta */
+    }
+</style>
+@if (Model != null)
+{
+    <input type="hidden" name="@getName("IdCiudadano")" value="@Model.IdCiudadano" />
+    <input type="hidden" name="@getName("Titulo")" value="@Model.Titulo" />
+    <input type="hidden" name="@getName("Estado")" value="@Model.Estado" />
+    <input type="hidden" name="@getName("DistanciaMetros")" value="@Model.DistanciaMetros" />
+    <input type="hidden" id="indLat" name="@getName("Longitud")" value="@Model.Longitud" />
+    <input type="hidden" id="indLng" name="@getName("Latitud")" value="@Model.Latitud" />
+}
+
+<!-- Button trigger modal -->
+<button type="button" id="startBtn" onclick="getLocation()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Ingrese su ubicación
+</button>
+
+<!-- Modal -->
+@{
+    if (Model != null)
+    {
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="map">
+
+                        </div>
+                        <div class="row m-2 d-flex justify-content-center">
+                            <section class="col col-3">
+                                <label class="input">
+                                    <input disabled class="form-control" id="Latitude" placeholder="Latitud" name="@getName("Latitud")" value="@Model.Latitud" />
+
+                                </label>
+                            </section>
+                            <section class="col col-3">
+                                <label class="input">
+                                    <input disabled class="form-control" id="Longitude" placeholder="Longitud" name="@getName("Longitud")" value="@Model.Longitud" />
+
+                                </label>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-bs-dismiss="modal" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+<script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('startBtn').addEventListener('onmouseover', setUbicationProps(), {
+            once: true
+        });
+    });
+
+    var marker, lat, lng;
+
+    function getLocation() {
+
+
+        //Inicializa el mapa de la librería leaflet
+        const map = L.map('map');
+
+        $('#staticBackdrop').on('shown.bs.modal', function () {
+            map.invalidateSize();
+        })
+
+        //Obtiene la posición inicial para mostrar el mapa
+        navigator.geolocation.getCurrentPosition(ok);
+
+
+
+        function ok(pos) {
+            const crd = pos.coords;
+            lat = crd.latitude;
+            lng = crd.longitude;
+            map.setView([crd.latitude, crd.longitude], 19);
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lng], {
+                draggable: 'true'
+            }).addTo(map);
+
+            $('#Latitude').attr('value', lat);
+            $('#indLat').attr('value', lat);
+            $('#Longitude').attr('value', lng);
+            $('#indLng').attr('value', lng);
+
+            marker.on('drag', function (e) {
+                var nuMarker = e.target;
+                var position = nuMarker.getLatLng();
+                console.log(position)
+                $('#Latitude').val(position.lat);
+                $('#Longitude').val(position.lng);
+                $('#indLat').val(position.lat);
+                $('#indLng').val(position.lng);
+            });
+
+            //$("#Latitude, #Longitude").change(function () {
+            //    var position = [parseInt($("#Latitude").val()), parseInt($("#Longitude").val())];
+            //    marker.setLatLng(position, {
+            //        draggable: 'true'
+            //    }).bindPopup(position).update();
+            //    map.panTo(position);
+            //});
+        }
+
+
+
+        //Configura el servicio de mapas a usar y lo asocia a la librería
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+
+    }
+
+
+
+</script>

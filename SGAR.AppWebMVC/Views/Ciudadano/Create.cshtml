@@ -150,6 +150,10 @@
                     </div>
                 </div>
 
+                <div class="row m-2" id="divUbicacion">
+                    <partial name="_SelectUbication" model="@Model.Notificacion" />
+                </div>
+
                 <div class="d-flex justify-content-center">
                     <div class="form-group  d-flex justify-content-center me-2">
                         <input type="submit" value="Crear" class="btn btn-success " />
@@ -167,6 +171,17 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script>
+    function setUbicationProps() {
+        $.ajax({
+            url: '@Url.Action("SaveLocation", "Ciudadano")',
+            data: $("#divUbicacion").serialize(),
+            success: function (html) {
+                $("#divUbicacion").html(html);
+            }
+        });
+    }
+
+
     // Esta línea agrega un event listener al elemento HTML con el id "departamentoId".
     // El evento "change" se dispara cuando el valor del elemento cambia (por ejemplo, cuando se selecciona una opción diferente en un dropdown).
     $("#departamentoId").change(function () {
