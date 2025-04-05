@@ -328,9 +328,7 @@ namespace SGAR.AppWebMVC.Controllers
                 // 6. if (ciudadano.Notificacion.Latitud == null || ...): Realiza una validación para
                 //    asegurar que las coordenadas de latitud y longitud de la notificación del ciudadano
                 //    hayan sido proporcionadas y no sean valores nulos o cero.
-                if (ciudadano.Notificacion.Latitud == null ||
-                    ciudadano.Notificacion.Latitud == 0 ||
-                    ciudadano.Notificacion.Longitud == null ||
+                if (ciudadano.Notificacion.Latitud == 0 ||
                     ciudadano.Notificacion.Longitud == 0)
                     // 7. throw new Exception("Debe seleccionar su ubicación");: Si las coordenadas no son válidas,
                     //    lanza una excepción con un mensaje indicando que el usuario debe seleccionar su ubicación.

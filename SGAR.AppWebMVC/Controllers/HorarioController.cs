@@ -327,7 +327,7 @@ namespace SGAR.AppWebMVC.Controllers
                 .Where(s => s.IdOperador == Convert.ToInt32(User.FindFirst("Id").Value))
                 .ToList();
             }
-            if (User.IsInRole("Usuario"))
+            if (User.IsInRole("Ciudadano"))
             {
                 horarios = _context.Horarios
                 .Include(h => h.IdOperadorNavigation)
