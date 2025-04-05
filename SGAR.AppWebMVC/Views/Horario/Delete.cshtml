@@ -2,13 +2,18 @@
 
 @{
     ViewData["Title"] = "Eliminar Horario";
+    string[] diasSemana = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
 }
 
-<h2>@ViewData["Title"]</h2>
 
-<h4>¿Estás seguro de que deseas eliminar este horario?</h4>
-
-<div>
+<h4 class="text-center"><i class="bi bi-trash3-fill"></i> ¿Estás seguro de que deseas eliminar este horario?</h4>
+<hr />
+<div class="card">
+    <div class="card-header">
+        Datos del Horario
+    </div>
+    <div class="card-body">
+<div class="p-2">
     <strong>Operador:</strong> @Model.IdOperadorNavigation.Nombre <br />
     <strong>Zona:</strong> @Model.IdZonaNavigation.Nombre <br />
     <strong>Hora de Entrada:</strong> @Model.HoraEntrada <br />
@@ -19,13 +24,17 @@
         {
             <label>
                 <input type="checkbox" disabled @(ViewBag.DiasSeleccionados.Contains(i) ? "checked" : "") />
-                @Enum.GetName(typeof(DayOfWeek), i)
+                @diasSemana[i]
+                
             </label>
         }
     </div>
     <strong>Turno:</strong> @(Model.Turno == 1 ? "Matutino" : "Vespertino") <br />
 </div>
+    </div>
+</div>
 
+<br />
 <form method="post" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-danger">Eliminar</button>

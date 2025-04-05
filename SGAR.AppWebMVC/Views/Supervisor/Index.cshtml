@@ -3,69 +3,29 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div style="align-items: center;" class="p-2">
+    <h2><i class="bi bi-search"></i> Buscar Supervisor</h2>
+</div>
 
-<h1><i class="bi bi-card-list me-3"></i>@ViewData["Title"]</h1>
-<style>
-    .custom-form {
-        padding: 10px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-        .custom-form .form-group {
-            margin-bottom: 0;
-        }
-
-        .custom-form label {
-            font-weight: bold;
-            display: none;
-        }
-
-        .custom-form input, .custom-form select {
-            height: 35px;
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-            padding: 5px;
-        }
-
-        .custom-form .dui-input {
-            width: 150px;
-        }
-
-        .custom-form .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: white;
-            padding: 5px 15px;
-        }
-
-        .custom-form .btn-success {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-            color: white;
-            padding: 5px 15px;
-        }
-
-        .custom-form .btn {
-            height: 35px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-</style>
-
-<form asp-action="Index" class="mb-3 custom-form">
-    <div class="form-group">
-        <input type="text" name="codigo" class="form-control" placeholder="Codigo" />
+<form asp-action="Index" class="mb-3 ">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="control-label">Codigo</label>
+                <input type="text" name="codigo" class="form-control" id="codigo" placeholder="" />
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group col-6">
+                <label class="control-label">DUI</label>
+                <input type="text" name="dui" class="form-control dui-input" id="dui" placeholder="" />
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <input type="text" name="dui" class="form-control dui-input" placeholder="DUI" />
-    </div>
-    <div class="form-group">
-        <select name="topRegistro" class="form-control">
+   
+    <div class="form-group" style="width: 420px;">
+        <label for="topRegistro">Cant. Registro</label>
+        <select name="topRegistro" class="form-control" id="topRegistro">
             <option selected value="10">10</option>
             <option value="20">20</option>
             <option value="60">60</option>
@@ -75,13 +35,14 @@
             <option value="0">Todos</option>
         </select>
     </div>
+    <br />
     <input type="submit" value="Buscar" class="btn btn-primary" />
     <a class="btn btn-success" asp-action="Create">Crear Perfil</a>
 </form>
 
-
-
-
+<div style="align-items: center;" class="p-2">
+    <h2 class="text-center">Lista de Supervisores</h2>
+</div>
 
 <div class="row">
     <div class="col-10 mx-auto">
@@ -141,6 +102,78 @@
     </div>
 
 </div>
+<style>
+    .custom-form {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .custom-form .form-group {
+            margin-bottom: 0;
+        }
+
+        .custom-form label {
+            font-weight: bold;
+            display: none;
+        }
+
+        .custom-form input, .custom-form select {
+            height: 35px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            padding: 5px;
+        }
+
+        .custom-form .dui-input {
+            width: 150px;
+        }
+
+        .custom-form .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 5px 15px;
+        }
+
+        .custom-form .btn-success {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: white;
+            padding: 5px 15px;
+        }
+
+        .custom-form .btn {
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+    .custom-form {
+        display: flex;
+        align-items: flex-end; /* Alinea verticalmente al final de los elementos */
+        gap: 10px; /* Espacio entre los elementos */
+    }
+
+        .custom-form .form-group {
+            margin-bottom: 0; /* Elimina el margen inferior predeterminado */
+        }
+
+            .custom-form .form-group label {
+                display: block; /* Hace que la etiqueta ocupe una línea completa */
+                margin-bottom: 5px; /* Espacio entre la etiqueta y el input/select */
+                font-size: 0.9em; /* Opcional: ajusta el tamaño de la fuente */
+                color: #555; /* Opcional: ajusta el color de la etiqueta */
+            }
+
+        .custom-form .form-control::placeholder {
+            color: transparent; /* Oculta el texto del placeholder */
+        }
+</style>
 
 @section Scripts {
     <script>

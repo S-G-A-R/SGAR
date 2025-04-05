@@ -4,12 +4,14 @@
     ViewData["Title"] = "Calendario de Horarios";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="text-center"><i class="bi bi-calendar3"></i> @ViewData["Title"]</h2>
 
 @if (User.IsInRole("Alcaldia"))
 {
-    <a href="@Url.Action("Index", "Horario")" class="btn btn-secondary">Volver a la Lista</a>
+    <a href="@Url.Action("Index", "Horario")" class="btn btn-secondary"><i class="bi bi-arrow-left-short"></i> Volver a la Lista</a>
 }
+
+<hr />
 
 
 <!-- Incluir FullCalendar y jQuery -->
@@ -29,7 +31,8 @@
                 <h5 class="modal-title" id="modalTitle">Detalles del Horario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-center">
+                <img src="~/css/sgarlimp.png" alt="Imagen de bienvenida" style="max-width: 140px; margin-right: 20px;"/>
                 <p><strong>Operador:</strong> <span id="modalOperador"></span></p>
                 <p><strong>Zona:</strong> <span id="modalZona"></span></p>
                 <p><strong>Turno:</strong> <span id="modalTurno"></span></p>
@@ -53,6 +56,7 @@
                 locale: 'es', // Traducción a español
                 initialView: 'dayGridMonth',
                 headerToolbar: {
+
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'

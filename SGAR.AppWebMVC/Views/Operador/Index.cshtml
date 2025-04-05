@@ -10,23 +10,18 @@
 
 <form asp-action="Index" class="mb-3">
     <div class="row">
-        <div class="col-4">
-            <div class="form-group">
+            <div class="form-group col-3">
                 <label class="control-label">Codigo</label>
                 <input type="text" name="CodigoOperador" class="form-control" />
             </div>
-        </div>
-        <div class="col-8">
-            <div class="form-group col-6">
+
+            <div class="form-group col-3">
                 <label class="control-label">DUI</label>
                 <input type="text" name="Dui" class="form-control" />
             </div>
-        </div>
 
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
+      
+            <div class="form-group col-3">
                 <label class="control-label">Cant. Registros</label>
                 <select name="topRegistro" class="form-control">
                     <option selected value="10">10</option>
@@ -38,13 +33,12 @@
                     <option value="0">Todos</option>
                 </select>
             </div>
-        </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <input type="submit" value="Buscar" class="btn btn-primary" />
-            <a class="btn btn-success" asp-action="Create"><i class="bi bi-plus-circle"></i></a>
-        </div>
+        <input type="submit" value="Buscar" class="btn btn-primary" />
+        <a class="btn btn-info" asp-action="Create"><i class="bi bi-plus-circle"></i> Crear Operador</a>
+    </div>
     </div>
 </form>
 

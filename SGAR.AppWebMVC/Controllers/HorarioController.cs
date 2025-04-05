@@ -21,14 +21,31 @@ namespace SGAR.AppWebMVC.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index( string operador, string zona, int topRegistro = 10)
         {
             var horarios = _context.Horarios
                 .Include(h => h.IdOperadorNavigation)
                 .Include(h => h.IdZonaNavigation)
                 .Where(h => h.IdZonaNavigation.IdAlcaldia == Convert.ToInt32(User.FindFirst("Id").Value))
-                .ToList();
-            return View(horarios);
+                .AsQueryable();
+
+
+            if (!string.IsNullOrWhiteSpace(operador))
+            {
+                horarios = horarios.Where(h => h.IdOperadorNavigation.Nombre.ToLower().Contains(operador.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(zona))
+            {
+                horarios = horarios.Where(h => h.IdZonaNavigation.Nombre.ToLower().Contains(zona.ToLower()));
+            }
+
+            if (topRegistro > 0)
+            {
+                horarios = horarios.Take(topRegistro);
+            }
+
+            return View(await horarios.ToListAsync());
         }
 
         public IActionResult Create()

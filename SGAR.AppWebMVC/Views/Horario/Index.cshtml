@@ -4,15 +4,54 @@
     ViewData["Title"] = "Gestión de Horarios";
 }
 
-<h2>Gestión de Horarios</h2>
-
-<div class="d-flex justify-content-between mb-3">
-    <a href="@Url.Action("FullCalendar", "Horario")" class="btn btn-info">📅 Ver Calendario</a>
-    <a href="@Url.Action("Create", "Horario")" class="btn btn-success">➕ Crear Horario</a>
+<div style="align-items: center;" class="p-2">
+    <h2><i class="bi bi-search"></i> Buscar Horario</h2>
 </div>
 
-<table class="table table-striped">
-    <thead>
+<form asp-action="Index" class="mb-3">
+    <div class="row">
+            <div class="form-group col-3">
+                <label class="control-label">Operador</label>
+                <input type="text" name="operador" class="form-control" />
+            </div>
+ 
+            <div class="form-group col-3">
+                <label class="control-label">Zona</label>
+                <input type="text" name="zona" class="form-control" />
+            </div>
+
+            <div class="form-group col-3">
+                <label class="control-label">Cant. Registros</label>
+                <select name="topRegistro" class="form-control">
+                    <option selected value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="60">60</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="0">Todos</option>
+                </select>
+            </div>
+        </div>
+ 
+    <div class="row mt-3">
+        <div class="col-12">
+            <input type="submit" value="Buscar" class="btn btn-primary" />
+            <a class="btn btn-info" asp-action="Create"><i class="bi bi-plus-circle"></i>  Crear Horario</a>
+        </div>
+    </div>
+</form>
+
+<div style="align-items: center;" class="p-2">
+    <h2 class="text-center">Gestión de Horarios</h2>
+</div>
+
+<div class="d-flex justify-content-between mb-3">
+    <a href="@Url.Action("FullCalendar", "Horario")" class="btn btn-secondary">📅 Ver Calendario</a>
+</div>
+
+<table class="table table-striped" id="myTable">
+    <thead class="table-dark">
         <tr>
             <th>Operador</th>
             <th>Zona</th>
@@ -34,9 +73,9 @@
               
                 <td>@(horario.Turno == 1 ? "Matutino" : "Vespertino")</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-success"> Editar</a>
-                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-secondary">Ver</a>
-                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> Eliminar</a>
+                    <a href="@Url.Action("Edit", "Horario", new { id = horario.Id })" class="btn btn-secondary"> <i class="bi bi-pencil-square"></i></a>
+                    <a href="@Url.Action("Details", "Horario", new { id = horario.Id })" class="btn btn-primary"><i class="bi bi-info-square-fill"></i></a>
+                    <a href="@Url.Action("Delete", "Horario", new { id = horario.Id })" class="btn btn-danger"> <i class="bi bi-trash-fill"></i></a>
                 </td>
             </tr>
         }
@@ -56,4 +95,15 @@
 
         return string.Join(", ", resultado);
     }
+}
+
+                    @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": languageTable,
+                ordering: false
+            });
+        });
+    </script>
 }
