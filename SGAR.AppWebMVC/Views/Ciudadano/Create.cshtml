@@ -99,7 +99,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row mb-3">
                     <div class="form-group col-md-3">
-                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <label asp-for="Nombre" class="form-label required">Nombre</label>
                         <input asp-for="Nombre" class="form-control" autocomplete="off" />
                         <span asp-validation-for="Nombre" class="text-danger"></span>
                     </div>
@@ -109,37 +109,37 @@
                         <span asp-validation-for="Apellido" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3">
-                        <label asp-for="Dui" class="form-label">DUI</label>
+                        <label asp-for="Dui" class="form-label required">DUI</label>
                         <input asp-for="Dui" class="form-control" autocomplete="off" />
                         <span asp-validation-for="Dui" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3">
-                        <label asp-for="Correo" class="form-label">Correo</label>
+                        <label asp-for="Correo" class="form-label required">Correo</label>
                         <input asp-for="Correo" class="form-control" autocomplete="off" />
                         <span asp-validation-for="Correo" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="form-group col-md-3">
-                        <label class="form-label">Departamento</label>
-                        <select id="departamentoId" class="form-control" asp-items="ViewBag.DepartamentoId"></select>
+                        <label class="form-label required">Departamento</label>
+                        <select id="departamentoId" class="form-control combo" asp-items="ViewBag.DepartamentoId"></select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="form-label">Municipio</label>
-                        <select id="municipioId" class="form-control" asp-items="ViewBag.MunicipioId"></select>
+                        <label class="form-label required">Municipio</label>
+                        <select id="municipioId" class="form-control combo" asp-items="ViewBag.MunicipioId"></select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="form-label">Distrito</label>
-                        <select id="distritos" class="form-control" asp-items="ViewBag.DistritoId"></select>
+                        <label class="form-label required">Distrito</label>
+                        <select id="distritos" class="form-control combo" asp-items="ViewBag.DistritoId"></select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label asp-for="ZonaId" class="form-label">Zona</label>
-                        <select id="zonas" asp-for="ZonaId" class="form-control" asp-items="ViewBag.ZonaId"></select>
+                        <label asp-for="ZonaId" class="form-label required">Zona</label>
+                        <select id="zonas" asp-for="ZonaId" class="form-control combo" asp-items="ViewBag.ZonaId"></select>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="form-group col-md-4">
-                        <label asp-for="Password" class="form-label">Contraseña</label>
+                        <label asp-for="Password" class="form-label required">Contraseña</label>
                         <input asp-for="Password" class="form-control" type="password" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>

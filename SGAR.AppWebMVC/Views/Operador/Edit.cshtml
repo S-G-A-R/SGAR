@@ -19,7 +19,7 @@
                 <div class="card-body">
             <div class="row p-2">
                 <div class="form-group col-4">
-                    <label asp-for="Nombre" class="control-label"></label>
+                            <label asp-for="Nombre" class="control-label required"></label>
                     <input asp-for="Nombre" class="form-control" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
@@ -42,7 +42,7 @@
                     <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
-                    <label asp-for="Dui" class="control-label"></label>
+                            <label asp-for="Dui" class="control-label required"></label>
                     <input asp-for="Dui" class="form-control" />
                     <span asp-validation-for="Dui" class="text-danger"></span>
                 </div>
@@ -63,17 +63,17 @@
                 <div class="card-body">
             <div class="row p-2">
                 <div class="form-group col-4">
-                    <label asp-for="CodigoOperador" class="control-label"></label>
+                            <label asp-for="CodigoOperador" class="control-label required"></label>
                     <input asp-for="CodigoOperador" class="form-control" />
                     <span asp-validation-for="CodigoOperador" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
-                    <label asp-for="CorreoLaboral" class="control-label"></label>
+                            <label asp-for="CorreoLaboral" class="control-label required"></label>
                     <input asp-for="CorreoLaboral" class="form-control" />
                     <span asp-validation-for="CorreoLaboral" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
-                    <label asp-for="TelefonoLaboral" class="control-label"></label>
+                            <label asp-for="TelefonoLaboral" class="control-label required"></label>
                     <input asp-for="TelefonoLaboral" class="form-control" />
                     <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
                 </div>
@@ -82,7 +82,7 @@
             <div class="row p-2">
                 <div class="form-group col-4">
                     <label asp-for="VehiculoId" class="control-label"></label>
-                    <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.VehiculoId"></select>
+                    <select asp-for="VehiculoId" class="form-control combo" asp-items="ViewBag.VehiculoId"></select>
                     <span asp-validation-for="VehiculoId" class="text-danger"></span>
                 </div>
                 <div class="form-group col-4">
