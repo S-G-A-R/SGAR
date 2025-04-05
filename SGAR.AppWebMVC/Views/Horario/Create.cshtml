@@ -7,18 +7,19 @@
 <h1 class="text-center"><i class="bi bi-calendar-plus"></i> @ViewData["Title"]</h1>
 
 <form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row p-2">
-    <div class="form-group col-6">
-        <label asp-for="HoraEntrada" class="control-label required"></label>
-        <input asp-for="HoraEntrada" type="time" class="form-control" />
-        <span asp-validation-for="HoraEntrada" class="text-danger"></span>
-    </div>
+        <div class="form-group col-6">
+            <label asp-for="HoraEntrada" class="control-label required"></label>
+            <input asp-for="HoraEntrada" type="time" class="form-control" />
+            <span asp-validation-for="HoraEntrada" class="text-danger"></span>
+        </div>
 
-    <div class="form-group col-6">
-        <label asp-for="HoraSalida" class="control-label required"></label>
-        <input asp-for="HoraSalida" type="time" class="form-control" />
-        <span asp-validation-for="HoraSalida" class="text-danger"></span>
-    </div>
+        <div class="form-group col-6">
+            <label asp-for="HoraSalida" class="control-label required"></label>
+            <input asp-for="HoraSalida" type="time" class="form-control" />
+            <span asp-validation-for="HoraSalida" class="text-danger"></span>
+        </div>
     </div>
 
     <div class="form-group p-2">
@@ -35,30 +36,30 @@
     </div>
 
     <div class="row p-2">
-    <div class="form-group col-6">
-        <label asp-for="Turno" class="control-label"></label>
-        <select asp-for="Turno" class="form-control">
-            <option value="1">Matutino</option>
-            <option value="2">Vespertino</option>
-        </select>
-    </div>
+        <div class="form-group col-6">
+            <label asp-for="Turno" class="control-label"></label>
+            <select asp-for="Turno" class="form-control">
+                <option value="1">Matutino</option>
+                <option value="2">Vespertino</option>
+            </select>
+        </div>
 
-    <div class="form-group col-6">
-        <label asp-for="IdOperador" class="control-label required"></label>
-        <select asp-for="IdOperador" class="form-control combo" asp-items="ViewBag.Operadores"></select>
-    </div>
+        <div class="form-group col-6">
+            <label asp-for="IdOperador" class="control-label required"></label>
+            <select asp-for="IdOperador" class="form-control combo" asp-items="ViewBag.Operadores"></select>
+        </div>
     </div>
 
     <div class="row p-2">
-    <div class="form-group col-6">
-        <label for="IdDistrito">Distrito</label>
-        <select id="idDistrito" name="IdDistrito" class="form-control combo" asp-items="ViewBag.Distritos"></select>
-    </div>
+        <div class="form-group col-6">
+            <label for="IdDistrito">Distrito</label>
+            <select id="idDistrito" name="IdDistrito" class="form-control combo" asp-items="ViewBag.Distritos"></select>
+        </div>
 
-    <div class="form-group col-6">
-        <label for="IdZona" class="required">Zona</label>
-        <select id="zonas" name="IdZona" asp-for="IdZona" asp-items="ViewBag.Distritos" class="form-control combo"></select>
-    </div>
+        <div class="form-group col-6">
+            <label for="IdZona" class="required">Zona</label>
+            <select id="zonas" name="IdZona" asp-for="IdZona" asp-items="ViewBag.Distritos" class="form-control combo"></select>
+        </div>
     </div>
 
     <br />

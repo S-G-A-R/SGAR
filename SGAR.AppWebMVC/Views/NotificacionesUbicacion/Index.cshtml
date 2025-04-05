@@ -1,65 +1,136 @@
-﻿@model IEnumerable<SGAR.AppWebMVC.Models.NotificacionesUbicacion>
+﻿<div>
+    <button class="btn btn-info" onclick="getLocation()" id="startBtn">Iniciar</button>
+    <button class="btn btn-danger mb-3 me-2" onclick="endMap()" id="stopBtn" hidden>Detener</button>
+    <button class="btn btn-success mb-3" onclick="trackTruck()" id="trackBtn" hidden>Seguir Camión</button>
+    <button class="btn btn-secondary mb-3" onclick="stopTracking()" id="stopTrackBtn" hidden>Dejar de seguir</button>
+</div>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+<div id="dummy">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DistanciaMetros)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Longitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdCiudadanoNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DistanciaMetros)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Latitud)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Longitud)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdCiudadanoNavigation.Apellido)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+</div>
+
+
+<script>
+
+    function createMap() {
+        //Crea el div con el id "map"
+        mapDiv = document.createElement("div");
+        mapDiv.setAttribute("id", "map");
+
+        //Obtiene el nodo padre del div "dummy" e inserta el div creado
+        parent = document.getElementById("dummy").parentNode
+        const dummy = document.getElementById("dummy");
+        parent.insertBefore(mapDiv, dummy);
+
+    }
+
+    var marker, opMarker, lat, lng, opLat, opLng, id;
+    var follow = false;
+    var map;
+
+    var customIcon = L.icon({
+        iconUrl: '/css/custom-marker.svg',
+        shadowUrl: '/css/marker-shadow.svg',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+        shadowSize: [41, 41]
+    });
+
+    function getLocation() {
+        createMap()
+
+        document.getElementById("startBtn").hidden = true
+        document.getElementById("stopBtn").hidden = false
+        document.getElementById("trackBtn").hidden = false
+
+        map = L.map('map');
+
+        $.ajax({
+            url: '@Url.Action("GetUbicationFromCdId", "NotificacionesUbicacion")',
+            type: 'GET',
+            success: function (res) {
+                ok(res);
+            },
+            error: function (request, status, error) {
+                console.log("error");
+            }
+        })
+
+
+
+        function ok(pos) {
+            lat = pos.latitud;
+            lng = pos.longitud;
+            map.setView([lat, lng], 16);
+
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lng]).addTo(map);
+
+            getTruck();
+        }
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+    }
+
+    function getTruck() {
+        $.ajax({
+            url: '@Url.Action("GetOpUbication", "NotificacionesUbicacion")',
+            type: 'GET',
+            success: function (res) {
+                next(res);
+            },
+            error: function (request, status, error) {
+                console.log("error");
+            }
+        })
+
+        function next(loc) {
+            opLat = loc.latitud;
+            opLng = loc.longitud;
+            if (opMarker) {
+                map.removeLayer(opMarker)
+            }
+
+            opMarker = L.marker([opLat, opLng], { icon: customIcon }).addTo(map);
+            map.flyTo(opMarker._latlng, 16);
+        }
+    }
+
+    function trackTruck() {
+        document.getElementById("trackBtn").hidden = true
+        document.getElementById("stopTrackBtn").hidden = false
+        document.getElementById("stopBtn").disabled = true
+
+        id = setInterval(getTruck, 3000)
+    }
+
+    function stopTracking() {
+        document.getElementById("trackBtn").hidden = false
+        document.getElementById("stopTrackBtn").hidden = true
+        document.getElementById("stopBtn").disabled = false
+        clearInterval(id)
+    }
+
+    function endMap() {
+
+        document.getElementById("startBtn").hidden = false
+        document.getElementById("stopBtn").hidden = true
+        document.getElementById("trackBtn").hidden = true
+        document.getElementById("stopTrackBtn").hidden = true
+
+        const mapElement = document.getElementById("map");
+        mapElement.remove();
+
+    }
+
+</script>

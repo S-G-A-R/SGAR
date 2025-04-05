@@ -231,11 +231,16 @@ namespace SGAR.AppWebMVC.Controllers
         // Atributo que permite el acceso a esta acción sin requerir autenticación.
         [AllowAnonymous]
         // Definición de la acción Create, que es asíncrona y devuelve un IActionResult.
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dui,Correo,Password,ZonaId,Notificacion")] Ciudadano ciudadano) 
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dui,Correo,Password,ConfirmarPassword,ZonaId,Notificacion")] Ciudadano ciudadano) 
         {
             // Bloque try para manejar excepciones.
             try
             {
+                if (ciudadano.Notificacion.Latitud == null ||
+                   ciudadano.Notificacion.Latitud == 0 ||
+                   ciudadano.Notificacion.Longitud == null ||
+                   ciudadano.Notificacion.Longitud == 0)
+                    throw new Exception("Debe seleccionar su ubicación");
                 // Genera un hash SHA-256 de la contraseña proporcionada por el usuario.
                 ciudadano.Password = GenerarHash256(ciudadano.Password);
                 // Agrega el objeto ciudadano al contexto de la base de datos.
@@ -440,7 +445,6 @@ namespace SGAR.AppWebMVC.Controllers
         // Atributo que indica que esta acción solo responde a solicitudes HTTP POST.
         [HttpPost]
         // Atributo que protege contra ataques de falsificación de solicitudes entre sitios (CSRF).
-        [ValidateAntiForgeryToken]
         // Este atributo restringe el acceso a la acción a usuarios que tengan el rol "Ciudadano".
         [Authorize(Roles = "Ciudadano")]
         // Definición de la acción Delete, que es asíncrona y devuelve un IActionResult.
@@ -452,14 +456,15 @@ namespace SGAR.AppWebMVC.Controllers
             if (ciudadano != null) 
             {
                 // Elimina el ciudadano del contexto de la base de datos.
-                _context.Ciudadanos.Remove(ciudadano); 
+                _context.Ciudadanos.Remove(ciudadano);
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                // Guarda los cambios en la base de datos de forma asíncrona.
+                await _context.SaveChangesAsync();
+                // Redirige al usuario a la acción Index del controlador Home después de eliminar el ciudadano.
+                return Json(new { redirectToUrl = Url.Action("Index", "Home") });
             }
             // Cierra la sesión del usuario eliminando la cookie de autenticación.
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            // Guarda los cambios en la base de datos de forma asíncrona.
-            await _context.SaveChangesAsync();
-            // Redirige al usuario a la acción Index del controlador Home después de eliminar el ciudadano.
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Menu", "Ciudadano");
         }
 
         // Definición de un método privado que devuelve un valor booleano (true o false).

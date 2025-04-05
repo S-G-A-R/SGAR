@@ -82,5 +82,21 @@ namespace SGAR.AppWebMVC.Controllers
         {
             return _context.NotificacionesUbicaciones.Any(e => e.Id == id);
         }
+
+        public async Task<JsonResult> GetUbicationFromCdId()
+        {
+            return Json(await _context.NotificacionesUbicaciones.FirstOrDefaultAsync(s => s.IdCiudadano == Convert.ToInt32(User.FindFirst("Id").Value)));
+
+        }
+
+        public async Task<JsonResult> GetOpUbication()
+        {
+            var zona = await _context.Zonas.FirstOrDefaultAsync(x=>x.Nombre == User.FindFirst("Zona").Value);
+            var horario = await _context.Horarios.FirstOrDefaultAsync(x => x.IdZona == zona.Id);
+            var ubicacion = await _context.Ubicaciones.FirstOrDefaultAsync(x => x.IdOperador == horario.IdOperador);
+
+            return Json(ubicacion);
+
+        }
     }
 }

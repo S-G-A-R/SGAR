@@ -71,7 +71,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No, gracias</button>
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Si, entiendo y quiero continuar</a>
+                <button onclick="deleteUser()"  class="btn btn-outline-danger">Si, entiendo y quiero continuar</button>
             </div>
         </div>
     </div>
@@ -115,3 +115,18 @@
         width: 60%; /*Establece el ancho del valor al 60% del espacio disponible en la fila. Esto, junto con el 40% de la etiqueta, asegura que la fila se llene completamente.*/
     }
 </style>
+
+<script>
+    function deleteUser(){
+        $.ajax({
+            url: '@Url.Action("Delete", "Ciudadano")',
+            type: 'POST',
+            data: {
+                id: @Convert.ToInt32(User.FindFirst("Id").Value),
+            },
+            success: function (res) {
+                window.location = res.redirectToUrl
+            }
+        })
+    }
+</script>

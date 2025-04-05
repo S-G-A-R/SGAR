@@ -19,8 +19,8 @@
     <input type="hidden" name="@getName("Titulo")" value="@Model.Titulo" />
     <input type="hidden" name="@getName("Estado")" value="@Model.Estado" />
     <input type="hidden" name="@getName("DistanciaMetros")" value="@Model.DistanciaMetros" />
-    <input type="hidden" id="indLat" name="@getName("Longitud")" value="@Model.Longitud" />
-    <input type="hidden" id="indLng" name="@getName("Latitud")" value="@Model.Latitud" />
+    <input type="hidden" id="indLng" name="@getName("Longitud")" value="@Model.Longitud" />
+    <input type="hidden" id="indLat" name="@getName("Latitud")" value="@Model.Latitud" />
 }
 
 <!-- Button trigger modal -->
@@ -36,7 +36,7 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Seleccione Ubicación (Mantenga para arrastrar)</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -120,14 +120,6 @@
                 $('#indLat').val(position.lat);
                 $('#indLng').val(position.lng);
             });
-
-            //$("#Latitude, #Longitude").change(function () {
-            //    var position = [parseInt($("#Latitude").val()), parseInt($("#Longitude").val())];
-            //    marker.setLatLng(position, {
-            //        draggable: 'true'
-            //    }).bindPopup(position).update();
-            //    map.panTo(position);
-            //});
         }
 
 
